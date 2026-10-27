@@ -17,8 +17,9 @@ from pathlib import Path
 
 import pytest
 
-from iso_diagram import build, render
+from iso_diagram import build, render, stack
 from iso_diagram.shared import SKILL_DIR
+from iso_diagram.theme import Theme
 
 
 EXAMPLES = SKILL_DIR / "examples"
@@ -168,3 +169,33 @@ def test_theme_option_accepts_a_path(
     out = tmp_path / "tree.svg"
     run_build(monkeypatch, EXAMPLES / "aws-tree.json", "-o", out, "--theme", theme)
     assert "theme default" in capsys.readouterr().out
+
+
+def test_markup_in_titles_is_escaped(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    tree_spec = example("aws-tree")
+    tree_spec["root"]["label"] = "R&D"
+    tree_spec["root"]["desc"] = "Teams <and> partners"
+    stack_spec = example("aws-stack")
+    stack_spec["layers"][0]["title"] = "R&D <region>"
+    for name, spec in [("tree", tree_spec), ("stack", stack_spec)]:
+        out = tmp_path / f"{name}.svg"
+        run_build(monkeypatch, write_spec(tmp_path, spec), "-o", out, "--allow-issues")
+        svg = out.read_text()
+        assert "<title>R&amp;D" in svg
+        assert "&lt;" in svg
+
+
+def test_mono_labels_are_measured_in_the_mono_font() -> None:
+    spec = example("aws-stack")
+    marker = spec["layers"][1]["markers"][0]
+    resource = spec["layers"][4]["resources"][0]
+    marker["mono"] = resource["mono"] = True
+    theme = Theme()
+    _, reg, _ = stack.build(spec, theme)
+    lengths = {lb.text: lb.length for lb in reg.labels}
+    for label in (marker["label"], resource["label"]):
+        mono = theme.measure(s=label, size=20, mono=True, weight=600)
+        assert mono != theme.measure(s=label, size=20, mono=False, weight=600)
+        assert lengths[label] == mono

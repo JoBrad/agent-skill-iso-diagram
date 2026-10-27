@@ -9,6 +9,7 @@ import math
 
 from collections.abc import Callable
 from typing import Any
+from xml.sax.saxutils import escape
 
 from iso_diagram.checks import Label, Registry, Surface
 from iso_diagram.iso import (
@@ -89,7 +90,9 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
                 px, py = (dx / C + dy / S) / 2 + col[0], (dy / S - dx / C) / 2 + col[1]
                 reach = max(reach, abs(px) + RES_SIZE / 2, abs(py) + RES_SIZE / 2)
             lx, ly = res_label_pos(col, r.get("count", 1))
-            half = theme.measure(s=r["label"], size=20, mono=False, weight=600) / 2
+            half = (
+                theme.measure(s=r["label"], size=20, mono=r.get("mono"), weight=600) / 2
+            )
             reach = max(reach, abs(lx) + 9, abs(ly) + half)
     W = 2 * (reach + INSET)
     cx = 35 + W * C
@@ -189,7 +192,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     for i in reversed(range(len(layers))):
         l, t, p = layers[i], tiers[i], plates[i]
         out.append(
-            f"<g><title>{l['title']}</title>{p.svg(top=t['top'], side=t['side'], stroke=t['stroke'])}</g>"
+            f"<g><title>{escape(l['title'])}</title>{p.svg(top=t['top'], side=t['side'], stroke=t['stroke'])}</g>"
         )
         out.append(
             plate_content(
@@ -495,7 +498,9 @@ def plate_content(
                 text=m["label"],
                 center=(x + 34, y + 6),
                 size=20,
-                length=theme.measure(s=m["label"], size=20, mono=False, weight=600),
+                length=theme.measure(
+                    s=m["label"], size=20, mono=m.get("mono"), weight=600
+                ),
             )
         )
     if l.get("note"):
@@ -591,7 +596,9 @@ def resources(
                 text=r["label"],
                 center=(lx, ly),
                 size=20,
-                length=theme.measure(s=r["label"], size=20, mono=False, weight=600),
+                length=theme.measure(
+                    s=r["label"], size=20, mono=r.get("mono"), weight=600
+                ),
             )
         )
     out.append(f'<g transform="{plane_matrix(cx, cy)}">{"".join(labels)}</g>')

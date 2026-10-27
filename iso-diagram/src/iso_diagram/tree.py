@@ -8,6 +8,7 @@ import itertools
 import math
 
 from collections.abc import Iterator, Sequence
+from xml.sax.saxutils import escape
 
 from iso_diagram.checks import Label, Registry, Surface
 from iso_diagram.iso import (
@@ -463,7 +464,9 @@ def draw_node(*, n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
             )
         )
         y += size + gap
-    title = f"<title>{n.label}</title>" + (f"<desc>{n.desc}</desc>" if n.desc else "")
+    title = f"<title>{escape(n.label)}</title>" + (
+        f"<desc>{escape(n.desc)}</desc>" if n.desc else ""
+    )
     return (
         f"<g>{title}{s.svg(top=t['top'], side=t['side'], stroke=t['stroke'])}"
         f'<g transform="{plane_matrix(s.cx, s.cy)} rotate(-90)">{"".join(texts)}</g></g>'

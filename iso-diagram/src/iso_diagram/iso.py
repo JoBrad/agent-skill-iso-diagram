@@ -7,6 +7,7 @@ point maps to the screen with to_screen(); a whole group maps with plane_matrix(
 import math
 import re
 
+from collections.abc import Iterable, Sequence
 from xml.sax.saxutils import escape
 
 from iso_diagram import icons
@@ -16,21 +17,23 @@ C = math.cos(math.radians(30))
 S = 0.5
 TAN30 = math.tan(math.radians(30))
 
+Point = tuple[float, float]
+
 
 # --- geometry -------------------------------------------------------------------------
 
 
-def to_screen(cx, cy, x, y):
+def to_screen(cx: float, cy: float, x: float, y: float) -> Point:
     """Screen point of plane point (x, y) on a face whose center sits at screen (cx, cy)."""
     return (cx + (x - y) * C, cy + (x + y) * S)
 
 
-def plane_matrix(cx, cy) -> str:
+def plane_matrix(cx: float, cy: float) -> str:
     """SVG transform that maps plane coordinates onto a face centered at screen (cx, cy)."""
     return f"translate({cx:.1f},{cy:.1f}) matrix({C:.5f},{S},{-C:.5f},{S},0,0)"
 
 
-def rr_points(w, d, r, steps=8):
+def rr_points(w: float, d: float, r: float, steps: int = 8) -> list[Point]:
     """Outline of a w x d rounded rectangle centered on the plane origin."""
     r = min(r, w / 2, d / 2)
     pts = []
@@ -47,12 +50,13 @@ def rr_points(w, d, r, steps=8):
     return pts
 
 
-def hull(points):
+def hull(points: Iterable[Point]) -> list[Point]:
+    """Return the convex hull of points (Andrew's monotone chain), first point not repeated."""
     pts = sorted(set(points))
     if len(pts) < 3:
         return pts
 
-    def cross(o, a, b):
+    def cross(o: Point, a: Point, b: Point) -> float:
         return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
 
     lower, upper = [], []
@@ -67,7 +71,8 @@ def hull(points):
     return lower[:-1] + upper[:-1]
 
 
-def point_in_poly(x, y, poly):
+def point_in_poly(x: float, y: float, poly: list[Point]) -> bool:
+    """Return whether (x, y) is inside polygon poly, by the even-odd rule."""
     inside = False
     for (x0, y0), (x1, y1) in zip(poly, poly[1:] + poly[:1], strict=False):
         if (y0 > y) != (y1 > y) and x < x0 + (x1 - x0) * (y - y0) / (y1 - y0):
@@ -75,14 +80,25 @@ def point_in_poly(x, y, poly):
     return inside
 
 
-def poly(points):
+def poly(points: Iterable[Point]) -> str:
+    """Return points as an SVG points attribute."""
     return " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
 
 
 class Slab:
     """A rounded isometric slab. (cx, cy) is the screen center of its top face."""
 
-    def __init__(self, name, cx, cy, w, d, h, r=18) -> None:
+    def __init__(
+        self,
+        name: str,
+        cx: float,
+        cy: float,
+        w: float,
+        d: float,
+        h: float,
+        r: float = 18,
+    ) -> None:
+        """Build a w x d slab, h deep, with corner radius r, its top centered at (cx, cy)."""
         self.name, self.cx, self.cy, self.w, self.d, self.h, self.r = (
             name,
             cx,
@@ -95,7 +111,7 @@ class Slab:
         self.top_pts = [to_screen(cx, cy, x, y) for x, y in rr_points(w, d, r)]
         self.body = hull(self.top_pts + [(x, y + h) for x, y in self.top_pts])
 
-    def vertex(self, which):
+    def vertex(self, which: str) -> Point:
         """Screen point of a top-face corner: 'top', 'right', 'bottom', 'left'."""
         x, y = {
             "top": (-self.w / 2, -self.d / 2),
@@ -105,7 +121,7 @@ class Slab:
         }[which]
         return to_screen(self.cx, self.cy, x, y)
 
-    def vspan(self, x):
+    def vspan(self, x: float) -> tuple[float, float] | None:
         """(top, bottom) screen y where a vertical line at x meets the outline, or None."""
         ys = [
             y0 + (y1 - y0) * (x - x0) / (x1 - x0)
@@ -116,7 +132,7 @@ class Slab:
         ]
         return (min(ys), max(ys)) if ys else None
 
-    def hspan(self, y):
+    def hspan(self, y: float) -> tuple[float, float] | None:
         """(left, right) screen x where a horizontal line at y meets the outline, or None."""
         xs = [
             x0 + (x1 - x0) * (y - y0) / (y1 - y0)
@@ -127,8 +143,8 @@ class Slab:
         ]
         return (min(xs), max(xs)) if xs else None
 
-    def contains(self, x, y, margin=0.0):
-        """True when (x, y) is inside the outline by more than margin screen units."""
+    def contains(self, x: float, y: float, margin: float = 0.0) -> bool:
+        """Return whether (x, y) is inside the outline by more than margin screen units."""
         if not point_in_poly(x, y, self.body):
             return False
         if margin <= 0:
@@ -138,7 +154,8 @@ class Slab:
             for dx, dy in ((margin, 0), (-margin, 0), (0, margin), (0, -margin))
         )
 
-    def svg(self, top, side, stroke, sw=2.0) -> str:
+    def svg(self, top: str, side: str, stroke: str, sw: float = 2.0) -> str:
+        """Return the slab as SVG: body in the side color, top face in the top color."""
         return (
             f'<polygon points="{poly(self.body)}" fill="{side}" stroke="{stroke}" stroke-width="{sw}" '
             f'stroke-linejoin="round"/>'
@@ -146,7 +163,8 @@ class Slab:
             f'stroke-linejoin="round"/>'
         )
 
-    def shadow(self, dy=40) -> str:
+    def shadow(self, dy: float = 40) -> str:
+        """Return a soft shadow of the top face, dy below the slab's bottom."""
         pts = [(x, y + self.h + dy) for x, y in self.top_pts]
         return f'<polygon points="{poly(pts)}" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>'
 
@@ -155,8 +173,18 @@ class Slab:
 
 
 def text(
-    x, y, s, font, size, fill, weight=400, anchor="start", baseline=None, transform=None
+    x: float,
+    y: float,
+    s: object,
+    font: str,
+    size: float,
+    fill: str,
+    weight: int = 400,
+    anchor: str = "start",
+    baseline: str | None = None,
+    transform: str | None = None,
 ) -> str:
+    """Return an SVG text element; s is escaped."""
     tr = f' transform="{transform}"' if transform else ""
     bl = f' dominant-baseline="{baseline}"' if baseline else ""
     return (
@@ -193,8 +221,8 @@ def icon(  # ruff: ignore[too-many-positional-arguments]
 # --- connectors ---------------------------------------------------------------------------
 
 
-def rounded_path(points, r=16):
-    """Polyline with rounded corners."""
+def rounded_path(points: Sequence[Point], r: float = 16) -> str:
+    """Return SVG path data for a polyline with corners rounded to radius r."""
     if len(points) < 3:
         return "M " + " L ".join(f"{x:.1f},{y:.1f}" for x, y in points)
     out = [f"M {points[0][0]:.1f},{points[0][1]:.1f}"]
@@ -209,11 +237,20 @@ def rounded_path(points, r=16):
     return " ".join(out)
 
 
-def marker_id(color):
+def marker_id(color: str) -> str:
+    """Return the id of the arrowhead marker for color."""
     return "arrow-" + color.lstrip("#")
 
 
-def connector(points, color, width=3.0, arrow=True, opacity=1.0, r=16) -> str:
+def connector(
+    points: Sequence[Point],
+    color: str,
+    width: float = 3.0,
+    arrow: bool = True,
+    opacity: float = 1.0,
+    r: float = 16,
+) -> str:
+    """Return a rounded connector path, with an arrowhead at its end when arrow is set."""
     marker = f' marker-end="url(#{marker_id(color)})"' if arrow else ""
     op = f' opacity="{opacity}"' if opacity < 1 else ""
     return (
@@ -222,7 +259,8 @@ def connector(points, color, width=3.0, arrow=True, opacity=1.0, r=16) -> str:
     )
 
 
-def arrow_marker(color) -> str:
+def arrow_marker(color: str) -> str:
+    """Return the arrowhead marker definition for color."""
     return (
         f'<marker id="{marker_id(color)}" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="13" '
         f'markerHeight="13" markerUnits="userSpaceOnUse" orient="auto-start-reverse">'
@@ -230,13 +268,15 @@ def arrow_marker(color) -> str:
     )
 
 
-def badge(x, y, n, fill, font, size=18):
+def badge(x: float, y: float, n: object, fill: str, font: str, size: float = 18) -> str:
+    """Return a numbered step badge: a filled disc with n in white."""
     return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{size - 3}" fill="{fill}"/>' + text(
         x, y, n, font, size, "#FFFFFF", 600, "middle", "central"
     )
 
 
-def dot(x, y, color, r=6) -> str:
+def dot(x: float, y: float, color: str, r: float = 6) -> str:
+    """Return a filled circle."""
     return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{color}"/>'
 
 
@@ -244,8 +284,15 @@ def dot(x, y, color, r=6) -> str:
 
 
 def svg_doc(
-    width, height, body, marker_colors, background, title=None, desc=None
+    width: float,
+    height: float,
+    body: str,
+    marker_colors: Iterable[str],
+    background: str,
+    title: str | None = None,
+    desc: str | None = None,
 ) -> str:
+    """Return a complete SVG document: metadata, arrow markers, background, and body."""
     defs = "".join(arrow_marker(c) for c in sorted(set(marker_colors)))
     meta = (f"<title>{escape(title)}</title>" if title else "") + (
         f"<desc>{escape(desc)}</desc>" if desc else ""

@@ -7,34 +7,71 @@ and check() reports every place a rule breaks, so problems surface before anyone
 import itertools
 import math
 
+from collections.abc import Sequence
+
+from iso_diagram.iso import Point, Slab
+from iso_diagram.theme import Theme
+
 
 INSET = 16  # plane units between a child and its parent's edge
 LABEL_MARGIN = 4  # plane units between a label and the edge of its surface
 
 
-class Registry:
-    def __init__(self, theme) -> None:
-        self.theme = theme
-        self.slabs = []
-        self.children = []  # (parent, pw, pd, child, (x, y, w, d))
-        self.labels = []  # (surface, sw, sd, text, (x, y), size, along_y, length)
-        self.connectors = []  # (name, points, source slab or None, target slab or None)
-        self.issues = []
+Rect = tuple[float, float, float, float]  # plane x, y, w, d
 
-    def slab(self, s):
+
+class Registry:
+    """What a layout drew that the layout rules cover, plus issues it found itself."""
+
+    def __init__(self, theme: Theme) -> None:
+        """Start an empty registry; theme supplies the text-size floor."""
+        self.theme = theme
+        self.slabs: list[Slab] = []
+        # (parent, pw, pd, child, (x, y, w, d))
+        self.children: list[tuple[str, float, float, str, Rect]] = []
+        # (surface, sw, sd, text, (x, y), size, along_y, length)
+        self.labels: list[tuple[str, float, float, str, Point, float, bool, float]] = []
+        # (name, points, source slab or None, target slab or None)
+        self.connectors: list[
+            tuple[str, Sequence[Point], Slab | None, Slab | None]
+        ] = []
+        self.issues: list[str] = []
+
+    def slab(self, s: Slab) -> Slab:
+        """Record a slab and return it."""
         self.slabs.append(s)
         return s
 
-    def child(self, parent, pw, pd, name, rect) -> None:
+    def child(self, parent: str, pw: float, pd: float, name: str, rect: Rect) -> None:
+        """Record a child rect drawn on a pw x pd parent, for the inset rule."""
         self.children.append((parent, pw, pd, name, rect))
 
-    def label(self, surface, sw, sd, s, center, size, length, along_y=True) -> None:
+    def label(
+        self,
+        surface: str,
+        sw: float,
+        sd: float,
+        s: str,
+        center: Point,
+        size: float,
+        length: float,
+        along_y: bool = True,
+    ) -> None:
+        """Record a label centered on a sw x sd surface, for the size and fit rules."""
         self.labels.append((surface, sw, sd, s, center, size, along_y, length))
 
-    def connector(self, name, points, source=None, target=None) -> None:
+    def connector(
+        self,
+        name: str,
+        points: Sequence[Point],
+        source: Slab | None = None,
+        target: Slab | None = None,
+    ) -> None:
+        """Record a connector and the slabs its ends should sit on."""
         self.connectors.append((name, points, source, target))
 
-    def check(self, width, height):
+    def check(self, width: float, height: float) -> list[str]:
+        """Return every rule the recorded layout breaks on a width x height canvas."""
         out = list(self.issues)
         for parent, pw, pd, name, (x, y, w, d) in self.children:
             gap = min(
@@ -67,7 +104,13 @@ class Registry:
                 out.append(f"canvas: '{s.name}' extends past the canvas")
         return out
 
-    def _connector_issues(self, name, pts, source, target):
+    def _connector_issues(
+        self,
+        name: str,
+        pts: Sequence[Point],
+        source: Slab | None,
+        target: Slab | None,
+    ) -> list[str]:
         out = []
         bends = sum(
             1

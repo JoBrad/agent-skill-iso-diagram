@@ -7,8 +7,11 @@ shapes only at their outlines. A story path is shown by emphasizing the connecto
 import itertools
 import math
 
+from collections.abc import Iterator, Sequence
+
 from iso_diagram.checks import Registry
 from iso_diagram.iso import (
+    Point,
     Slab,
     badge,
     connector,
@@ -18,6 +21,8 @@ from iso_diagram.iso import (
     svg_doc,
     text,
 )
+from iso_diagram.shared import Spec
+from iso_diagram.theme import Theme, Tier
 
 
 SIZES = [
@@ -38,7 +43,10 @@ CARD_W = 650
 
 
 class Node:
-    def __init__(self, spec, depth, parent=None) -> None:
+    """One node of a tree spec, its place in the hierarchy, and its slab once laid out."""
+
+    def __init__(self, spec: Spec, depth: int, parent: "Node | None" = None) -> None:
+        """Build a node and its children from spec."""
         self.id = spec["id"]
         self.label = spec.get("label", self.id)
         self.sublabel = spec.get("sublabel")
@@ -49,34 +57,39 @@ class Node:
         self.depth, self.parent = depth, parent
         self.children = [Node(c, depth + 1, self) for c in spec.get("children", [])]
         self.stacked = False
-        self.slab = None
+        # Set by build() during layout; nothing reads it before then.
+        self.slab: Slab
 
-    def walk(self):
+    def walk(self) -> Iterator["Node"]:
+        """Yield this node and every descendant, depth first."""
         yield self
         for c in self.children:
             yield from c.walk()
 
 
-def footprint(node):
+def footprint(node: Node) -> tuple[int, int, int]:
+    """Return a node's slab size (w, d, h): a stacked tile, or its size step's."""
     if node.parent is not None and node.parent.stacked:
         return STACK_TILE
     size, h = SIZES[min(size_step(node), len(SIZES) - 1)]
     return (size, size, h)
 
 
-def size_step(node):
-    """An only child keeps its parent's size; a fan-out steps down one size."""
+def size_step(node: Node) -> int:
+    """Return a node's size step: an only child keeps its parent's, a fan-out steps down."""
     if node.parent is None:
         return 0
     return size_step(node.parent) + (0 if len(node.parent.children) == 1 else 1)
 
 
-def screen_width(node):
+def screen_width(node: Node) -> float:
+    """Return the screen width of a node's slab."""
     w, d, _ = footprint(node)
     return (w + d) * math.cos(math.radians(30))
 
 
-def subtree_width(node):
+def subtree_width(node: Node) -> float:
+    """Return the screen width a node's subtree needs, gaps included."""
     own = screen_width(node)
     if not node.children:
         return own
@@ -91,7 +104,8 @@ def subtree_width(node):
     )
 
 
-def place_x(node, center, xs) -> None:
+def place_x(node: Node, center: float, xs: dict[str, float]) -> None:
+    """Set the screen x of node and its subtree in xs, centered on center."""
     xs[node.id] = center
     if not node.children:
         return
@@ -110,7 +124,8 @@ def place_x(node, center, xs) -> None:
         left += wdt + GAP_X
 
 
-def build(spec, theme):
+def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
+    """Lay out and draw an iso-tree spec; return the SVG, its registry, and its size."""
     reg = Registry(theme)
     root = Node(spec["root"], 0)
     nodes = {n.id: n for n in root.walk()}
@@ -363,14 +378,16 @@ def build(spec, theme):
     )
 
 
-def default_caption(spec):
+def default_caption(spec: Spec) -> str:
+    """Return the story, plus a legend when the spec draws a path."""
     parts = [spec.get("story", "")]
     if spec.get("path"):
         parts.append("Faint lines: contains. Bold arrows: the path, steps numbered.")
     return " ".join(p for p in parts if p)
 
 
-def draw_node(n, t, theme, reg) -> str:
+def draw_node(n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
+    """Return a node's slab and labels, shrinking the label to fit, and register them."""
     s = n.slab
     lines = [
         (
@@ -412,7 +429,17 @@ def draw_node(n, t, theme, reg) -> str:
     )
 
 
-def callout_card(x, y, w, h, color, title, items, theme):
+def callout_card(
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    color: str,
+    title: str,
+    items: list[str],
+    theme: Theme,
+) -> str:
+    """Return a callout card: a title over its items in two columns."""
     out = [
         f'<rect x="{x:.1f}" y="{y:.1f}" width="{w}" height="{h}" rx="22" fill="#FFFFFF" '
         f'stroke="{color}" stroke-width="3"/>',
@@ -437,8 +464,13 @@ def callout_card(x, y, w, h, color, title, items, theme):
 # --- routing --------------------------------------------------------------------------------
 
 
-def clear(pts, slabs, placed, spacing=12) -> bool:
-    """True when a route crosses no slab and keeps its distance from parallel connectors."""
+def clear(
+    pts: Sequence[Point],
+    slabs: list[Slab],
+    placed: list[list[Point]],
+    spacing: float = 12,
+) -> bool:
+    """Return whether a route crosses no slab and keeps clear of parallel connectors."""
     total = sum(math.dist(a, b) for a, b in itertools.pairwise(pts))
     walked = 0.0
     for a, b in itertools.pairwise(pts):
@@ -474,7 +506,9 @@ def clear(pts, slabs, placed, spacing=12) -> bool:
     return True
 
 
-def route_parent_child(p, q, slabs, placed):
+def route_parent_child(
+    p: Slab, q: Slab, slabs: list[Slab], placed: list[list[Point]]
+) -> list[Point] | None:
     """Straight down if the shapes line up, else out a side corner and down: one bend."""
     qx = q.vertex("top")[0] + 30
     offsets = sorted(range(-240, 241, 10), key=lambda k: (abs(k), k))
@@ -512,14 +546,16 @@ def route_parent_child(p, q, slabs, placed):
     return None
 
 
-def well_inside(slab, x, margin=30):
+def well_inside(slab: Slab, x: float, margin: float = 30) -> bool:
     """Keep vertical connectors off a shape's far corners, where they would graze its silhouette."""
     xs = [p[0] for p in slab.body]
     return min(xs) + margin <= x <= max(xs) - margin
 
 
-def route_flow(a, b, slabs, placed):
-    """A sideways flow between two shapes: straight across if possible, else under and up."""
+def route_flow(
+    a: Slab, b: Slab, slabs: list[Slab], placed: list[list[Point]]
+) -> list[Point] | None:
+    """Route a sideways flow between two shapes: straight across, else under and up."""
     left_to_right = a.cx < b.cx
     lo = max(min(p[1] for p in a.body), min(p[1] for p in b.body))
     hi = min(max(p[1] for p in a.body), max(p[1] for p in b.body))

@@ -5,19 +5,24 @@ import io
 import re
 import xml.etree.ElementTree as ET
 
+from collections.abc import Iterable
+
 from fontTools.subset import Options, Subsetter
 from fontTools.ttLib import TTFont
 from fontTools.varLib.instancer import instantiateVariableFont
+
+from iso_diagram.theme import Theme
 
 
 NS = "{http://www.w3.org/2000/svg}"
 
 
-def family_of(attr):
+def family_of(attr: str) -> str:
+    """Return the first family in a CSS font-family list, unquoted."""
     return attr.split(",")[0].strip().strip("'\"")
 
 
-def used_faces(svg_text):
+def used_faces(svg_text: str) -> dict[tuple[str, int], set[str]]:
     """Map (family, weight) to the characters drawn in that face."""
     used = {}
     for el in ET.fromstring(svg_text).iter(f"{NS}text"):
@@ -27,7 +32,8 @@ def used_faces(svg_text):
     return used
 
 
-def woff2(theme, kind, weight, chars):
+def woff2(theme: Theme, kind: str, weight: int, chars: Iterable[str]) -> str:
+    """Return the theme's kind font at weight, subset to chars, as base64 WOFF2."""
     spec = theme.font_spec(kind)
     font = TTFont(theme.font_file(kind))
     if "fvar" in font:
@@ -47,7 +53,8 @@ def woff2(theme, kind, weight, chars):
     return base64.b64encode(buf.getvalue()).decode()
 
 
-def embed(svg_text, theme):
+def embed(svg_text: str, theme: Theme) -> str:
+    """Return svg_text with an embedded @font-face for each family and weight it uses."""
     kinds = {theme.font_spec(k)["family"]: k for k in ("sans", "mono")}
     faces = []
     for (fam, weight), chars in sorted(used_faces(svg_text).items()):

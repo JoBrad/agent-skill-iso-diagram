@@ -7,9 +7,13 @@ hop happens flat on the plate named as its 'via'.
 
 import math
 
+from collections.abc import Callable
+from typing import Any
+
 from iso_diagram.checks import Registry
 from iso_diagram.iso import (
     C,
+    Point,
     S,
     Slab,
     badge,
@@ -20,6 +24,8 @@ from iso_diagram.iso import (
     text,
     to_screen,
 )
+from iso_diagram.shared import Spec
+from iso_diagram.theme import Theme, Tier
 
 
 GAP = 260  # screen distance between plate centers
@@ -31,8 +37,20 @@ ZONE_MIN, ZONE_MAX = 100, SPACING - 6
 RES_SIZE, RES_H = 64, 18
 RES_OFFSETS = {1: [(0, 6)], 2: [(-34, 40), (34, 58)], 3: [(-50, 30), (0, 52), (50, 74)]}
 
+# Column name to its plane center, shared by every plate.
+Columns = dict[str, Point]
+# (layer index, column) to the zone's side length.
+ZoneWidths = dict[tuple[int, str], float]
+# Column to the (first, last) layer index its lane spans.
+Lanes = dict[str, tuple[int, int]]
+# (via layer index, from column, to column).
+Hop = tuple[int, str, str]
+# Plane point of a column's lane: lane(column, "A" or "B").
+LaneFn = Callable[[str, str], Point]
 
-def build(spec, theme):
+
+def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
+    """Lay out and draw an iso-stack spec; return the SVG, its registry, and its size."""
     reg = Registry(theme)
     cols = spec["columns"]
     n = len(cols)
@@ -75,7 +93,7 @@ def build(spec, theme):
     cx = 35 + W * C
     flow = theme.flow
 
-    def lane(col, side):
+    def lane(col: str, side: str) -> Point:
         x, y = colpos[col]
         k = -LANE if side == "A" else LANE
         return (x + k, y - k)
@@ -123,10 +141,10 @@ def build(spec, theme):
         reg.slab(Slab(l["id"], cx, cys[i], W, W, H, r=26)) for i, l in enumerate(layers)
     ]
 
-    def pt(i, p):
+    def pt(i: int, p: Point) -> Point:
         return to_screen(cx, cys[i], *p)
 
-    def ports(i):
+    def ports(i: int) -> list[str]:
         out = []
         for lanes, side in ((down, "A"), (up, "B")):
             for col, (lo, hi) in lanes.items():
@@ -138,7 +156,7 @@ def build(spec, theme):
                     )
         return out
 
-    def pipes_to(i):
+    def pipes_to(i: int) -> list[str]:
         out = []
         for lanes, side, is_up in ((down, "A", False), (up, "B", True)):
             for col, (lo, hi) in lanes.items():
@@ -270,7 +288,17 @@ def build(spec, theme):
     )
 
 
-def key_points(layers, colpos, zone_w, lane, down, up, hops, step_marks, theme):
+def key_points(
+    layers: list[Spec],
+    colpos: Columns,
+    zone_w: ZoneWidths,
+    lane: LaneFn,
+    down: Lanes,
+    up: Lanes,
+    hops: list[Hop],
+    step_marks: list[tuple[Any, ...]],
+    theme: Theme,
+) -> dict[int, list[tuple[float, ...]]]:
     """Plane points on each plate that must stay visible: ports, hops, badges, labels, resources."""
     keys = {i: [] for i in range(len(layers))}
     for lanes, side in ((down, "A"), (up, "B")):
@@ -303,7 +331,8 @@ def key_points(layers, colpos, zone_w, lane, down, up, hops, step_marks, theme):
     return keys
 
 
-def chevron(x, y, up, flow) -> str:
+def chevron(x: float, y: float, up: bool, flow: Tier) -> str:
+    """Return a chevron at (x, y) pointing up or down, in the flow's text shade."""
     d = -1 if up else 1
     return (
         f'<polyline points="{x - 6:.1f},{y - 3.5 * d:.1f} {x:.1f},{y + 3.5 * d:.1f} {x + 6:.1f},{y - 3.5 * d:.1f}" '
@@ -311,7 +340,17 @@ def chevron(x, y, up, flow) -> str:
     )
 
 
-def ptext(x, y, s, fill, theme, mono=False, weight=500, size=20):
+def ptext(
+    x: float,
+    y: float,
+    s: str,
+    fill: str,
+    theme: Theme,
+    mono: bool = False,
+    weight: int = 500,
+    size: float = 20,
+) -> str:
+    """Return text lying flat on a plate at plane (x, y), upright to the reader."""
     font = theme.mono if mono else theme.sans
     return text(
         0,
@@ -328,8 +367,21 @@ def ptext(x, y, s, fill, theme, mono=False, weight=500, size=20):
 
 
 def plate_content(
-    i, l, t, W, colpos, zone_w, lane, hops, flow, theme, reg, cx, cy
+    i: int,
+    l: Spec,
+    t: Tier,
+    W: float,
+    colpos: Columns,
+    zone_w: ZoneWidths,
+    lane: LaneFn,
+    hops: list[Hop],
+    flow: Tier,
+    theme: Theme,
+    reg: Registry,
+    cx: float,
+    cy: float,
 ) -> str:
+    """Return a plate's zones, hops, markers, and note, registering them for checks."""
     inner = []
     for z in l.get("zones", []):
         x, y = colpos[z["column"]]
@@ -394,14 +446,25 @@ def plate_content(
     return f'<g transform="{plane_matrix(cx, cy)}">{"".join(inner)}</g>'
 
 
-def res_label_pos(col, count):
-    """Flat label in front of a resource group, on the plate it sits on."""
+def res_label_pos(col: Point, count: int) -> Point:
+    """Return the plane position of the flat label in front of a resource group."""
     dx, dy = max(RES_OFFSETS[count], key=lambda o: o[1])  # the frontmost slab
     px, py = (dx / C + dy / S) / 2 + col[0], (dy / S - dx / C) / 2 + col[1]
     return (px + 54, py)
 
 
-def resources(i, l, t, colpos, theme, reg, cx, cy, W):
+def resources(
+    i: int,
+    l: Spec,
+    t: Tier,
+    colpos: Columns,
+    theme: Theme,
+    reg: Registry,
+    cx: float,
+    cy: float,
+    W: float,
+) -> str:
+    """Return a layer's resource slabs and labels, registering them for checks."""
     out, labels = [], []
     for r in l["resources"]:
         col = colpos[r["column"]]

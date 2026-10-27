@@ -11,6 +11,7 @@ import itertools
 import math
 import os
 
+from collections.abc import Sequence
 from pathlib import Path
 
 from iso_diagram import fonts, render
@@ -38,28 +39,33 @@ MACHADO = {  # Machado, Oliveira and Fernandes 2009, full severity, linear RGB
 }
 
 
-def lin(c):
+def lin(c: float) -> float:
+    """Return an sRGB channel (0 to 255) as linear light (0 to 1)."""
     c /= 255
     return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
 
 
-def rgb(h):
+def rgb(h: str) -> list[int]:
+    """Return the 0 to 255 channels of a #RRGGBB color."""
     return [int(h[i : i + 2], 16) for i in (1, 3, 5)]
 
 
-def simulate_linear(h, m):
+def simulate_linear(h: str, m: list[list[float]]) -> list[float]:
+    """Return color h in linear RGB as seen through simulation matrix m."""
     v = [lin(c) for c in rgb(h)]
     return [max(0.0, min(1.0, sum(m[i][j] * v[j] for j in range(3)))) for i in range(3)]
 
 
-def to_hex(linear):
+def to_hex(linear: Sequence[float]) -> str:
+    """Return a linear RGB color as #RRGGBB."""
     enc = [
         12.92 * v if v <= 0.0031308 else 1.055 * v ** (1 / 2.4) - 0.055 for v in linear
     ]
     return "#" + "".join(f"{round(255 * max(0, min(1, v))):02X}" for v in enc)
 
 
-def lab(linear):
+def lab(linear: Sequence[float]) -> tuple[float, float, float]:
+    """Return the CIELAB coordinates of a linear RGB color."""
     x = 0.4124 * linear[0] + 0.3576 * linear[1] + 0.1805 * linear[2]
     y = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
     z = 0.0193 * linear[0] + 0.1192 * linear[1] + 0.9505 * linear[2]
@@ -68,12 +74,14 @@ def lab(linear):
     return (116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz))
 
 
-def contrast(h):
+def contrast(h: str) -> float:
+    """Return the contrast ratio of color h against white."""
     v = [lin(c) for c in rgb(h)]
     return 1.05 / (0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2] + 0.05)
 
 
-def build(theme):
+def build(theme: Theme) -> tuple[str, list[str], float]:
+    """Return the swatch sheet SVG, the color-blindness report lines, and the width."""
     slots = [*theme.order, theme.leaf]
     ink = theme.ink
     out = [
@@ -207,6 +215,7 @@ def build(theme):
 
 
 def main() -> None:
+    """Draw the swatch sheet for the theme named on the command line."""
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )

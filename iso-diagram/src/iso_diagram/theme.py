@@ -3,8 +3,13 @@
 import json
 
 from pathlib import Path
+from typing import Any
 
 from iso_diagram.shared import SKILL_DIR
+
+
+# Colors for one slot: slot, hue, top, side, stroke, text.
+Tier = dict[str, str]
 
 
 def tint(hex_color: str, amount: float) -> str:
@@ -14,10 +19,13 @@ def tint(hex_color: str, amount: float) -> str:
 
 
 class Theme:
+    """A theme file: color slots and tints, ink colors, fonts, and text measurement."""
+
     def __init__(
         self,
         name_or_path: str | Path = "default",
     ) -> None:
+        """Load a theme by name from themes/, or from a path to a theme file."""
         path = name_or_path
         if not Path(path).exists():
             path = SKILL_DIR / "themes" / f"{name_or_path}.json"
@@ -34,7 +42,7 @@ class Theme:
         self.mono = f"'{f['mono']['family']}', {f['mono']['fallback']}"
         self._fonts = {}
 
-    def tier(self, slot):
+    def tier(self, slot: str) -> Tier:
         """Colors for one slot: top and side tints, outline, text shade, and the raw hue."""
         s = self.data["slots"][slot]
         t = self.data["tints"]
@@ -48,7 +56,7 @@ class Theme:
             "text": s["text"],
         }
 
-    def level_slots(self, depth_count):
+    def level_slots(self, depth_count: int) -> list[str]:
         """Color by level: slots in order, the deepest level takes the leaf slot."""
         if depth_count > len(self.order) + 1:
             raise ValueError(
@@ -57,17 +65,22 @@ class Theme:
         return [*self.order[: depth_count - 1], self.leaf]
 
     @property
-    def flow(self):
+    def flow(self) -> Tier:
+        """Colors for connectors and traffic: the theme's flow slot."""
         return self.tier(self.flow_slot)
 
-    def font_file(self, kind):
+    def font_file(self, kind: str) -> Path:
+        """Return the font file for kind ('sans' or 'mono')."""
         return SKILL_DIR / self.data["fonts"][kind]["file"]
 
-    def font_spec(self, kind):
+    def font_spec(self, kind: str) -> dict[str, Any]:
+        """Return the theme's font entry for kind ('sans' or 'mono')."""
         return self.data["fonts"][kind]
 
-    def measure(self, s, size, mono=False, weight=400):
-        """Rendered width of a string in screen units, from the font's own advance widths."""
+    def measure(
+        self, s: object, size: float, mono: bool = False, weight: int = 400
+    ) -> float:
+        """Return the rendered width of s in screen units, from the font's advance widths."""
         kind = "mono" if mono else "sans"
         if kind not in self._fonts:
             from fontTools.ttLib import TTFont

@@ -23,6 +23,7 @@ STYLES = {"iso-tree": tree.build, "iso-stack": stack.build}
 
 
 def main() -> None:
+    """Build the spec named on the command line."""
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )

@@ -29,10 +29,11 @@ def browser() -> str:
 def png(
     svg_path: str | Path,
     png_path: str | Path,
-    width: int,
-    height: int,
-    scale: int = 2,
+    width: float,
+    height: float,
+    scale: float = 2,
 ) -> None:
+    """Screenshot svg_path to png_path at width x height, scaled by scale."""
     cmd = [
         browser(),
         "--headless=new",

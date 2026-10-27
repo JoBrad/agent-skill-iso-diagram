@@ -279,7 +279,7 @@ def main() -> None:
     output_svg_file = Path(args.out)
     svg_content, report, width = build(theme)
     svg_content = fonts.embed(svg_content, theme)
-    output_svg_file.parent.mkdir(parents=True)
+    output_svg_file.parent.mkdir(parents=True, exist_ok=True)
     with output_svg_file.open("w") as f:
         f.write(svg_content)
     print(f"wrote {output_svg_file}")

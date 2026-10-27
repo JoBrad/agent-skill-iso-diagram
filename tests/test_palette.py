@@ -74,10 +74,6 @@ def test_main_png_hands_the_sheet_to_render(
     assert call["height"] == 1070
 
 
-@pytest.mark.xfail(
-    raises=FileExistsError,
-    reason="known bug: mkdir(parents=True) without exist_ok",
-)
 def test_main_writes_into_an_existing_folder(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -3,6 +3,8 @@ __pycache__/
 .venv/
 venv/
 *.py[cod]
+.coverage
+coverage.json
 
 # Icons are fetched on first use; only the manifest and licenses are tracked
 iso-diagram/assets/icons/*/*.svg

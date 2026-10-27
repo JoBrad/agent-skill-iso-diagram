@@ -37,6 +37,7 @@ INSET = 18
 LANE = 16  # plane offset of the A and B lanes from a column's center
 ZONE_MIN, ZONE_MAX = 100, SPACING - 6
 RES_SIZE, RES_H = 64, 18
+NOTE = 40  # plate note size, near iso-tree's top slab labels
 RES_OFFSETS = {1: [(0, 6)], 2: [(-34, 40), (34, 58)], 3: [(-50, 30), (0, 52), (50, 74)]}
 
 # Column name to its plane center, shared by every plate.
@@ -453,16 +454,25 @@ def plate_content(plan: Plan, i: int) -> str:
     if layer.get("note"):
         note = layer["note"]
         length = plan.theme.measure(
-            s=note["text"], size=20, mono=note.get("mono"), weight=500
+            s=note["text"], size=NOTE, mono=note.get("mono"), weight=500
         )
         # Along the front-right edge, near the front corner.
-        nx, ny = plan.plate_w / 2 - 34, plan.plate_w / 2 - 30 - length / 2
+        nx, ny = plan.plate_w / 2 - 24 - NOTE / 2, plan.plate_w / 2 - 30 - length / 2
+        style = TextStyle(
+            font=plan.theme.mono if note.get("mono") else plan.theme.sans,
+            size=NOTE,
+            fill=t["text"],
+            weight=500,
+            anchor="middle",
+            baseline="central",
+        )
         inner.append(
-            plan.flat_text(
-                at=(nx, ny),
+            text(
+                x=0,
+                y=0,
                 s=note["text"],
-                fill=t["text"],
-                mono=note.get("mono", False),
+                style=style,
+                transform=f"translate({nx:.1f},{ny:.1f}) rotate(-90)",
             )
         )
         reg.label(
@@ -470,7 +480,7 @@ def plate_content(plan: Plan, i: int) -> str:
                 surface=plate,
                 text=note["text"],
                 center=(nx, ny),
-                size=20,
+                size=NOTE,
                 length=length,
             )
         )

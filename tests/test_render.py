@@ -35,10 +35,6 @@ def test_browser_exits_when_none_is_found(monkeypatch: pytest.MonkeyPatch) -> No
         render.browser()
 
 
-@pytest.mark.xfail(
-    raises=TypeError,
-    reason="known bug: 'file://' + Path raises TypeError",
-)
 def test_png_screenshots_the_svg(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -43,6 +43,6 @@ def png(
         f"--force-device-scale-factor={scale}",
         f"--window-size={int(width)},{int(height)}",
         f"--screenshot={resolved_path(png_path)}",
-        "file://" + resolved_path(svg_path),
+        resolved_path(svg_path).as_uri(),
     ]
     subprocess.run(cmd, check=True, capture_output=True)

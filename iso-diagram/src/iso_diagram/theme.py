@@ -26,8 +26,8 @@ class Theme:
         name_or_path: str | Path = "default",
     ) -> None:
         """Load a theme by name from themes/, or from a path to a theme file."""
-        path = name_or_path
-        if not Path(path).exists():
+        path = Path(name_or_path)
+        if not path.exists():
             path = SKILL_DIR / "themes" / f"{name_or_path}.json"
         with path.open() as f:
             self.data = json.load(f)

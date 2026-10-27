@@ -35,10 +35,6 @@ def test_theme_loads_from_a_path_object(tmp_path: Path) -> None:
     assert Theme(path).data["name"] == "copy"
 
 
-@pytest.mark.xfail(
-    raises=AttributeError,
-    reason="known bug: a str path reaches path.open() without becoming a Path",
-)
 def test_theme_loads_from_a_str_path() -> None:
     assert Theme(str(DEFAULT)).data["name"] == "default"
 

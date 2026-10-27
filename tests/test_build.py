@@ -159,3 +159,12 @@ def test_allow_issues_writes_anyway(
     out = tmp_path / "x.svg"
     run_build(monkeypatch, write_spec(tmp_path, spec), "-o", out, "--allow-issues")
     assert out.exists()
+
+
+def test_theme_option_accepts_a_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    theme = SKILL_DIR / "themes" / "default.json"
+    out = tmp_path / "tree.svg"
+    run_build(monkeypatch, EXAMPLES / "aws-tree.json", "-o", out, "--theme", theme)
+    assert "theme default" in capsys.readouterr().out

@@ -13,7 +13,7 @@ platform-layer diagrams such as "Schedules > Webhooks > UIs > Flows > Scripts > 
 
 ## Layout the script does
 
-- **Columns** sit on a diagonal across each plate, 130 apart, so each plate shows them as a
+- **Columns** sit on a diagonal across each plate, 170 apart, so each plate shows them as a
   row from left to right. The plate grows to keep every zone 18 units in from its edge.
 - **Plates** are at least 260 apart, and the script spreads them further until no port, hop,
   badge, label, or resource is under the plate above. The back of each plate may still be

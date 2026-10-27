@@ -58,7 +58,7 @@ class Registry:
         """Record a child rect drawn on a pw x pd parent, for the inset rule."""
         self.children.append((parent, pw, pd, name, rect))
 
-    def label(
+    def label(  # ruff: ignore[too-many-arguments]
         self,
         *,
         surface: str,
@@ -84,7 +84,11 @@ class Registry:
         """Record a connector and the slabs its ends should sit on."""
         self.connectors.append((name, points, source, target))
 
-    def check(self, width: float, height: float) -> list[str]:
+    def check(
+        self,
+        width: float,
+        height: float,
+    ) -> list[str]:
         """Return every rule the recorded layout breaks on a width x height canvas."""
         out = list(self.issues)
         for parent, pw, pd, name, (x, y, w, d) in self.children:
@@ -128,19 +132,16 @@ class Registry:
         source: Slab | None,
         target: Slab | None,
     ) -> list[str]:
+        return [
+            *_route_issues(name=name, pts=pts),
+            *self._crossing_issues(name=name, pts=pts),
+            *_endpoint_issues(name=name, pts=pts, source=source, target=target),
+        ]
+
+    def _crossing_issues(self, *, name: str, pts: Sequence[Point]) -> list[str]:
+        # Sample every 2 units, skipping 3 at each end where the connector meets its
+        # slabs; report at most one crossing per segment.
         out = []
-        bends = sum(
-            1
-            for a, b, c in zip(pts, pts[1:], pts[2:], strict=False)
-            if abs((b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0])) > 1e-6
-        )
-        if any(
-            abs(a[0] - b[0]) > 0.5 and abs(a[1] - b[1]) > 0.5
-            for a, b in itertools.pairwise(pts)
-        ):
-            out.append(f"route: '{name}' has a diagonal segment")
-        if bends > 1:
-            out.append(f"route: '{name}' has {bends} bends")
         total = sum(math.dist(a, b) for a, b in itertools.pairwise(pts))
         walked = 0.0
         for a, b in itertools.pairwise(pts):
@@ -152,28 +153,55 @@ class Registry:
                 if d < 3 or d > total - 3:
                     continue
                 x, y = a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t
-                for s in self.slabs:
-                    if s.contains(x, y, margin=1):
-                        out.append(
-                            f"connector: '{name}' crosses '{s.name}' near ({x:.0f},{y:.0f})"
-                        )
-                        break
-                else:
-                    continue
-                break
+                hit = next((s for s in self.slabs if s.contains(x, y, margin=1)), None)
+                if hit is not None:
+                    out.append(
+                        f"connector: '{name}' crosses '{hit.name}' near ({x:.0f},{y:.0f})"
+                    )
+                    break
             walked += seg
-        for end, prev, slab, what in (
-            (pts[-1], pts[-2], target, "end"),
-            (pts[0], pts[1], source, "start"),
-        ):
-            if slab is None:
-                continue
-            dx, dy = end[0] - prev[0], end[1] - prev[1]
-            k = 4 / max(math.hypot(dx, dy), 1e-6)
-            inside = slab.contains(end[0] + dx * k, end[1] + dy * k)
-            outside = not slab.contains(end[0] - dx * k, end[1] - dy * k)
-            if not (inside and outside):
-                out.append(
-                    f"connector: '{name}' {what} does not sit on the outline of '{slab.name}'"
-                )
         return out
+
+
+def _route_issues(*, name: str, pts: Sequence[Point]) -> list[str]:
+    out = []
+    if any(
+        abs(a[0] - b[0]) > 0.5 and abs(a[1] - b[1]) > 0.5
+        for a, b in itertools.pairwise(pts)
+    ):
+        out.append(f"route: '{name}' has a diagonal segment")
+    bends = sum(
+        1
+        for a, b, c in zip(pts, pts[1:], pts[2:], strict=False)
+        if abs((b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0])) > 1e-6
+    )
+    if bends > 1:
+        out.append(f"route: '{name}' has {bends} bends")
+    return out
+
+
+def _endpoint_issues(
+    *,
+    name: str,
+    pts: Sequence[Point],
+    source: Slab | None,
+    target: Slab | None,
+) -> list[str]:
+    # An end sits on the outline when a step forward lands inside the slab and a step
+    # back lands outside it.
+    out = []
+    for end, prev, slab, what in (
+        (pts[-1], pts[-2], target, "end"),
+        (pts[0], pts[1], source, "start"),
+    ):
+        if slab is None:
+            continue
+        dx, dy = end[0] - prev[0], end[1] - prev[1]
+        k = 4 / max(math.hypot(dx, dy), 1e-6)
+        inside = slab.contains(end[0] + dx * k, end[1] + dy * k)
+        outside = not slab.contains(end[0] - dx * k, end[1] - dy * k)
+        if not (inside and outside):
+            out.append(
+                f"connector: '{name}' {what} does not sit on the outline of '{slab.name}'"
+            )
+    return out

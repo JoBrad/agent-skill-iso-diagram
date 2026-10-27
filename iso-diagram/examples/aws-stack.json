@@ -1,0 +1,39 @@
+{
+  "style": "iso-stack",
+  "title": "AWS request path",
+  "story": "A request crosses every boundary from the Internet to the database.",
+  "points": [
+    "Region, VPC, subnet, and security group nest, so each resource sits under all four.",
+    "The request enters through the Internet gateway and reaches the load balancer first.",
+    "Traffic between subnets goes back up through the VPC router."
+  ],
+  "color_by": "level",
+  "caption": "Steps: (1) Internet to ALB, (2) ALB to EC2, (3) EC2 to RDS. Traffic between subnets crosses the VPC router.",
+  "columns": ["pub", "app", "data"],
+  "source": {"label": "Internet", "icon": "globe", "column": "pub"},
+  "layers": [
+    {"id": "region", "title": "Region", "subtitle": "Availability Zones and regional services",
+     "zones": [{"column": "pub", "label": "AZ a", "style": "dashed", "fill": false, "size": 120},
+               {"column": "app", "label": "AZ b", "style": "dashed", "fill": false, "size": 120},
+               {"column": "data", "label": "AZ c", "style": "dashed", "fill": false, "size": 120}],
+     "note": {"text": "us-east-1", "mono": true}},
+    {"id": "vpc", "title": "VPC", "subtitle": "Network boundary, routing, gateways",
+     "markers": [{"column": "pub", "label": "IGW"}], "note": {"text": "10.0.0.0/16", "mono": true}},
+    {"id": "subnet", "title": "Subnets", "subtitle": "One AZ each, public or private",
+     "zones": [{"column": "pub", "label": "Public"}, {"column": "app", "label": "Private app"},
+               {"column": "data", "label": "Private data"}]},
+    {"id": "sg", "title": "Security groups", "subtitle": "Stateful allow rules per resource",
+     "zones": [{"column": "pub", "label": "alb-sg", "mono": true, "style": "dashed"},
+               {"column": "app", "label": "app-sg", "mono": true, "style": "dashed"},
+               {"column": "data", "label": "db-sg", "mono": true, "style": "dashed"}]},
+    {"id": "res", "title": "Resources", "subtitle": "Load balancer, instances, database",
+     "resources": [{"column": "pub", "label": "ALB", "icon": "network"},
+                   {"column": "app", "label": "EC2", "icon": "server", "count": 2},
+                   {"column": "data", "label": "RDS", "icon": "database"}]}
+  ],
+  "steps": [
+    {"from": "source", "column": "pub", "to": "res"},
+    {"from": "pub", "to": "app", "via": "vpc", "at": "res"},
+    {"from": "app", "to": "data", "via": "vpc", "at": "res"}
+  ]
+}

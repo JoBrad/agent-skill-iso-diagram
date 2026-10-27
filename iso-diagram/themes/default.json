@@ -1,0 +1,77 @@
+{
+  "name": "default",
+  "description": "Tuned Okabe-Ito palette, Roboto and Roboto Mono.",
+  "slots": {
+    "blue": {
+      "stroke": "#3478C8",
+      "text": "#215EA3"
+    },
+    "vermillion": {
+      "stroke": "#E26D33",
+      "text": "#B44F1C"
+    },
+    "green": {
+      "stroke": "#17A07A",
+      "text": "#0C7558"
+    },
+    "rose": {
+      "stroke": "#CC74AE",
+      "text": "#A04E85"
+    },
+    "amber": {
+      "stroke": "#E5A93A",
+      "text": "#8A6410"
+    },
+    "sky": {
+      "stroke": "#68BDEA",
+      "text": "#2B6F98"
+    },
+    "neutral": {
+      "stroke": "#6B7280",
+      "text": "#374151"
+    }
+  },
+  "order": [
+    "blue",
+    "vermillion",
+    "green",
+    "rose",
+    "amber",
+    "sky"
+  ],
+  "leaf": "neutral",
+  "flow": "sky",
+  "light_slots": [
+    "amber",
+    "sky"
+  ],
+  "tints": {
+    "top": 0.89,
+    "side": 0.62
+  },
+  "muted_opacity": 0.55,
+  "ink": {
+    "title": "#111827",
+    "body": "#0F172A",
+    "label": "#374151",
+    "caption": "#6B7280"
+  },
+  "background": "#FFFFFF",
+  "fonts": {
+    "sans": {
+      "family": "Roboto",
+      "file": "assets/fonts/Roboto.ttf",
+      "fixed_axes": {
+        "wdth": 100
+      },
+      "fallback": "'Helvetica Neue', Arial, sans-serif"
+    },
+    "mono": {
+      "family": "Roboto Mono",
+      "file": "assets/fonts/RobotoMono.ttf",
+      "fixed_axes": {},
+      "fallback": "Menlo, monospace"
+    }
+  },
+  "min_surface_text": 20
+}

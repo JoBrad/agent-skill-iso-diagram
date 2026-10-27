@@ -1,0 +1,246 @@
+"""Swatch sheet for a theme: slabs, shades, contrast, and simulated color vision.
+
+    uv run --project SKILL_DIR iso-palette [THEME] -o OUT.svg [--png]
+
+Also prints the closest pair of stroke colors under each type of color blindness, so a new
+theme can be judged before any diagram uses it.
+"""
+
+import argparse
+import itertools
+import math
+import os
+
+from pathlib import Path
+
+from iso_diagram import fonts, render
+from iso_diagram.iso import Slab, plane_matrix, svg_doc, text
+from iso_diagram.shared import resolved_path
+from iso_diagram.theme import Theme
+
+
+MACHADO = {  # Machado, Oliveira and Fernandes 2009, full severity, linear RGB
+    "Deuteranopia": [
+        [0.367322, 0.860646, -0.227968],
+        [0.280085, 0.672501, 0.047413],
+        [-0.011820, 0.042940, 0.968881],
+    ],
+    "Protanopia": [
+        [0.152286, 1.052583, -0.204868],
+        [0.114503, 0.786281, 0.099216],
+        [-0.003882, -0.048116, 1.051998],
+    ],
+    "Tritanopia": [
+        [1.255528, -0.076749, -0.178779],
+        [-0.078411, 0.930809, 0.147602],
+        [0.004733, 0.691367, 0.303900],
+    ],
+}
+
+
+def lin(c):
+    c /= 255
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
+
+def rgb(h):
+    return [int(h[i : i + 2], 16) for i in (1, 3, 5)]
+
+
+def simulate_linear(h, m):
+    v = [lin(c) for c in rgb(h)]
+    return [max(0.0, min(1.0, sum(m[i][j] * v[j] for j in range(3)))) for i in range(3)]
+
+
+def to_hex(linear):
+    enc = [
+        12.92 * v if v <= 0.0031308 else 1.055 * v ** (1 / 2.4) - 0.055 for v in linear
+    ]
+    return "#" + "".join(f"{round(255 * max(0, min(1, v))):02X}" for v in enc)
+
+
+def lab(linear):
+    x = 0.4124 * linear[0] + 0.3576 * linear[1] + 0.1805 * linear[2]
+    y = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+    z = 0.0193 * linear[0] + 0.1192 * linear[1] + 0.9505 * linear[2]
+    f = lambda t: t ** (1 / 3) if t > 0.008856 else 7.787 * t + 16 / 116  # ruff: ignore[lambda-assignment]
+    fx, fy, fz = f(x / 0.95047), f(y), f(z / 1.08883)
+    return (116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz))
+
+
+def contrast(h):
+    v = [lin(c) for c in rgb(h)]
+    return 1.05 / (0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2] + 0.05)
+
+
+def build(theme):
+    slots = [*theme.order, theme.leaf]
+    ink = theme.ink
+    out = [
+        text(
+            40,
+            64,
+            f"{theme.data['name'].title()} palette",
+            theme.sans,
+            36,
+            ink["title"],
+            600,
+        ),
+        text(
+            40,
+            98,
+            f"{len(slots)} slots, assigned in order; the last is the leaf tier. Tints mix the "
+            f"stroke toward white. Contrast is against white.",
+            theme.sans,
+            18,
+            ink["caption"],
+        ),
+    ]
+    x0, colw = 200, 210
+    rows = [
+        ("Stroke", "hue"),
+        ("Text", "text"),
+        ("Top tint", "top"),
+        ("Side tint", "side"),
+    ]
+    for i, slot in enumerate(slots):
+        t = theme.tier(slot)
+        cx = x0 + i * colw + colw / 2
+        s = Slab(slot, cx, 210, 110, 110, 22, r=14)
+        out.append(s.shadow(dy=24) + s.svg(t["top"], t["side"], t["stroke"]))
+        out.append(
+            f'<g transform="{plane_matrix(cx, 210)} rotate(-90)">'
+            + text(
+                0, 0, slot.title(), theme.sans, 20, t["text"], 600, "middle", "central"
+            )
+            + "</g>"
+        )
+        out.append(
+            text(
+                cx,
+                330,
+                f"{i + 1}. {slot.title()}",
+                theme.sans,
+                20,
+                ink["title"],
+                600,
+                "middle",
+            )
+        )
+        for r, (_, key) in enumerate(rows):
+            y = 360 + r * 66
+            out.append(
+                f'<rect x="{cx - 85:.1f}" y="{y}" width="56" height="44" rx="8" fill="{t[key]}" '
+                f'stroke="#E5E7EB"/>'
+            )
+            out.append(text(cx - 18, y + 20, t[key], theme.mono, 17, ink["title"], 500))
+            if key in ("hue", "text"):
+                out.append(
+                    text(
+                        cx - 18,
+                        y + 40,
+                        f"{contrast(t[key]):.1f}:1",
+                        theme.sans,
+                        15,
+                        ink["caption"],
+                    )
+                )
+    for r, (label, _) in enumerate(rows):
+        out.append(text(40, 388 + r * 66, label, theme.sans, 18, ink["label"], 600))
+
+    out.append(
+        text(
+            40,
+            690,
+            "Simulated color vision (stroke colors)",
+            theme.sans,
+            26,
+            ink["title"],
+            600,
+        )
+    )
+    report = []
+    for r, (label, m) in enumerate([("Typical", None), *list(MACHADO.items())]):
+        y = 720 + r * 74
+        out.append(text(40, y + 34, label, theme.sans, 18, ink["label"], 600))
+        sims = {}
+        for i, slot in enumerate(slots):
+            hue = theme.tier(slot)["hue"]
+            linear = (
+                [lin(c) for c in rgb(hue)] if m is None else simulate_linear(hue, m)
+            )
+            sims[slot] = linear
+            out.append(
+                f'<rect x="{x0 + i * colw + 10}" y="{y}" width="{colw - 20}" height="54" rx="10" '
+                f'fill="{to_hex(linear)}"/>'
+            )
+        d, a, b = min(
+            (math.dist(lab(sims[a]), lab(sims[b])), a, b)
+            for a, b in itertools.combinations(slots, 2)
+        )
+        report.append(f"{label:13} closest pair {a} / {b}: difference {d:.1f}")
+    light = ", ".join(theme.data["light_slots"]) or "none"
+    out.append(
+        text(
+            40,
+            1040,
+            f"Simulation: Machado et al. 2009, full severity. Outlines for light slots ({light}) "
+            f"use the text shade.",
+            theme.sans,
+            16,
+            ink["caption"],
+        )
+    )
+    width = x0 + len(slots) * colw + 40
+    return (
+        svg_doc(
+            width,
+            1070,
+            "".join(out),
+            [],
+            theme.background,
+            f"{theme.data['name']} palette",
+        ),
+        report,
+        width,
+    )
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    ap.add_argument(
+        "theme",
+        nargs="?",
+        default="default",
+    )
+    ap.add_argument(
+        "-o",
+        "--out",
+        required=True,
+        type=resolved_path,
+    )
+    ap.add_argument(
+        "--png",
+        action="store_true",
+    )
+    args = ap.parse_args()
+    theme = Theme(args.theme)
+    output_svg_file = Path(args.out)
+    svg_content, report, width = build(theme)
+    svg_content = fonts.embed(svg_content, theme)
+    output_svg_file.parent.mkdir(parents=True)
+    with output_svg_file.open("w") as f:
+        f.write(svg_content)
+    print(f"wrote {output_svg_file}")
+    print("\n".join(report))
+    print("A difference under about 10 is hard to tell apart; aim for 15 or more.")
+    if args.png:
+        output_png_file = output_svg_file.with_suffix(".png")
+        render.png(output_svg_file, output_png_file, width, 1070)
+        print(f"wrote {output_png_file}")
+
+
+if __name__ == "__main__":
+    main()

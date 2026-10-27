@@ -4,6 +4,10 @@ __pycache__/
 venv/
 *.py[cod]
 
+# Icons are fetched on first use; only the manifest and licenses are tracked
+iso-diagram/assets/icons/*/*.svg
+iso-diagram/assets/icons/*/*.part
+
 # Devbox
 .devbox/
 

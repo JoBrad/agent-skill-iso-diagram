@@ -49,3 +49,10 @@ def test_embed_rejects_a_family_the_theme_lacks() -> None:
     svg = '<svg xmlns="http://www.w3.org/2000/svg"><defs/><text font-family="Arial">x</text></svg>'
     with pytest.raises(ValueError, match="'Arial', which the theme does not provide"):
         fonts.embed(svg, Theme())
+
+
+def test_woff2_is_byte_identical_across_builds(monkeypatch: pytest.MonkeyPatch) -> None:
+    first = fonts.woff2(theme=Theme(), kind="sans", weight=400, chars="Hello")
+    # fontTools stamps the current time into the font unless told not to.
+    monkeypatch.setattr("time.time", lambda: 4_102_444_800.0)
+    assert fonts.woff2(theme=Theme(), kind="sans", weight=400, chars="Hello") == first

@@ -49,6 +49,8 @@ def woff2(*, theme: Theme, kind: str, weight: int, chars: Iterable[str]) -> str:
     sub.subset(font)
     buf = io.BytesIO()
     font.flavor = "woff2"
+    # Keep the source font's timestamp, so the same diagram always embeds the same bytes.
+    font.recalcTimestamp = False
     font.save(buf)
     return base64.b64encode(buf.getvalue()).decode()
 

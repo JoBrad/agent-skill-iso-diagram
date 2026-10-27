@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.18.4/.schema/devbox.schema.json",
+  "packages": [
+    "uv@0.13.4"
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Devbox shell initialized.'"
+    ],
+    "scripts": {
+      "install": [
+        "uv sync"
+      ]
+    }
+  }
+}

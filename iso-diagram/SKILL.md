@@ -75,8 +75,9 @@ before drawing, and propose a resolution.
 
    `SKILL_DIR` is the absolute path of this skill's directory. The first run creates
    `SKILL_DIR/.venv` and installs the `iso_diagram` package into it. Add `--png` only when the user asks for PNG (it needs Chrome or Chromium). The script
-   checks insets, label fit, text sizes, connector routes, and the canvas, and writes
-   nothing while any check fails. Fix the spec rather than passing `--allow-issues`; if a
+   first checks that every id the spec references exists, then checks insets, label and
+   card text fit, text sizes, connector routes, and the canvas, and writes nothing while
+   any check fails. Fix the spec rather than passing `--allow-issues`; if a
    check cannot be met, say which and why.
 4. **Look at it.** Render a PNG for your own review (to a scratch path if the user wants SVG
    only) and read it. Check each key point is visible, then check the layout rules by eye:

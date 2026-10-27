@@ -17,6 +17,7 @@ from iso_diagram.iso import (
     Point,
     S,
     Slab,
+    Spec,
     badge,
     icon,
     plane_matrix,
@@ -25,7 +26,6 @@ from iso_diagram.iso import (
     text,
     to_screen,
 )
-from iso_diagram.shared import Spec
 from iso_diagram.theme import Theme, Tier
 
 
@@ -36,6 +36,7 @@ INSET = 18
 LANE = 16  # plane offset of the A and B lanes from a column's center
 ZONE_MIN, ZONE_MAX = 100, SPACING - 6
 RES_SIZE, RES_H = 64, 18
+CAPTION_SIZE, CAPTION_LEADING = 18, 26
 RES_OFFSETS = {1: [(0, 6)], 2: [(-34, 40), (34, 58)], 3: [(-50, 30), (0, 52), (50, 74)]}
 
 # Column name to its plane center, shared by every plate.
@@ -284,6 +285,14 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
             f'fill="none" stroke="{t["stroke"]}" stroke-width="2.5"/>'
             f'<circle cx="{lead_x:.1f}" cy="{top_edge + 14:.1f}" r="6" fill="{t["stroke"]}"/>'
         )
+        leader = f"leader of '{l['id']}'"
+        reg.text(
+            text=l["title"],
+            left=label_x - theme.measure(s=l["title"], size=40, weight=500),
+            right=label_x,
+            within=leader,
+            box=(lead_x, label_x),
+        )
         out.append(
             text(
                 x=label_x,
@@ -297,6 +306,13 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
             )
         )
         if l.get("subtitle"):
+            reg.text(
+                text=l["subtitle"],
+                left=label_x - theme.measure(s=l["subtitle"], size=18),
+                right=label_x,
+                within=leader,
+                box=(lead_x, label_x),
+            )
             out.append(
                 text(
                     x=label_x,
@@ -313,17 +329,24 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     width = label_x + 60
     bottom = max(p_[1] for p_ in plates[-1].body)
     caption_y = bottom + 70
-    out.append(
-        text(
-            x=40,
-            y=caption_y,
-            s=spec.get("caption") or spec["story"],
-            font=theme.sans,
-            size=18,
-            fill=theme.ink["caption"],
-        )
+    lines = theme.wrap_lines(
+        s=spec.get("caption") or spec["story"], size=CAPTION_SIZE, width=width - 80
     )
-    height = caption_y + 30
+    for k, line in enumerate(lines):
+        out.append(
+            text(
+                x=40,
+                y=caption_y + k * CAPTION_LEADING,
+                s=line,
+                font=theme.sans,
+                size=CAPTION_SIZE,
+                fill=theme.ink["caption"],
+            )
+        )
+        reg.text(
+            text=line, left=40, right=40 + theme.measure(s=line, size=CAPTION_SIZE)
+        )
+    height = caption_y + 30 + max(len(lines) - 1, 0) * CAPTION_LEADING
     return (
         svg_doc(
             width=width,

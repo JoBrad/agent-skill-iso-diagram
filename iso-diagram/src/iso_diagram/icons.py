@@ -22,10 +22,10 @@ from pathlib import Path
 
 import truststore
 
-from iso_diagram.shared import ASSETS_DIR
+from iso_diagram import SKILL_DIR
 
 
-ICONS_DIR = ASSETS_DIR / "icons"
+ICONS_DIR = SKILL_DIR / "assets" / "icons"
 CDN = "https://cdn.jsdelivr.net/npm"
 TIMEOUT = 30
 # Verify against the OS trust store: the CA file a standalone Python ships with can

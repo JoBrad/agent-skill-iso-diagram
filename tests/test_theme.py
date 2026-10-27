@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from iso_diagram.shared import SKILL_DIR
+from iso_diagram import SKILL_DIR
 from iso_diagram.theme import Theme, tint
 
 
@@ -86,3 +86,37 @@ def test_measure_scales_with_size_weight_and_font() -> None:
 def test_measure_is_keyword_only() -> None:
     with pytest.raises(TypeError):
         Theme().measure("x", 20)  # type: ignore[misc]
+
+
+def test_a_bare_name_is_always_a_built_in_theme(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / "default").mkdir()
+    monkeypatch.chdir(tmp_path)
+    assert Theme("default").path == DEFAULT
+
+
+def test_a_relative_path_resolves_against_base(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data = json.loads(DEFAULT.read_text())
+    data["name"] = "brand"
+    (tmp_path / "brand.json").write_text(json.dumps(data))
+    monkeypatch.chdir(SKILL_DIR)
+    assert Theme("brand.json", base=tmp_path).data["name"] == "brand"
+    assert Theme(DEFAULT, base=tmp_path).path == DEFAULT
+
+
+def test_wrap_lines_breaks_between_words_to_fit() -> None:
+    theme = Theme()
+    s = "one two three four five six seven eight nine ten"
+    width = theme.measure(s="one two three", size=18)
+    lines = theme.wrap_lines(s=s, size=18, width=width)
+    assert " ".join(lines) == s
+    assert len(lines) > 1
+    assert all(theme.measure(s=line, size=18) <= width for line in lines)
+    assert theme.wrap_lines(s="short", size=18, width=width) == ["short"]
+    assert theme.wrap_lines(s="", size=18, width=width) == []
+    assert theme.wrap_lines(s="unbreakablewordthatislong", size=18, width=10) == [
+        "unbreakablewordthatislong"
+    ]

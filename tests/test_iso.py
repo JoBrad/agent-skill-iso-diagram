@@ -1,6 +1,8 @@
 """Geometry and SVG building blocks in iso_diagram.iso."""
 
+import gc
 import math
+import warnings
 
 import pytest
 
@@ -207,3 +209,11 @@ def test_svg_doc_omits_empty_metadata() -> None:
 def test_iso_constants() -> None:
     assert pytest.approx(math.sqrt(3) / 2) == iso.C
     assert pytest.approx(1 / math.sqrt(3)) == iso.TAN30
+
+
+def test_icon_inner_closes_the_icon_file() -> None:
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always", ResourceWarning)
+        iso.icon_inner("globe")
+        gc.collect()
+    assert not [w for w in caught if issubclass(w.category, ResourceWarning)]

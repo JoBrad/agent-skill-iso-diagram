@@ -8,6 +8,7 @@ import math
 import re
 
 from collections.abc import Iterable, Sequence
+from typing import Any
 from xml.sax.saxutils import escape
 
 from iso_diagram import icons
@@ -18,6 +19,8 @@ S = 0.5
 TAN30 = math.tan(math.radians(30))
 
 Point = tuple[float, float]
+# A parsed JSON spec, or one of its nested objects.
+Spec = dict[str, Any]
 
 
 # --- geometry -------------------------------------------------------------------------
@@ -204,7 +207,7 @@ def icon_inner(name: str) -> str:
         raise KeyError(
             f"icon '{name}' is in neither Feather nor Lucide; draw it in Feather style"
         )
-    raw = re.sub(r"<!--.*?-->", "", path.open().read(), flags=re.S)
+    raw = re.sub(r"<!--.*?-->", "", path.read_text(), flags=re.S)
     return re.search(r"<svg[^>]*>(.*)</svg>", raw, re.S).group(1).strip()
 
 

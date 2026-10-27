@@ -14,6 +14,7 @@ from iso_diagram.checks import Label, Registry, Surface
 from iso_diagram.iso import (
     Point,
     Slab,
+    Spec,
     badge,
     connector,
     dot,
@@ -22,7 +23,6 @@ from iso_diagram.iso import (
     svg_doc,
     text,
 )
-from iso_diagram.shared import Spec
 from iso_diagram.theme import Theme, Tier
 
 
@@ -41,6 +41,7 @@ STACK_STEP = (85, 42)  # screen offset between stacked tiles
 GAP_X = 75  # screen gap between sibling subtrees
 GAP_Y = 100  # screen gap between a level's bottom and the next level's top
 CARD_W = 650
+CAPTION_SIZE, CAPTION_LEADING = 18, 26
 
 
 class Node:
@@ -316,6 +317,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     card_x = tree_right + 105
     prev_bottom = 0
     cards_bottom = 0
+    has_card = False
     level_specs = spec.get("levels", [])
     for d, lvl in enumerate(levels):
         card = level_specs[d].get("card") if d < len(level_specs) else None
@@ -364,29 +366,33 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
                 title=card.get("title", n.label),
                 items=card.get("items", []),
                 theme=theme,
+                reg=reg,
             )
         )
         prev_bottom = top + h
         cards_bottom = max(cards_bottom, top + h)
+        has_card = True
+    reg.issues.extend(unused_cards(level_specs, depth_count))
 
-    width = (
-        card_x + CARD_W + 40
-        if any(level_specs and l.get("card") for l in level_specs)
-        else tree_right + 60
-    )
+    width = card_x + CARD_W + 40 if has_card else tree_right + 60
     caption_y = max(tree_bottom, cards_bottom) + 70
     caption = spec.get("caption") or default_caption(spec)
-    out.append(
-        text(
-            x=40,
-            y=caption_y,
-            s=caption,
-            font=theme.sans,
-            size=18,
-            fill=theme.ink["caption"],
+    lines = theme.wrap_lines(s=caption, size=CAPTION_SIZE, width=width - 80)
+    for i, line in enumerate(lines):
+        out.append(
+            text(
+                x=40,
+                y=caption_y + i * CAPTION_LEADING,
+                s=line,
+                font=theme.sans,
+                size=CAPTION_SIZE,
+                fill=theme.ink["caption"],
+            )
         )
-    )
-    height = caption_y + 30
+        reg.text(
+            text=line, left=40, right=40 + theme.measure(s=line, size=CAPTION_SIZE)
+        )
+    height = caption_y + 30 + max(len(lines) - 1, 0) * CAPTION_LEADING
     return (
         svg_doc(
             width=width,
@@ -400,6 +406,15 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         reg,
         (width, height),
     )
+
+
+def unused_cards(level_specs: list[Spec], depth_count: int) -> list[str]:
+    """Return an issue for each card on a level deeper than the tree, which nothing draws."""
+    return [
+        f"levels: levels[{d}] has a card, but the tree has {depth_count} levels"
+        for d in range(depth_count, len(level_specs))
+        if level_specs[d].get("card")
+    ]
 
 
 def default_caption(spec: Spec) -> str:
@@ -483,8 +498,17 @@ def callout_card(
     title: str,
     items: list[str],
     theme: Theme,
+    reg: Registry,
 ) -> str:
-    """Return a callout card: a title over its items in two columns."""
+    """Return a callout card: a title over its items in two columns, registering its text."""
+    within = f"card '{title}'"
+    reg.text(
+        text=title,
+        left=x + 30,
+        right=x + 30 + theme.measure(s=title, size=32, weight=600),
+        within=within,
+        box=(x, x + w - 30),
+    )
     out = [
         f'<rect x="{x:.1f}" y="{y:.1f}" width="{w}" height="{h}" rx="22" fill="#FFFFFF" '
         f'stroke="{color}" stroke-width="3"/>',
@@ -499,8 +523,19 @@ def callout_card(
         ),
     ]
     per_col = math.ceil(len(items) / 2) if items else 0
+    col_w = (w - 60) / 2
     for i, item in enumerate(items):
-        cx = x + 30 + (i // per_col) * (w - 60) / 2
+        col = i // per_col
+        cx = x + 30 + col * col_w
+        # Text in the first of two columns must stop short of the second.
+        right = cx + col_w - 20 if col == 0 and len(items) > 1 else x + w - 30
+        reg.text(
+            text=item,
+            left=cx,
+            right=cx + theme.measure(s=item, size=19),
+            within=within,
+            box=(x, right),
+        )
         out.append(
             text(
                 x=cx,

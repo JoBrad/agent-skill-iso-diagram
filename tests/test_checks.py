@@ -1,8 +1,16 @@
-"""Layout rules in iso_diagram.checks."""
+"""Layout rules and spec checks in iso_diagram.checks."""
 
 import pytest
 
-from iso_diagram.checks import INSET, Label, Registry, Surface
+from iso_diagram import stack
+from iso_diagram.checks import (
+    INSET,
+    RESOURCE_COUNTS,
+    Label,
+    Registry,
+    Surface,
+    spec_issues,
+)
 from iso_diagram.iso import Slab
 from iso_diagram.theme import Theme
 
@@ -123,3 +131,132 @@ def test_record_methods_are_keyword_only(reg: Registry) -> None:
         reg.child(PLATE, "c", (0, 0, 1, 1))  # type: ignore[misc]
     with pytest.raises(TypeError):
         reg.connector("c", [(0, 0), (0, 1)])  # type: ignore[misc]
+
+
+def test_screen_text_inside_its_box_and_the_canvas(reg: Registry) -> None:
+    reg.text(text="fits", left=10, right=90, within="card", box=(0, 100))
+    reg.text(text="caption", left=40, right=960)
+    assert reg.check(1000, 1000) == []
+
+
+def test_screen_text_past_its_box_or_the_canvas(reg: Registry) -> None:
+    reg.text(text="wide", left=10, right=120, within="card 'A'", box=(0, 100))
+    reg.text(text="left", left=-5, right=50, within="card 'A'", box=(0, 100))
+    reg.text(text="caption", left=40, right=1040)
+    assert reg.check(1000, 1000) == [
+        "fit: 'wide' runs past the card 'A'",
+        "fit: 'left' runs past the card 'A'",
+        "fit: 'caption' runs past the canvas",
+    ]
+
+
+def tree_spec(**overrides: object) -> dict:
+    """Return a minimal valid iso-tree spec, with top-level keys overridden."""
+    spec: dict = {
+        "style": "iso-tree",
+        "story": "S",
+        "points": [],
+        "root": {"id": "r", "children": [{"id": "a"}, {"id": "b"}]},
+    }
+    spec.update(overrides)
+    return spec
+
+
+def stack_spec(**overrides: object) -> dict:
+    """Return a minimal valid iso-stack spec, with top-level keys overridden."""
+    spec: dict = {
+        "style": "iso-stack",
+        "story": "S",
+        "points": [],
+        "columns": ["web", "db"],
+        "layers": [
+            {"id": "top", "title": "Top"},
+            {
+                "id": "bottom",
+                "title": "Bottom",
+                "resources": [{"column": "db", "label": "DB", "icon": "database"}],
+            },
+        ],
+    }
+    spec.update(overrides)
+    return spec
+
+
+def test_valid_specs_have_no_spec_issues() -> None:
+    assert (
+        spec_issues(tree_spec(path=["r", "a"], flows=[{"from": "a", "to": "b"}])) == []
+    )
+    assert spec_issues(tree_spec(source={"id": "net"}, path=["net", "r", "a"])) == []
+    steps = [
+        {"from": "source", "column": "web", "to": "bottom"},
+        {"from": "web", "to": "db", "via": "top", "at": "bottom"},
+    ]
+    assert spec_issues(stack_spec(steps=steps, source={"column": "web"})) == []
+
+
+def test_duplicate_tree_ids_are_spec_issues() -> None:
+    root = {
+        "id": "r",
+        "children": [
+            {"id": "vpc-1", "children": [{"id": "private"}]},
+            {"id": "vpc-2", "children": [{"id": "private"}]},
+        ],
+    }
+    assert spec_issues(tree_spec(root=root)) == [
+        "spec: node id 'private' is used 2 times; ids must be unique"
+    ]
+
+
+def test_tree_references_are_spec_issues() -> None:
+    spec = tree_spec(
+        root={"id": "r", "children": [{"label": "no id"}]},
+        flows=[{"from": "a", "to": "dbb"}],
+        path=["r", "zz"],
+    )
+    spec["root"]["children"].append({"id": "a"})
+    assert spec_issues(spec) == [
+        "spec: root.children[0] is missing 'id'",
+        "spec: flows[0].to names no node 'dbb'",
+        "spec: path[1] names no node 'zz'",
+    ]
+    assert spec_issues(tree_spec(root=None)) == ["spec: missing 'root'"]
+
+
+def test_stack_references_are_spec_issues() -> None:
+    spec = stack_spec(
+        steps=[
+            {"from": "source", "column": "app", "to": "middle"},
+            {"from": "web", "to": "db", "via": "nowhere", "at": "bottom"},
+        ],
+        source={"column": "app"},
+    )
+    spec["layers"][1]["resources"][0]["count"] = 4
+    spec["layers"][1]["zones"] = [{"column": "cache", "label": "Cache"}]
+    spec["layers"].append({"id": "top", "title": "Again"})
+    assert spec_issues(spec) == [
+        "spec: layer id 'top' is used 2 times; ids must be unique",
+        "spec: layers[1].zones[0].column names no column 'cache'",
+        "spec: layers[1].resources[0].count is 4; use 1, 2, or 3",
+        "spec: steps[0].column names no column 'app'",
+        "spec: steps[0].to names no layer 'middle'",
+        "spec: steps[1].via names no layer 'nowhere'",
+        "spec: source.column names no column 'app'",
+    ]
+
+
+def test_stack_required_keys_are_spec_issues() -> None:
+    spec = stack_spec(steps=[{"from": "web"}])
+    del spec["columns"]
+    del spec["layers"][0]["title"]
+    assert spec_issues(spec) == ["spec: missing 'columns'"]
+    spec = stack_spec(steps=[{"from": "web", "to": "db"}])
+    del spec["layers"][0]["title"]
+    assert spec_issues(spec) == [
+        "spec: layers[0] is missing 'title'",
+        "spec: steps[0] is missing 'via'",
+        "spec: steps[0] is missing 'at'",
+    ]
+
+
+def test_resource_counts_match_what_iso_stack_draws() -> None:
+    assert set(RESOURCE_COUNTS) == set(stack.RES_OFFSETS)

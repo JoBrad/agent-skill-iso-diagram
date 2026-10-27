@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from iso_diagram import render
+from iso_diagram.iso import svg_doc
 
 
 def test_browser_takes_the_first_absolute_candidate_that_exists(
@@ -47,6 +48,26 @@ def test_png_screenshots_the_svg(
     )
     (cmd,) = calls
     assert cmd[0] == "chrome"
-    assert "--window-size=100,50" in cmd
+    assert "--window-size=101,50" in cmd
     assert "--force-device-scale-factor=3" in cmd
     assert cmd[-1] == svg.resolve().as_uri()
+
+
+@pytest.mark.parametrize(("width", "size"), [(1234.6, "1235"), (1234.4, "1234")])
+def test_png_window_matches_the_svg_size(
+    width: float, size: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls: list[list[str]] = []
+    monkeypatch.setattr(render, "browser", lambda: "chrome")
+    monkeypatch.setattr(subprocess, "run", lambda cmd, **kwargs: calls.append(cmd))
+    render.png(
+        svg_path=tmp_path / "d.svg",
+        png_path=tmp_path / "d.png",
+        width=width,
+        height=width,
+    )
+    doc = svg_doc(
+        width=width, height=width, body="", marker_colors=[], background="#FFF"
+    )
+    assert f'width="{size}"' in doc
+    assert f"--window-size={size},{size}" in calls[0]

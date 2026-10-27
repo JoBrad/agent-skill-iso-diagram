@@ -13,7 +13,7 @@ working specs; copy the closer one and edit it.
 | `title` | no | the SVG `<title>` |
 | `color_by` | no | the color encoding, for the record; the scripts implement `level` |
 | `caption` | no | text under the diagram; defaults to the story plus a line legend |
-| `theme` | no | theme name in `themes/` or a path; `--theme` overrides it |
+| `theme` | no | theme name in `themes/`, or a path relative to the spec's folder; `--theme` overrides it |
 
 ## iso-tree
 

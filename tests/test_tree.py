@@ -2,6 +2,7 @@
 
 import json
 import os
+import xml.etree.ElementTree as ET
 
 from pathlib import Path
 
@@ -158,3 +159,60 @@ def test_card_without_room_for_its_leader(tmp_path: Path) -> None:
     assert any(
         i.startswith("leader: 'Services' card cannot sit level") for i in reg.issues
     )
+
+
+def two_node_spec(**overrides: object) -> dict:
+    spec: dict = {
+        "style": "iso-tree",
+        "story": "S",
+        "points": [],
+        "root": {"id": "r", "label": "R", "children": [leaf("c")]},
+    }
+    spec.update(overrides)
+    return spec
+
+
+def caption_lines(svg: str) -> list[ET.Element]:
+    texts = ET.fromstring(svg).iter("{http://www.w3.org/2000/svg}text")
+    return [t for t in texts if t.get("x") == "40.0"]
+
+
+def test_long_caption_wraps_inside_the_canvas() -> None:
+    story = (
+        "A request from the Internet crosses the edge, the region, the VPC, and the "
+        "subnet before it reaches the one instance that can answer it today."
+    )
+    theme = Theme()
+    svg, reg, (width, height) = tree.build(two_node_spec(story=story), theme)
+    lines = caption_lines(svg)
+    assert len(lines) > 1
+    assert " ".join(t.text or "" for t in lines) == story
+    for t in lines:
+        assert 40 + theme.measure(s=t.text, size=18) <= width - 40
+        assert float(t.get("y", 0)) < height
+    assert reg.check(width, height) == []
+
+
+def test_long_card_text_is_an_issue() -> None:
+    spec = json.loads(json.dumps(VARIANT))
+    spec["levels"][2]["card"]["items"][0] = "an item far too long for its column " * 2
+    spec["levels"][0]["card"]["title"] = (
+        "A card title far too long to fit inside its card"
+    )
+    _, reg, (width, height) = tree.build(spec, Theme())
+    issues = reg.check(width, height)
+    assert any(
+        i.startswith("fit: 'an item far too long")
+        and i.endswith("runs past the card 'Services'")
+        for i in issues
+    )
+    title = spec["levels"][0]["card"]["title"]
+    assert f"fit: '{title}' runs past the card '{title}'" in issues
+
+
+def test_a_card_on_a_missing_level_is_an_issue_and_adds_no_width() -> None:
+    _, _, (plain_width, _) = tree.build(two_node_spec(), Theme())
+    spec = two_node_spec(levels=[{}, {}, {"card": {"title": "Ghost", "items": []}}])
+    _, reg, (width, _) = tree.build(spec, Theme())
+    assert width == plain_width
+    assert "levels: levels[2] has a card, but the tree has 2 levels" in reg.issues

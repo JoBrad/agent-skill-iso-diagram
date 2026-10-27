@@ -5,8 +5,6 @@ import subprocess
 
 from pathlib import Path
 
-from iso_diagram.shared import resolved_path
-
 
 CANDIDATES: list[str] = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -15,6 +13,11 @@ CANDIDATES: list[str] = [
     "chromium",
     "chromium-browser",
 ]
+
+
+def resolved_path(path: str | Path) -> Path:
+    """Return path made absolute, with ~ expanded."""
+    return Path(path).expanduser().resolve()
 
 
 def browser() -> str:
@@ -41,7 +44,8 @@ def png(
         "--disable-gpu",
         "--hide-scrollbars",
         f"--force-device-scale-factor={scale}",
-        f"--window-size={int(width)},{int(height)}",
+        # Rounded the way svg_doc writes the SVG's size, so no edge pixel is cut off.
+        f"--window-size={width:.0f},{height:.0f}",
         f"--screenshot={resolved_path(png_path)}",
         resolved_path(svg_path).as_uri(),
     ]

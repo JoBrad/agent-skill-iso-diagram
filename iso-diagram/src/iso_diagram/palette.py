@@ -16,7 +16,6 @@ from pathlib import Path
 
 from iso_diagram import fonts, render
 from iso_diagram.iso import Slab, plane_matrix, svg_doc, text
-from iso_diagram.shared import resolved_path
 from iso_diagram.theme import Theme
 
 
@@ -268,7 +267,7 @@ def main() -> None:
         "-o",
         "--out",
         required=True,
-        type=resolved_path,
+        type=render.resolved_path,
     )
     ap.add_argument(
         "--png",

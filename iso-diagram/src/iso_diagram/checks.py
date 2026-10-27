@@ -1,24 +1,30 @@
-"""Layout checks.
+"""Spec and layout checks.
 
-Each rule here is one the skill promises; a layout records what it drew
-and check() reports every place a rule breaks, so problems surface before anyone sees them.
+spec_issues() catches a spec that names something it never defines, before layout
+trips over it. Each layout rule here is one the skill promises; a layout records what it
+drew and check() reports every place a rule breaks, so problems surface before anyone
+sees them.
 """
 
 import itertools
 import math
 
-from collections.abc import Sequence
+from collections import Counter
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 
-from iso_diagram.iso import Point, Slab
+from iso_diagram.iso import Point, Slab, Spec
 from iso_diagram.theme import Theme
 
 
 INSET = 16  # plane units between a child and its parent's edge
 LABEL_MARGIN = 4  # plane units between a label and the edge of its surface
+RESOURCE_COUNTS = (1, 2, 3)  # iso-stack draws a resource as 1 to 3 slabs
 
 
 Rect = tuple[float, float, float, float]  # plane x, y, w, d
+# Values a spec reference may take, and what they name: ({"web", "db"}, "column").
+Known = tuple[Collection[object], str]
 
 
 @dataclass(frozen=True)
@@ -56,6 +62,8 @@ class Registry:
         # (parent, child name, (x, y, w, d))
         self.children: list[tuple[Surface, str, Rect]] = []
         self.labels: list[Label] = []
+        # (text, left, right, what it must stay within, (min x, max x) or None for the canvas)
+        self.texts: list[tuple[str, float, float, str, tuple[float, float] | None]] = []
         # (name, points, source slab or None, target slab or None)
         self.connectors: list[
             tuple[str, Sequence[Point], Slab | None, Slab | None]
@@ -74,6 +82,18 @@ class Registry:
     def label(self, label: Label) -> None:
         """Record a label, for the text-size and fit rules."""
         self.labels.append(label)
+
+    def text(
+        self,
+        *,
+        text: str,
+        left: float,
+        right: float,
+        within: str = "canvas",
+        box: tuple[float, float] | None = None,
+    ) -> None:
+        """Record screen text spanning left to right, for the fit rule; box None is the canvas."""
+        self.texts.append((text, left, right, within, box))
 
     def connector(
         self,
@@ -128,6 +148,15 @@ class Registry:
             xs, ys = [p[0] for p in s.body], [p[1] for p in s.body]
             if min(xs) < 0 or min(ys) < 0 or max(xs) > width or max(ys) > height:
                 out.append(f"canvas: '{s.name}' extends past the canvas")
+        out.extend(self._fit_issues(width))
+        return out
+
+    def _fit_issues(self, width: float) -> list[str]:
+        out = []
+        for text, left, right, within, box in self.texts:
+            lo, hi = box or (0, width)
+            if left < lo or right > hi:
+                out.append(f"fit: '{text}' runs past the {within}")
         return out
 
     def _connector_issues(
@@ -210,4 +239,114 @@ def _endpoint_issues(
             out.append(
                 f"connector: '{name}' {what} does not sit on the outline of '{slab.name}'"
             )
+    return out
+
+
+# --- spec checks ----------------------------------------------------------------------
+
+
+def spec_issues(spec: Spec) -> list[str]:
+    """Return every missing key and dangling reference in a spec of a known style."""
+    check = {"iso-tree": _tree_spec_issues, "iso-stack": _stack_spec_issues}
+    return [f"spec: {i}" for i in check[spec["style"]](spec)]
+
+
+def _missing(obj: Spec, keys: Sequence[str], where: str) -> list[str]:
+    prefix = f"{where} is missing" if where else "missing"
+    return [f"{prefix} '{k}'" for k in keys if obj.get(k) is None]
+
+
+def _refs(obj: Spec, *, where: str, refs: dict[str, Known]) -> list[str]:
+    out = []
+    for key, (known, what) in refs.items():
+        if obj.get(key) is None:
+            out.append(f"{where} is missing '{key}'")
+        elif obj[key] not in known:
+            out.append(f"{where}.{key} names no {what} '{obj[key]}'")
+    return out
+
+
+def _duplicates(ids: list[str], what: str) -> list[str]:
+    return [
+        f"{what} id '{i}' is used {n} times; ids must be unique"
+        for i, n in Counter(ids).items()
+        if n > 1
+    ]
+
+
+def _tree_spec_issues(spec: Spec) -> list[str]:
+    if spec.get("root") is None:
+        return ["missing 'root'"]
+    out: list[str] = []
+    ids: list[str] = []
+
+    def walk(node: Spec, where: str) -> None:
+        out.extend(_missing(node, ["id"], where))
+        if "id" in node:
+            ids.append(node["id"])
+        for i, child in enumerate(node.get("children", [])):
+            walk(child, f"{where}.children[{i}]")
+
+    walk(spec["root"], "root")
+    out += _duplicates(ids, "node")
+    nodes: Known = (set(ids), "node")
+    for i, flow in enumerate(spec.get("flows", [])):
+        out += _refs(flow, where=f"flows[{i}]", refs={"from": nodes, "to": nodes})
+    source = spec.get("source")
+    if source:
+        out += _missing(source, ["id"], "source")
+    on_path = set(ids) | ({source.get("id")} if source else set())
+    out += [
+        f"path[{i}] names no node '{p}'"
+        for i, p in enumerate(spec.get("path", []))
+        if p not in on_path
+    ]
+    return out
+
+
+def _stack_spec_issues(spec: Spec) -> list[str]:
+    missing = _missing(spec, ["columns", "layers"], "")
+    if missing:
+        return missing
+    layers = spec["layers"]
+    out: list[str] = []
+    for i, layer in enumerate(layers):
+        out += _missing(layer, ["id", "title"], f"layers[{i}]")
+    ids = [layer["id"] for layer in layers if "id" in layer]
+    out += _duplicates(ids, "layer")
+    columns: Known = (set(spec["columns"]), "column")
+    for i, layer in enumerate(layers):
+        out += _layer_item_issues(layer, where=f"layers[{i}]", columns=columns)
+    out += _step_issues(
+        spec.get("steps", []), columns=columns, layers=(set(ids), "layer")
+    )
+    if spec.get("source"):
+        out += _refs(spec["source"], where="source", refs={"column": columns})
+    return out
+
+
+def _layer_item_issues(layer: Spec, *, where: str, columns: Known) -> list[str]:
+    out = []
+    for kind in ("zones", "markers", "resources"):
+        for j, item in enumerate(layer.get(kind, [])):
+            at = f"{where}.{kind}[{j}]"
+            out += _refs(item, where=at, refs={"column": columns})
+            out += _missing(
+                item, ["label", "icon"] if kind == "resources" else ["label"], at
+            )
+            count = item.get("count", 1)
+            if kind == "resources" and count not in RESOURCE_COUNTS:
+                out.append(f"{at}.count is {count}; use 1, 2, or 3")
+    return out
+
+
+def _step_issues(steps: list[Spec], *, columns: Known, layers: Known) -> list[str]:
+    out = []
+    for i, step in enumerate(steps):
+        refs = (
+            {"column": columns, "to": layers}
+            if step.get("from") == "source"
+            else {"from": columns, "to": columns, "via": layers, "at": layers}
+        )
+        out += _refs(step, where=f"steps[{i}]", refs=refs)
     return out

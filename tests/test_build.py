@@ -17,8 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from iso_diagram import build, render, stack
-from iso_diagram.shared import SKILL_DIR
+from iso_diagram import SKILL_DIR, build, render, stack
 from iso_diagram.theme import Theme
 
 
@@ -32,7 +31,7 @@ def normalized(svg: str) -> str:
     return FONT_DATA.sub("base64,FONT", svg).replace("><", ">\n<")
 
 
-def run_build(monkeypatch: pytest.MonkeyPatch, *args: str) -> None:
+def run_build(monkeypatch: pytest.MonkeyPatch, *args: str | Path) -> None:
     """Run iso-build with args as its command line."""
     monkeypatch.setattr(sys, "argv", ["iso-build", *map(str, args)])
     build.main()
@@ -199,3 +198,41 @@ def test_mono_labels_are_measured_in_the_mono_font() -> None:
         mono = theme.measure(s=label, size=20, mono=True, weight=600)
         assert mono != theme.measure(s=label, size=20, mono=False, weight=600)
         assert lengths[label] == mono
+
+
+def test_spec_issues_stop_the_build_before_layout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    spec = example("aws-tree")
+    spec["flows"] = [{"from": spec["root"]["id"], "to": "dbb"}]
+    out = tmp_path / "x.svg"
+    with pytest.raises(SystemExit, match=r"1 spec issue\(s\); nothing built"):
+        run_build(monkeypatch, write_spec(tmp_path, spec), "-o", out, "--allow-issues")
+    assert not out.exists()
+    assert "ISSUE spec: flows[0].to names no node 'dbb'" in capsys.readouterr().out
+
+
+def test_spec_theme_path_is_relative_to_the_spec(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    data = json.loads((SKILL_DIR / "themes" / "default.json").read_text())
+    data["name"] = "brand"
+    (tmp_path / "brand.json").write_text(json.dumps(data))
+    spec = example("aws-tree")
+    spec["theme"] = "brand.json"
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+    run_build(monkeypatch, write_spec(tmp_path, spec), "-o", tmp_path / "x.svg")
+    assert "theme brand" in capsys.readouterr().out
+
+
+def test_long_plate_titles_are_issues() -> None:
+    spec = example("aws-stack")
+    layer = spec["layers"][0]
+    layer["title"] = "A plate title far too long to sit between its leader and edge"
+    layer["subtitle"] = "A subtitle " * 12
+    _, reg, (width, height) = stack.build(spec, Theme())
+    issues = reg.check(width, height)
+    assert f"fit: '{layer['title']}' runs past the leader of '{layer['id']}'" in issues
+    assert any(i.startswith("fit: 'A subtitle A subtitle") for i in issues)

@@ -5,8 +5,10 @@ import json
 from pathlib import Path
 from typing import Any
 
-from iso_diagram.shared import SKILL_DIR
+from iso_diagram import SKILL_DIR
 
+
+THEMES_DIR = SKILL_DIR / "themes"
 
 # Colors for one slot: slot, hue, top, side, stroke, text.
 Tier = dict[str, str]
@@ -18,17 +20,29 @@ def tint(hex_color: str, amount: float) -> str:
     return "#" + "".join(f"{round(c + (255 - c) * amount):02X}" for c in rgb)
 
 
+def theme_path(name_or_path: str | Path, *, base: Path) -> Path:
+    """Return the theme file: a bare name is a built-in theme, anything else a path from base.
+
+    A bare name never looks at the working directory, so a file or folder there cannot
+    shadow a built-in theme.
+    """
+    path = Path(name_or_path).expanduser()
+    if len(path.parts) == 1 and not path.suffix:
+        return THEMES_DIR / f"{path}.json"
+    return base / path
+
+
 class Theme:
     """A theme file: color slots and tints, ink colors, fonts, and text measurement."""
 
     def __init__(
         self,
         name_or_path: str | Path = "default",
+        *,
+        base: Path | None = None,
     ) -> None:
-        """Load a theme by name from themes/, or from a path to a theme file."""
-        path = Path(name_or_path)
-        if not path.exists():
-            path = SKILL_DIR / "themes" / f"{name_or_path}.json"
+        """Load a built-in theme by name, or a theme file by path relative to base (default cwd)."""
+        path = theme_path(name_or_path, base=base or Path.cwd())
         with path.open() as f:
             self.data = json.load(f)
         self.path = path
@@ -98,3 +112,28 @@ class Theme:
         )
         bold = 1 + max(0, weight - 400) / 4000 if not mono else 1
         return units / upem * size * bold
+
+    def wrap_lines(
+        self,
+        *,
+        s: str,
+        size: float,
+        width: float,
+        mono: bool = False,
+        weight: int = 400,
+    ) -> list[str]:
+        """Split s into lines no wider than width, breaking between words.
+
+        A single word wider than width gets a line to itself; the fit check reports it.
+        """
+        lines: list[str] = []
+        for word in s.split():
+            joined = f"{lines[-1]} {word}" if lines else word
+            if (
+                lines
+                and self.measure(s=joined, size=size, mono=mono, weight=weight) <= width
+            ):
+                lines[-1] = joined
+            else:
+                lines.append(word)
+        return lines

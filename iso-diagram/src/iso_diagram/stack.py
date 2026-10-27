@@ -10,7 +10,7 @@ import math
 from collections.abc import Callable
 from typing import Any
 
-from iso_diagram.checks import Registry
+from iso_diagram.checks import Label, Registry, Surface
 from iso_diagram.iso import (
     C,
     Point,
@@ -433,6 +433,7 @@ def plate_content(
     cy: float,
 ) -> str:
     """Return a plate's zones, hops, markers, and note, registering them for checks."""
+    plate = Surface(name=l["id"], w=W, d=W)
     inner = []
     for z in l.get("zones", []):
         x, y = colpos[z["column"]]
@@ -456,15 +457,15 @@ def plate_content(
                 weight=weight,
             )
         )
-        reg.child(parent=l["id"], pw=W, pd=W, name=z["label"], rect=(x, y, w, w))
+        reg.child(parent=plate, name=z["label"], rect=(x, y, w, w))
         reg.label(
-            surface=f"{l['id']}/{z['label']}",
-            sw=w,
-            sd=w,
-            s=z["label"],
-            center=(w / 2 - 18, 0),
-            size=20,
-            length=theme.measure(s=z["label"], size=20, mono=mono, weight=weight),
+            Label(
+                surface=Surface(name=f"{l['id']}/{z['label']}", w=w, d=w),
+                text=z["label"],
+                center=(w / 2 - 18, 0),
+                size=20,
+                length=theme.measure(s=z["label"], size=20, mono=mono, weight=weight),
+            )
         )
     for via, a, b in hops:
         if via != i:
@@ -489,13 +490,13 @@ def plate_content(
             )
         )
         reg.label(
-            surface=l["id"],
-            sw=W,
-            sd=W,
-            s=m["label"],
-            center=(x + 34, y + 6),
-            size=20,
-            length=theme.measure(s=m["label"], size=20, mono=False, weight=600),
+            Label(
+                surface=plate,
+                text=m["label"],
+                center=(x + 34, y + 6),
+                size=20,
+                length=theme.measure(s=m["label"], size=20, mono=False, weight=600),
+            )
         )
     if l.get("note"):
         note = l["note"]
@@ -517,13 +518,13 @@ def plate_content(
             )
         )
         reg.label(
-            surface=l["id"],
-            sw=W,
-            sd=W,
-            s=note["text"],
-            center=(nx, ny),
-            size=20,
-            length=length,
+            Label(
+                surface=plate,
+                text=note["text"],
+                center=(nx, ny),
+                size=20,
+                length=length,
+            )
         )
     return f'<g transform="{plane_matrix(cx, cy)}">{"".join(inner)}</g>'
 
@@ -548,6 +549,7 @@ def resources(
     W: float,
 ) -> str:
     """Return a layer's resource slabs and labels, registering them for checks."""
+    plate = Surface(name=l["id"], w=W, d=W)
     out, labels = [], []
     for r in l["resources"]:
         col = colpos[r["column"]]
@@ -570,13 +572,7 @@ def resources(
                 f'<g transform="{plane_matrix(x, top_y)} rotate(-90)">{icon(name=r["icon"], color=t["text"], size=50, stroke=1.8)}</g>'
             )
             px, py = (dx / C + dy / S) / 2 + col[0], (dy / S - dx / C) / 2 + col[1]
-            reg.child(
-                parent=l["id"],
-                pw=W,
-                pd=W,
-                name=r["label"],
-                rect=(px, py, RES_SIZE, RES_SIZE),
-            )
+            reg.child(parent=plate, name=r["label"], rect=(px, py, RES_SIZE, RES_SIZE))
         lx, ly = res_label_pos(col, count)
         labels.append(
             ptext(
@@ -590,13 +586,13 @@ def resources(
             )
         )
         reg.label(
-            surface=l["id"],
-            sw=W,
-            sd=W,
-            s=r["label"],
-            center=(lx, ly),
-            size=20,
-            length=theme.measure(s=r["label"], size=20, mono=False, weight=600),
+            Label(
+                surface=plate,
+                text=r["label"],
+                center=(lx, ly),
+                size=20,
+                length=theme.measure(s=r["label"], size=20, mono=False, weight=600),
+            )
         )
     out.append(f'<g transform="{plane_matrix(cx, cy)}">{"".join(labels)}</g>')
     return "".join(out)

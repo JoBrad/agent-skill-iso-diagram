@@ -9,7 +9,7 @@ import math
 
 from collections.abc import Iterator, Sequence
 
-from iso_diagram.checks import Registry
+from iso_diagram.checks import Label, Registry, Surface
 from iso_diagram.iso import (
     Point,
     Slab,
@@ -454,14 +454,13 @@ def draw_node(*, n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
         )
         length = theme.measure(s=s_text, size=size, mono=mono, weight=weight)
         reg.label(
-            surface=s.name,
-            sw=s.w,
-            sd=s.d,
-            s=s_text,
-            center=(cy, 0),
-            size=size,
-            length=length,
-            along_y=True,
+            Label(
+                surface=Surface(name=s.name, w=s.w, d=s.d),
+                text=s_text,
+                center=(cy, 0),
+                size=size,
+                length=length,
+            )
         )
         y += size + gap
     title = f"<title>{n.label}</title>" + (f"<desc>{n.desc}</desc>" if n.desc else "")

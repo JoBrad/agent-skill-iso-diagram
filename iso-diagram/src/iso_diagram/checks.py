@@ -8,6 +8,7 @@ import itertools
 import math
 
 from collections.abc import Sequence
+from dataclasses import dataclass
 
 from iso_diagram.iso import Point, Slab
 from iso_diagram.theme import Theme
@@ -18,6 +19,27 @@ LABEL_MARGIN = 4  # plane units between a label and the edge of its surface
 
 
 Rect = tuple[float, float, float, float]  # plane x, y, w, d
+
+
+@dataclass(frozen=True)
+class Surface:
+    """A flat face that children and labels sit on: its name and plane size."""
+
+    name: str
+    w: float
+    d: float
+
+
+@dataclass(frozen=True)
+class Label:
+    """Text lying on a surface, as the text-size and fit rules see it."""
+
+    surface: Surface
+    text: str
+    center: Point  # plane coordinates, from the surface's center
+    size: float
+    length: float  # rendered width, from Theme.measure()
+    along_y: bool = True  # text runs along the surface's y axis
 
 
 class Registry:
@@ -31,10 +53,9 @@ class Registry:
         """Start an empty registry; theme supplies the text-size floor."""
         self.theme = theme
         self.slabs: list[Slab] = []
-        # (parent, pw, pd, child, (x, y, w, d))
-        self.children: list[tuple[str, float, float, str, Rect]] = []
-        # (surface, sw, sd, text, (x, y), size, along_y, length)
-        self.labels: list[tuple[str, float, float, str, Point, float, bool, float]] = []
+        # (parent, child name, (x, y, w, d))
+        self.children: list[tuple[Surface, str, Rect]] = []
+        self.labels: list[Label] = []
         # (name, points, source slab or None, target slab or None)
         self.connectors: list[
             tuple[str, Sequence[Point], Slab | None, Slab | None]
@@ -46,32 +67,13 @@ class Registry:
         self.slabs.append(s)
         return s
 
-    def child(
-        self,
-        *,
-        parent: str,
-        pw: float,
-        pd: float,
-        name: str,
-        rect: Rect,
-    ) -> None:
-        """Record a child rect drawn on a pw x pd parent, for the inset rule."""
-        self.children.append((parent, pw, pd, name, rect))
+    def child(self, *, parent: Surface, name: str, rect: Rect) -> None:
+        """Record a child rect drawn on parent, for the inset rule."""
+        self.children.append((parent, name, rect))
 
-    def label(  # ruff: ignore[too-many-arguments]
-        self,
-        *,
-        surface: str,
-        sw: float,
-        sd: float,
-        s: str,
-        center: Point,
-        size: float,
-        length: float,
-        along_y: bool = True,
-    ) -> None:
-        """Record a label centered on a sw x sd surface, for the size and fit rules."""
-        self.labels.append((surface, sw, sd, s, center, size, along_y, length))
+    def label(self, label: Label) -> None:
+        """Record a label, for the text-size and fit rules."""
+        self.labels.append(label)
 
     def connector(
         self,
@@ -91,29 +93,33 @@ class Registry:
     ) -> list[str]:
         """Return every rule the recorded layout breaks on a width x height canvas."""
         out = list(self.issues)
-        for parent, pw, pd, name, (x, y, w, d) in self.children:
+        for parent, name, (x, y, w, d) in self.children:
             gap = min(
-                pw / 2 - (x + w / 2),
-                pw / 2 - (-x + w / 2),
-                pd / 2 - (y + d / 2),
-                pd / 2 - (-y + d / 2),
+                parent.w / 2 - (x + w / 2),
+                parent.w / 2 - (-x + w / 2),
+                parent.d / 2 - (y + d / 2),
+                parent.d / 2 - (-y + d / 2),
             )
             if gap < INSET:
                 out.append(
-                    f"inset: '{name}' is {gap:.0f} units from the edge of '{parent}' (needs {INSET})"
+                    f"inset: '{name}' is {gap:.0f} units from the edge of "
+                    f"'{parent.name}' (needs {INSET})"
                 )
-        for surface, sw, sd, s, (x, y), size, along_y, length in self.labels:
-            if size < self.theme.min_surface_text:
+        for lb in self.labels:
+            surface = lb.surface
+            if lb.size < self.theme.min_surface_text:
                 out.append(
-                    f"text: '{s}' on '{surface}' is {size}px (floor {self.theme.min_surface_text})"
+                    f"text: '{lb.text}' on '{surface.name}' is {lb.size}px "
+                    f"(floor {self.theme.min_surface_text})"
                 )
-            half_len, half_h = length / 2, size * 0.42
-            hx, hy = (half_h, half_len) if along_y else (half_len, half_h)
+            half_len, half_h = lb.length / 2, lb.size * 0.42
+            hx, hy = (half_h, half_len) if lb.along_y else (half_len, half_h)
+            x, y = lb.center
             if (
-                abs(x) + hx > sw / 2 - LABEL_MARGIN
-                or abs(y) + hy > sd / 2 - LABEL_MARGIN
+                abs(x) + hx > surface.w / 2 - LABEL_MARGIN
+                or abs(y) + hy > surface.d / 2 - LABEL_MARGIN
             ):
-                out.append(f"surface: label '{s}' runs off '{surface}'")
+                out.append(f"surface: label '{lb.text}' runs off '{surface.name}'")
         for name, pts, source, target in self.connectors:
             out.extend(
                 self._connector_issues(name=name, pts=pts, source=source, target=target)

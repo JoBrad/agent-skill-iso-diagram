@@ -9,7 +9,6 @@ writes the files anyway and exits 0).
 
 import argparse
 import json
-import os
 import sys
 
 from pathlib import Path
@@ -89,7 +88,13 @@ def main() -> None:
     )
     if args.png:
         png = output_svg_file.with_suffix(".png")
-        render.png(output_svg_file, png, width, height, args.scale)
+        render.png(
+            svg_path=output_svg_file,
+            png_path=png,
+            width=width,
+            height=height,
+            scale=args.scale,
+        )
         print(f"wrote {png}")
 
 

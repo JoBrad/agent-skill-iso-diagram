@@ -86,22 +86,22 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
     ink = theme.ink
     out = [
         text(
-            40,
-            64,
-            f"{theme.data['name'].title()} palette",
-            theme.sans,
-            36,
-            ink["title"],
-            600,
+            x=40,
+            y=64,
+            s=f"{theme.data['name'].title()} palette",
+            font=theme.sans,
+            size=36,
+            fill=ink["title"],
+            weight=600,
         ),
         text(
-            40,
-            98,
-            f"{len(slots)} slots, assigned in order; the last is the leaf tier. Tints mix the "
+            x=40,
+            y=98,
+            s=f"{len(slots)} slots, assigned in order; the last is the leaf tier. Tints mix the "
             f"stroke toward white. Contrast is against white.",
-            theme.sans,
-            18,
-            ink["caption"],
+            font=theme.sans,
+            size=18,
+            fill=ink["caption"],
         ),
     ]
     x0, colw = 200, 210
@@ -114,25 +114,35 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
     for i, slot in enumerate(slots):
         t = theme.tier(slot)
         cx = x0 + i * colw + colw / 2
-        s = Slab(slot, cx, 210, 110, 110, 22, r=14)
-        out.append(s.shadow(dy=24) + s.svg(t["top"], t["side"], t["stroke"]))
+        s = Slab(name=slot, cx=cx, cy=210, w=110, d=110, h=22, r=14)
+        out.append(
+            s.shadow(dy=24) + s.svg(top=t["top"], side=t["side"], stroke=t["stroke"])
+        )
         out.append(
             f'<g transform="{plane_matrix(cx, 210)} rotate(-90)">'
             + text(
-                0, 0, slot.title(), theme.sans, 20, t["text"], 600, "middle", "central"
+                x=0,
+                y=0,
+                s=slot.title(),
+                font=theme.sans,
+                size=20,
+                fill=t["text"],
+                weight=600,
+                anchor="middle",
+                baseline="central",
             )
             + "</g>"
         )
         out.append(
             text(
-                cx,
-                330,
-                f"{i + 1}. {slot.title()}",
-                theme.sans,
-                20,
-                ink["title"],
-                600,
-                "middle",
+                x=cx,
+                y=330,
+                s=f"{i + 1}. {slot.title()}",
+                font=theme.sans,
+                size=20,
+                fill=ink["title"],
+                weight=600,
+                anchor="middle",
             )
         )
         for r, (_, key) in enumerate(rows):
@@ -141,36 +151,66 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
                 f'<rect x="{cx - 85:.1f}" y="{y}" width="56" height="44" rx="8" fill="{t[key]}" '
                 f'stroke="#E5E7EB"/>'
             )
-            out.append(text(cx - 18, y + 20, t[key], theme.mono, 17, ink["title"], 500))
+            out.append(
+                text(
+                    x=cx - 18,
+                    y=y + 20,
+                    s=t[key],
+                    font=theme.mono,
+                    size=17,
+                    fill=ink["title"],
+                    weight=500,
+                )
+            )
             if key in ("hue", "text"):
                 out.append(
                     text(
-                        cx - 18,
-                        y + 40,
-                        f"{contrast(t[key]):.1f}:1",
-                        theme.sans,
-                        15,
-                        ink["caption"],
+                        x=cx - 18,
+                        y=y + 40,
+                        s=f"{contrast(t[key]):.1f}:1",
+                        font=theme.sans,
+                        size=15,
+                        fill=ink["caption"],
                     )
                 )
     for r, (label, _) in enumerate(rows):
-        out.append(text(40, 388 + r * 66, label, theme.sans, 18, ink["label"], 600))
+        out.append(
+            text(
+                x=40,
+                y=388 + r * 66,
+                s=label,
+                font=theme.sans,
+                size=18,
+                fill=ink["label"],
+                weight=600,
+            )
+        )
 
     out.append(
         text(
-            40,
-            690,
-            "Simulated color vision (stroke colors)",
-            theme.sans,
-            26,
-            ink["title"],
-            600,
+            x=40,
+            y=690,
+            s="Simulated color vision (stroke colors)",
+            font=theme.sans,
+            size=26,
+            fill=ink["title"],
+            weight=600,
         )
     )
     report = []
     for r, (label, m) in enumerate([("Typical", None), *list(MACHADO.items())]):
         y = 720 + r * 74
-        out.append(text(40, y + 34, label, theme.sans, 18, ink["label"], 600))
+        out.append(
+            text(
+                x=40,
+                y=y + 34,
+                s=label,
+                font=theme.sans,
+                size=18,
+                fill=ink["label"],
+                weight=600,
+            )
+        )
         sims = {}
         for i, slot in enumerate(slots):
             hue = theme.tier(slot)["hue"]
@@ -190,24 +230,24 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
     light = ", ".join(theme.data["light_slots"]) or "none"
     out.append(
         text(
-            40,
-            1040,
-            f"Simulation: Machado et al. 2009, full severity. Outlines for light slots ({light}) "
+            x=40,
+            y=1040,
+            s=f"Simulation: Machado et al. 2009, full severity. Outlines for light slots ({light}) "
             f"use the text shade.",
-            theme.sans,
-            16,
-            ink["caption"],
+            font=theme.sans,
+            size=16,
+            fill=ink["caption"],
         )
     )
     width = x0 + len(slots) * colw + 40
     return (
         svg_doc(
-            width,
-            1070,
-            "".join(out),
-            [],
-            theme.background,
-            f"{theme.data['name']} palette",
+            width=width,
+            height=1070,
+            body="".join(out),
+            marker_colors=[],
+            background=theme.background,
+            title=f"{theme.data['name']} palette",
         ),
         report,
         width,
@@ -247,7 +287,9 @@ def main() -> None:
     print("A difference under about 10 is hard to tell apart; aim for 15 or more.")
     if args.png:
         output_png_file = output_svg_file.with_suffix(".png")
-        render.png(output_svg_file, output_png_file, width, 1070)
+        render.png(
+            svg_path=output_svg_file, png_path=output_png_file, width=width, height=1070
+        )
         print(f"wrote {output_png_file}")
 
 

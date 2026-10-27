@@ -173,7 +173,13 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
                 n.parent.children.index(n) - (len(n.parent.children) - 1) / 2
             )
         n.slab = Slab(
-            n.id, xs[n.id], y, w, d, h, r=12 if (w, d, h) == STACK_TILE else 18
+            name=n.id,
+            cx=xs[n.id],
+            cy=y,
+            w=w,
+            d=d,
+            h=h,
+            r=12 if (w, d, h) == STACK_TILE else 18,
         )
     min_x = min(min(p[0] for p in n.slab.body) for n in nodes.values())
     shift = 55 - min_x
@@ -181,7 +187,9 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         shift = max(shift, 300 - root.slab.vertex("left")[0])
     for n in nodes.values():
         s = n.slab
-        n.slab = reg.slab(Slab(n.id, s.cx + shift, s.cy, s.w, s.d, s.h, s.r))
+        n.slab = reg.slab(
+            Slab(name=n.id, cx=s.cx + shift, cy=s.cy, w=s.w, d=s.d, h=s.h, r=s.r)
+        )
     tree_right = max(max(p[0] for p in n.slab.body) for n in nodes.values())
     tree_bottom = max(max(p[1] for p in n.slab.body) for n in nodes.values())
 
@@ -196,7 +204,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         )
     for d in reversed(range(depth_count)):
         out.extend(
-            draw_node(n, tiers[n.id], theme, reg)
+            draw_node(n=n, t=tiers[n.id], theme=theme, reg=reg)
             for n in sorted(levels[d], key=lambda k: k.slab.cy)
         )
 
@@ -207,7 +215,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     lines = []
     for n in nodes.values():
         for c in n.children:
-            pts = route_parent_child(n.slab, c.slab, reg.slabs, placed)
+            pts = route_parent_child(p=n.slab, q=c.slab, slabs=reg.slabs, placed=placed)
             if pts is None:
                 reg.issues.append(f"route: no clean route from '{n.id}' to '{c.id}'")
                 continue
@@ -220,12 +228,16 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         if not on_path:
             out.append(
                 connector(
-                    pts, color, width=1.5, arrow=False, opacity=theme.muted_opacity
+                    points=pts,
+                    color=color,
+                    width=1.5,
+                    arrow=False,
+                    opacity=theme.muted_opacity,
                 )
             )
     for pts, color, on_path in lines:
         if on_path:
-            out.append(connector(pts, color, width=3))
+            out.append(connector(points=pts, color=color, width=3))
             markers.append(color)
 
     flow = theme.flow
@@ -238,17 +250,17 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         )
         sx, sy = 90, 62
         out.append(
-            f'<g transform="translate({sx},{sy})">{icon(source.get("icon", "globe"), flow["text"], 52)}</g>'
+            f'<g transform="translate({sx},{sy})">{icon(name=source.get("icon", "globe"), color=flow["text"], size=52)}</g>'
         )
         out.append(
             text(
-                sx + 40,
-                sy + 8,
-                source.get("label", source["id"]),
-                theme.sans,
-                22,
-                flow["text"],
-                600,
+                x=sx + 40,
+                y=sy + 8,
+                s=source.get("label", source["id"]),
+                font=theme.sans,
+                size=22,
+                fill=flow["text"],
+                weight=600,
             )
         )
         _lx, ly = first.slab.vertex("left")
@@ -257,7 +269,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         pts = [(sx, sy + 38), (sx, y_in), (x_in, y_in)]
         reg.connector(name=f"{source['id']}->{first.id}", points=pts, target=first.slab)
         placed.append(pts)
-        out.append(connector(pts, flow["text"], width=3))
+        out.append(connector(points=pts, color=flow["text"], width=3))
         markers.append(flow["text"])
         steps.append((sx - 32, (sy + 38 + y_in) / 2, flow["text"]))
     elif path:
@@ -265,7 +277,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
 
     for f in spec.get("flows", []):
         a, b = nodes[f["from"]].slab, nodes[f["to"]].slab
-        pts = route_flow(a, b, reg.slabs, placed)
+        pts = route_flow(a=a, b=b, slabs=reg.slabs, placed=placed)
         if pts is None:
             reg.issues.append(
                 f"route: no clean route for flow '{a.name}' to '{b.name}'"
@@ -274,7 +286,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         placed.append(pts)
         color = tiers[f["from"]]["stroke"]
         reg.connector(name=f"{a.name}=>{b.name}", points=pts, source=a, target=b)
-        out.append(connector(pts, color, width=3))
+        out.append(connector(points=pts, color=color, width=3))
         markers.append(color)
         longest = max(itertools.pairwise(pts), key=lambda s: math.dist(*s))
         mx, my = (
@@ -285,19 +297,19 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         if f.get("label"):
             out.append(
                 text(
-                    mx,
-                    my + 34,
-                    f["label"],
-                    theme.mono,
-                    18,
-                    tiers[f["from"]]["text"],
-                    500,
-                    "middle",
+                    x=mx,
+                    y=my + 34,
+                    s=f["label"],
+                    font=theme.mono,
+                    size=18,
+                    fill=tiers[f["from"]]["text"],
+                    weight=500,
+                    anchor="middle",
                 )
             )
     for i, st in enumerate(steps, start=1):
         if st is not None and len(steps) > 1:
-            out.append(badge(st[0], st[1], i, st[2], theme.sans))
+            out.append(badge(x=st[0], y=st[1], n=i, fill=st[2], font=theme.sans))
 
     # Callout cards with leader lines, one per level that has a card.
     card_x = tree_right + 105
@@ -340,17 +352,17 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
             f'<line x1="{lead[0]:.1f}" y1="{lead[1]:.1f}" x2="{card_x:.1f}" y2="{lead[1]:.1f}" '
             f'stroke="{color}" stroke-width="2.5"/>'
         )
-        out.append(dot(lead[0], lead[1], color))
+        out.append(dot(x=lead[0], y=lead[1], color=color))
         out.append(
             callout_card(
-                card_x,
-                top,
-                CARD_W,
-                h,
-                color,
-                card.get("title", n.label),
-                card.get("items", []),
-                theme,
+                x=card_x,
+                y=top,
+                w=CARD_W,
+                h=h,
+                color=color,
+                title=card.get("title", n.label),
+                items=card.get("items", []),
+                theme=theme,
             )
         )
         prev_bottom = top + h
@@ -363,17 +375,26 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     )
     caption_y = max(tree_bottom, cards_bottom) + 70
     caption = spec.get("caption") or default_caption(spec)
-    out.append(text(40, caption_y, caption, theme.sans, 18, theme.ink["caption"]))
+    out.append(
+        text(
+            x=40,
+            y=caption_y,
+            s=caption,
+            font=theme.sans,
+            size=18,
+            fill=theme.ink["caption"],
+        )
+    )
     height = caption_y + 30
     return (
         svg_doc(
-            width,
-            height,
-            "".join(out),
-            markers,
-            theme.background,
-            spec.get("title"),
-            spec.get("story"),
+            width=width,
+            height=height,
+            body="".join(out),
+            marker_colors=markers,
+            background=theme.background,
+            title=spec.get("title"),
+            desc=spec.get("story"),
         ),
         reg,
         (width, height),
@@ -388,7 +409,7 @@ def default_caption(spec: Spec) -> str:
     return " ".join(p for p in parts if p)
 
 
-def draw_node(n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
+def draw_node(*, n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
     """Return a node's slab and labels, shrinking the label to fit, and register them."""
     s = n.slab
     lines = [
@@ -404,7 +425,7 @@ def draw_node(n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
     label, size, weight, mono = lines[0]
     while (
         size > theme.min_surface_text
-        and theme.measure(label, size, mono, weight) > s.d - 28
+        and theme.measure(s=label, size=size, mono=mono, weight=weight) > s.d - 28
     ):
         size -= 1  # shrink to fit the surface, never below the floor; checks flag what still overflows
     lines[0] = (label, size, weight, mono)
@@ -419,9 +440,19 @@ def draw_node(n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
         cy = y + size / 2
         font = theme.mono if mono else theme.sans
         texts.append(
-            text(0, cy, s_text, font, size, t["text"], weight, "middle", "central")
+            text(
+                x=0,
+                y=cy,
+                s=s_text,
+                font=font,
+                size=size,
+                fill=t["text"],
+                weight=weight,
+                anchor="middle",
+                baseline="central",
+            )
         )
-        length = theme.measure(s_text, size, mono, weight)
+        length = theme.measure(s=s_text, size=size, mono=mono, weight=weight)
         reg.label(
             surface=s.name,
             sw=s.w,
@@ -435,12 +466,13 @@ def draw_node(n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
         y += size + gap
     title = f"<title>{n.label}</title>" + (f"<desc>{n.desc}</desc>" if n.desc else "")
     return (
-        f"<g>{title}{s.svg(t['top'], t['side'], t['stroke'])}"
+        f"<g>{title}{s.svg(top=t['top'], side=t['side'], stroke=t['stroke'])}"
         f'<g transform="{plane_matrix(s.cx, s.cy)} rotate(-90)">{"".join(texts)}</g></g>'
     )
 
 
 def callout_card(
+    *,
     x: float,
     y: float,
     w: float,
@@ -454,19 +486,27 @@ def callout_card(
     out = [
         f'<rect x="{x:.1f}" y="{y:.1f}" width="{w}" height="{h}" rx="22" fill="#FFFFFF" '
         f'stroke="{color}" stroke-width="3"/>',
-        text(x + 30, y + 52, title, theme.sans, 32, color, 600),
+        text(
+            x=x + 30,
+            y=y + 52,
+            s=title,
+            font=theme.sans,
+            size=32,
+            fill=color,
+            weight=600,
+        ),
     ]
     per_col = math.ceil(len(items) / 2) if items else 0
     for i, item in enumerate(items):
         cx = x + 30 + (i // per_col) * (w - 60) / 2
         out.append(
             text(
-                cx,
-                y + 100 + (i % per_col) * 38,
-                item,
-                theme.sans,
-                19,
-                theme.ink["body"],
+                x=cx,
+                y=y + 100 + (i % per_col) * 38,
+                s=item,
+                font=theme.sans,
+                size=19,
+                fill=theme.ink["body"],
             )
         )
     return "".join(out)
@@ -476,6 +516,7 @@ def callout_card(
 
 
 def clear(
+    *,
     pts: Sequence[Point],
     slabs: list[Slab],
     placed: list[list[Point]],
@@ -518,7 +559,7 @@ def clear(
 
 
 def route_parent_child(
-    p: Slab, q: Slab, slabs: list[Slab], placed: list[list[Point]]
+    *, p: Slab, q: Slab, slabs: list[Slab], placed: list[list[Point]]
 ) -> list[Point] | None:
     """Straight down if the shapes line up, else out a side corner and down: one bend."""
     qx = q.vertex("top")[0] + 30
@@ -534,7 +575,7 @@ def route_parent_child(
         ):
             continue
         pts = [(x, ps[1]), (x, qs[0])]
-        if clear(pts, slabs, placed):
+        if clear(pts=pts, slabs=slabs, placed=placed):
             return pts
     side = "left" if q.cx < p.cx else "right"
     _vx, vy = p.vertex(side)
@@ -552,7 +593,7 @@ def route_parent_child(
         ):
             continue
         pts = [(xe, y), (x, y), (x, qs[0])]
-        if clear(pts, slabs, placed):
+        if clear(pts=pts, slabs=slabs, placed=placed):
             return pts
     return None
 
@@ -564,7 +605,7 @@ def well_inside(slab: Slab, x: float, margin: float = 30) -> bool:
 
 
 def route_flow(
-    a: Slab, b: Slab, slabs: list[Slab], placed: list[list[Point]]
+    *, a: Slab, b: Slab, slabs: list[Slab], placed: list[list[Point]]
 ) -> list[Point] | None:
     """Route a sideways flow between two shapes: straight across, else under and up."""
     left_to_right = a.cx < b.cx
@@ -584,11 +625,11 @@ def route_flow(
             if (
                 abs(x2 - x1) > 40
                 and (x2 > x1) == left_to_right
-                and clear(pts, slabs, placed)
+                and clear(pts=pts, slabs=slabs, placed=placed)
             ):
                 return pts
     xa, ya = a.vertex("bottom")
     xb, yb = b.vertex("bottom")
     y = max(ya + a.h, yb + b.h) + 30
     pts = [(xa, ya + a.h), (xa, y), (xb, y), (xb, yb + b.h)]
-    return pts if clear(pts, slabs, placed) else None
+    return pts if clear(pts=pts, slabs=slabs, placed=placed) else None

@@ -27,6 +27,7 @@ def browser() -> str:
 
 
 def png(
+    *,
     svg_path: str | Path,
     png_path: str | Path,
     width: float,

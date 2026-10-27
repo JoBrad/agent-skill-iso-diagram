@@ -32,7 +32,7 @@ def used_faces(svg_text: str) -> dict[tuple[str, int], set[str]]:
     return used
 
 
-def woff2(theme: Theme, kind: str, weight: int, chars: Iterable[str]) -> str:
+def woff2(*, theme: Theme, kind: str, weight: int, chars: Iterable[str]) -> str:
     """Return the theme's kind font at weight, subset to chars, as base64 WOFF2."""
     spec = theme.font_spec(kind)
     font = TTFont(theme.font_file(kind))
@@ -62,7 +62,7 @@ def embed(svg_text: str, theme: Theme) -> str:
             raise ValueError(
                 f"text uses font '{fam}', which the theme does not provide"
             )
-        data = woff2(theme, kinds[fam], weight, chars)
+        data = woff2(theme=theme, kind=kinds[fam], weight=weight, chars=chars)
         faces.append(
             f"@font-face{{font-family:'{fam}';font-weight:{weight};"
             f"src:url(data:font/woff2;base64,{data}) format('woff2');}}"

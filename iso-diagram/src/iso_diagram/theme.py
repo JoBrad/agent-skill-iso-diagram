@@ -78,7 +78,7 @@ class Theme:
         return self.data["fonts"][kind]
 
     def measure(
-        self, s: object, size: float, mono: bool = False, weight: int = 400
+        self, *, s: object, size: float, mono: bool = False, weight: int = 400
     ) -> float:
         """Return the rendered width of s in screen units, from the font's advance widths."""
         kind = "mono" if mono else "sans"

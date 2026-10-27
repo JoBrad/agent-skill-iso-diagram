@@ -66,7 +66,9 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     zone_w = {}
     for i, l in enumerate(layers):
         for z in l.get("zones", []):
-            length = theme.measure(z["label"], 20, z.get("mono", False), 500)
+            length = theme.measure(
+                s=z["label"], size=20, mono=z.get("mono", False), weight=500
+            )
             zone_w[i, z["column"]] = z.get("size") or max(
                 ZONE_MIN, min(ZONE_MAX, round(length + 34))
             )
@@ -87,7 +89,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
                 px, py = (dx / C + dy / S) / 2 + col[0], (dy / S - dx / C) / 2 + col[1]
                 reach = max(reach, abs(px) + RES_SIZE / 2, abs(py) + RES_SIZE / 2)
             lx, ly = res_label_pos(col, r.get("count", 1))
-            half = theme.measure(r["label"], 20, False, 600) / 2
+            half = theme.measure(s=r["label"], size=20, mono=False, weight=600) / 2
             reach = max(reach, abs(lx) + 9, abs(ly) + half)
     W = 2 * (reach + INSET)
     cx = 35 + W * C
@@ -115,15 +117,25 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
             step_marks.append(("hop", a, at))
 
     # Plates sit far enough apart that nothing the story needs is hidden by the plate above.
-    keys = key_points(layers, colpos, zone_w, lane, down, up, hops, step_marks, theme)
+    keys = key_points(
+        layers=layers,
+        colpos=colpos,
+        zone_w=zone_w,
+        lane=lane,
+        down=down,
+        up=up,
+        hops=hops,
+        step_marks=step_marks,
+        theme=theme,
+    )
     gap = GAP
     while True:
         cys = [350 + gap * i for i in range(len(layers))]
         hidden = []
         for i in range(1, len(layers)):
-            above = Slab("", cx, cys[i - 1], W, W, H, r=26)
+            above = Slab(name="", cx=cx, cy=cys[i - 1], w=W, d=W, h=H, r=26)
             for p in keys[i]:
-                x, y = to_screen(cx, cys[i], p[0], p[1])
+                x, y = to_screen(cx=cx, cy=cys[i], x=p[0], y=p[1])
                 r = p[2] if len(p) > 2 else 8
                 if any(
                     above.contains(x + dx, y + dy)
@@ -138,11 +150,12 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
             f"hidden: something on '{layers[i]['id']}' at plane {p[0]:.0f},{p[1]:.0f} is under the plate above"
         )
     plates = [
-        reg.slab(Slab(l["id"], cx, cys[i], W, W, H, r=26)) for i, l in enumerate(layers)
+        reg.slab(Slab(name=l["id"], cx=cx, cy=cys[i], w=W, d=W, h=H, r=26))
+        for i, l in enumerate(layers)
     ]
 
     def pt(i: int, p: Point) -> Point:
-        return to_screen(cx, cys[i], *p)
+        return to_screen(cx=cx, cy=cys[i], x=p[0], y=p[1])
 
     def ports(i: int) -> list[str]:
         out = []
@@ -168,7 +181,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
                     out.append(
                         f'<line x1="{x:.1f}" y1="{y0:.1f}" x2="{x:.1f}" y2="{y1:.1f}" '
                         f'stroke="{flow["hue"]}" stroke-width="18"/>'
-                        + chevron(x, y1 - 45, is_up, flow)
+                        + chevron(x=x, y=y1 - 45, up=is_up, flow=flow)
                     )
         return out
 
@@ -176,17 +189,41 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     for i in reversed(range(len(layers))):
         l, t, p = layers[i], tiers[i], plates[i]
         out.append(
-            f"<g><title>{l['title']}</title>{p.svg(t['top'], t['side'], t['stroke'])}</g>"
+            f"<g><title>{l['title']}</title>{p.svg(top=t['top'], side=t['side'], stroke=t['stroke'])}</g>"
         )
         out.append(
             plate_content(
-                i, l, t, W, colpos, zone_w, lane, hops, flow, theme, reg, cx, cys[i]
+                i=i,
+                l=l,
+                t=t,
+                W=W,
+                colpos=colpos,
+                zone_w=zone_w,
+                lane=lane,
+                hops=hops,
+                flow=flow,
+                theme=theme,
+                reg=reg,
+                cx=cx,
+                cy=cys[i],
             )
         )
         out.extend(ports(i))
         out.extend(pipes_to(i))
         if l.get("resources"):
-            out.append(resources(i, l, t, colpos, theme, reg, cx, cys[i], W))
+            out.append(
+                resources(
+                    i=i,
+                    l=l,
+                    t=t,
+                    colpos=colpos,
+                    theme=theme,
+                    reg=reg,
+                    cx=cx,
+                    cy=cys[i],
+                    W=W,
+                )
+            )
 
     # Source feed into the top plate.
     source = spec.get("source")
@@ -196,21 +233,21 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         x, y = pt(0, lane(col, "A"))
         out.append(
             f'<line x1="{x:.1f}" y1="100" x2="{x:.1f}" y2="{y:.1f}" stroke="{flow["hue"]}" '
-            f'stroke-width="18"/>' + chevron(x, y - 60, False, flow)
+            f'stroke-width="18"/>' + chevron(x=x, y=y - 60, up=False, flow=flow)
         )
         out.extend(p for p in ports(0) if f'cx="{x:.1f}"' in p)
         out.append(
-            f'<g transform="translate({x:.1f},60)">{icon(source.get("icon", "globe"), flow["text"], 52)}</g>'
+            f'<g transform="translate({x:.1f},60)">{icon(name=source.get("icon", "globe"), color=flow["text"], size=52)}</g>'
         )
         out.append(
             text(
-                x + 40,
-                68,
-                source.get("label", "Source"),
-                theme.sans,
-                22,
-                flow["text"],
-                600,
+                x=x + 40,
+                y=68,
+                s=source.get("label", "Source"),
+                font=theme.sans,
+                size=22,
+                fill=flow["text"],
+                weight=600,
             )
         )
         badges.append(("screen", x - 34, 150))
@@ -222,12 +259,14 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     if len(badges) > 1:
         for n_, b in enumerate(badges, start=1):
             if b[0] == "screen":
-                out.append(badge(b[1], b[2], n_, flow["text"], theme.sans))
+                out.append(
+                    badge(x=b[1], y=b[2], n=n_, fill=flow["text"], font=theme.sans)
+                )
             else:
                 _, at, bx, by = b
                 out.append(
                     f'<g transform="{plane_matrix(cx, cys[at])} translate({bx:.1f},{by:.1f}) rotate(-90)">'
-                    f"{badge(0, 0, n_, flow['text'], theme.sans, size=20)}</g>"
+                    f"{badge(x=0, y=0, n=n_, fill=flow['text'], font=theme.sans, size=20)}</g>"
                 )
 
     # Leader lines and plate titles on the right.
@@ -243,19 +282,28 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
             f'<circle cx="{lead_x:.1f}" cy="{top_edge + 14:.1f}" r="6" fill="{t["stroke"]}"/>'
         )
         out.append(
-            text(label_x, y - 14, l["title"], theme.sans, 40, t["text"], 500, "end")
+            text(
+                x=label_x,
+                y=y - 14,
+                s=l["title"],
+                font=theme.sans,
+                size=40,
+                fill=t["text"],
+                weight=500,
+                anchor="end",
+            )
         )
         if l.get("subtitle"):
             out.append(
                 text(
-                    label_x,
-                    y + 30,
-                    l["subtitle"],
-                    theme.sans,
-                    18,
-                    theme.ink["caption"],
-                    400,
-                    "end",
+                    x=label_x,
+                    y=y + 30,
+                    s=l["subtitle"],
+                    font=theme.sans,
+                    size=18,
+                    fill=theme.ink["caption"],
+                    weight=400,
+                    anchor="end",
                 )
             )
 
@@ -264,24 +312,24 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     caption_y = bottom + 70
     out.append(
         text(
-            40,
-            caption_y,
-            spec.get("caption") or spec["story"],
-            theme.sans,
-            18,
-            theme.ink["caption"],
+            x=40,
+            y=caption_y,
+            s=spec.get("caption") or spec["story"],
+            font=theme.sans,
+            size=18,
+            fill=theme.ink["caption"],
         )
     )
     height = caption_y + 30
     return (
         svg_doc(
-            width,
-            height,
-            "".join(out),
-            [],
-            theme.background,
-            spec.get("title"),
-            spec.get("story"),
+            width=width,
+            height=height,
+            body="".join(out),
+            marker_colors=[],
+            background=theme.background,
+            title=spec.get("title"),
+            desc=spec.get("story"),
         ),
         reg,
         (width, height),
@@ -289,6 +337,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
 
 
 def key_points(
+    *,
     layers: list[Spec],
     colpos: Columns,
     zone_w: ZoneWidths,
@@ -331,7 +380,7 @@ def key_points(
     return keys
 
 
-def chevron(x: float, y: float, up: bool, flow: Tier) -> str:
+def chevron(*, x: float, y: float, up: bool, flow: Tier) -> str:
     """Return a chevron at (x, y) pointing up or down, in the flow's text shade."""
     d = -1 if up else 1
     return (
@@ -341,6 +390,7 @@ def chevron(x: float, y: float, up: bool, flow: Tier) -> str:
 
 
 def ptext(
+    *,
     x: float,
     y: float,
     s: str,
@@ -353,20 +403,21 @@ def ptext(
     """Return text lying flat on a plate at plane (x, y), upright to the reader."""
     font = theme.mono if mono else theme.sans
     return text(
-        0,
-        0,
-        s,
-        font,
-        size,
-        fill,
-        weight,
-        "middle",
-        "central",
-        f"translate({x:.1f},{y:.1f}) rotate(-90)",
+        x=0,
+        y=0,
+        s=s,
+        font=font,
+        size=size,
+        fill=fill,
+        weight=weight,
+        anchor="middle",
+        baseline="central",
+        transform=f"translate({x:.1f},{y:.1f}) rotate(-90)",
     )
 
 
 def plate_content(
+    *,
     i: int,
     l: Spec,
     t: Tier,
@@ -395,7 +446,15 @@ def plate_content(
         mono = z.get("mono", False)
         weight = 500 if mono or z.get("style") == "dashed" else 600
         inner.append(
-            ptext(x + w / 2 - 18, y, z["label"], t["text"], theme, mono, weight)
+            ptext(
+                x=x + w / 2 - 18,
+                y=y,
+                s=z["label"],
+                fill=t["text"],
+                theme=theme,
+                mono=mono,
+                weight=weight,
+            )
         )
         reg.child(parent=l["id"], pw=W, pd=W, name=z["label"], rect=(x, y, w, w))
         reg.label(
@@ -405,7 +464,7 @@ def plate_content(
             s=z["label"],
             center=(w / 2 - 18, 0),
             size=20,
-            length=theme.measure(z["label"], 20, mono, weight),
+            length=theme.measure(s=z["label"], size=20, mono=mono, weight=weight),
         )
     for via, a, b in hops:
         if via != i:
@@ -420,7 +479,13 @@ def plate_content(
         x, y = colpos[m["column"]]
         inner.append(
             ptext(
-                x + 34, y + 6, m["label"], t["text"], theme, m.get("mono", False), 600
+                x=x + 34,
+                y=y + 6,
+                s=m["label"],
+                fill=t["text"],
+                theme=theme,
+                mono=m.get("mono", False),
+                weight=600,
             )
         )
         reg.label(
@@ -430,17 +495,26 @@ def plate_content(
             s=m["label"],
             center=(x + 34, y + 6),
             size=20,
-            length=theme.measure(m["label"], 20, False, 600),
+            length=theme.measure(s=m["label"], size=20, mono=False, weight=600),
         )
     if l.get("note"):
         note = l["note"]
-        length = theme.measure(note["text"], 20, note.get("mono"), 500)
+        length = theme.measure(
+            s=note["text"], size=20, mono=note.get("mono"), weight=500
+        )
         nx, ny = (
             W / 2 - 34,
             W / 2 - 30 - length / 2,
         )  # along the front-right edge, near the front corner
         inner.append(
-            ptext(nx, ny, note["text"], t["text"], theme, note.get("mono", False))
+            ptext(
+                x=nx,
+                y=ny,
+                s=note["text"],
+                fill=t["text"],
+                theme=theme,
+                mono=note.get("mono", False),
+            )
         )
         reg.label(
             surface=l["id"],
@@ -462,6 +536,7 @@ def res_label_pos(col: Point, count: int) -> Point:
 
 
 def resources(
+    *,
     i: int,
     l: Spec,
     t: Tier,
@@ -476,17 +551,23 @@ def resources(
     out, labels = [], []
     for r in l["resources"]:
         col = colpos[r["column"]]
-        sx, sy = to_screen(cx, cy, *col)
+        sx, sy = to_screen(cx=cx, cy=cy, x=col[0], y=col[1])
         count = r.get("count", 1)
         for dx, dy in RES_OFFSETS[count]:
             x, y = sx + dx, sy + dy
             top_y = y - RES_H
             slab = Slab(
-                f"{l['id']}/{r['label']}", x, top_y, RES_SIZE, RES_SIZE, RES_H, r=10
+                name=f"{l['id']}/{r['label']}",
+                cx=x,
+                cy=top_y,
+                w=RES_SIZE,
+                d=RES_SIZE,
+                h=RES_H,
+                r=10,
             )
-            out.append(slab.svg("#FFFFFF", t["side"], t["stroke"]))
+            out.append(slab.svg(top="#FFFFFF", side=t["side"], stroke=t["stroke"]))
             out.append(
-                f'<g transform="{plane_matrix(x, top_y)} rotate(-90)">{icon(r["icon"], t["text"], 50, 1.8)}</g>'
+                f'<g transform="{plane_matrix(x, top_y)} rotate(-90)">{icon(name=r["icon"], color=t["text"], size=50, stroke=1.8)}</g>'
             )
             px, py = (dx / C + dy / S) / 2 + col[0], (dy / S - dx / C) / 2 + col[1]
             reg.child(
@@ -498,7 +579,15 @@ def resources(
             )
         lx, ly = res_label_pos(col, count)
         labels.append(
-            ptext(lx, ly, r["label"], t["text"], theme, r.get("mono", False), 600)
+            ptext(
+                x=lx,
+                y=ly,
+                s=r["label"],
+                fill=t["text"],
+                theme=theme,
+                mono=r.get("mono", False),
+                weight=600,
+            )
         )
         reg.label(
             surface=l["id"],
@@ -507,7 +596,7 @@ def resources(
             s=r["label"],
             center=(lx, ly),
             size=20,
-            length=theme.measure(r["label"], 20, False, 600),
+            length=theme.measure(s=r["label"], size=20, mono=False, weight=600),
         )
     out.append(f'<g transform="{plane_matrix(cx, cy)}">{"".join(labels)}</g>')
     return "".join(out)

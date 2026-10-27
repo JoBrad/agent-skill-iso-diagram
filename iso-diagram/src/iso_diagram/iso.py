@@ -23,7 +23,7 @@ Point = tuple[float, float]
 # --- geometry -------------------------------------------------------------------------
 
 
-def to_screen(cx: float, cy: float, x: float, y: float) -> Point:
+def to_screen(*, cx: float, cy: float, x: float, y: float) -> Point:
     """Screen point of plane point (x, y) on a face whose center sits at screen (cx, cy)."""
     return (cx + (x - y) * C, cy + (x + y) * S)
 
@@ -33,7 +33,7 @@ def plane_matrix(cx: float, cy: float) -> str:
     return f"translate({cx:.1f},{cy:.1f}) matrix({C:.5f},{S},{-C:.5f},{S},0,0)"
 
 
-def rr_points(w: float, d: float, r: float, steps: int = 8) -> list[Point]:
+def rr_points(*, w: float, d: float, r: float, steps: int = 8) -> list[Point]:
     """Outline of a w x d rounded rectangle centered on the plane origin."""
     r = min(r, w / 2, d / 2)
     pts = []
@@ -90,6 +90,7 @@ class Slab:
 
     def __init__(
         self,
+        *,
         name: str,
         cx: float,
         cy: float,
@@ -108,7 +109,9 @@ class Slab:
             h,
             r,
         )
-        self.top_pts = [to_screen(cx, cy, x, y) for x, y in rr_points(w, d, r)]
+        self.top_pts = [
+            to_screen(cx=cx, cy=cy, x=x, y=y) for x, y in rr_points(w=w, d=d, r=r)
+        ]
         self.body = hull(self.top_pts + [(x, y + h) for x, y in self.top_pts])
 
     def vertex(self, which: str) -> Point:
@@ -119,7 +122,7 @@ class Slab:
             "bottom": (self.w / 2, self.d / 2),
             "left": (-self.w / 2, self.d / 2),
         }[which]
-        return to_screen(self.cx, self.cy, x, y)
+        return to_screen(cx=self.cx, cy=self.cy, x=x, y=y)
 
     def vspan(self, x: float) -> tuple[float, float] | None:
         """(top, bottom) screen y where a vertical line at x meets the outline, or None."""
@@ -154,7 +157,7 @@ class Slab:
             for dx, dy in ((margin, 0), (-margin, 0), (0, margin), (0, -margin))
         )
 
-    def svg(self, top: str, side: str, stroke: str, sw: float = 2.0) -> str:
+    def svg(self, *, top: str, side: str, stroke: str, sw: float = 2.0) -> str:
         """Return the slab as SVG: body in the side color, top face in the top color."""
         return (
             f'<polygon points="{poly(self.body)}" fill="{side}" stroke="{stroke}" stroke-width="{sw}" '
@@ -173,6 +176,7 @@ class Slab:
 
 
 def text(
+    *,
     x: float,
     y: float,
     s: object,
@@ -204,7 +208,8 @@ def icon_inner(name: str) -> str:
     return re.search(r"<svg[^>]*>(.*)</svg>", raw, re.S).group(1).strip()
 
 
-def icon(  # ruff: ignore[too-many-positional-arguments]
+def icon(
+    *,
     name: str,
     color: str,
     size: float,
@@ -243,6 +248,7 @@ def marker_id(color: str) -> str:
 
 
 def connector(
+    *,
     points: Sequence[Point],
     color: str,
     width: float = 3.0,
@@ -268,14 +274,24 @@ def arrow_marker(color: str) -> str:
     )
 
 
-def badge(x: float, y: float, n: object, fill: str, font: str, size: float = 18) -> str:
+def badge(
+    *, x: float, y: float, n: object, fill: str, font: str, size: float = 18
+) -> str:
     """Return a numbered step badge: a filled disc with n in white."""
     return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{size - 3}" fill="{fill}"/>' + text(
-        x, y, n, font, size, "#FFFFFF", 600, "middle", "central"
+        x=x,
+        y=y,
+        s=n,
+        font=font,
+        size=size,
+        fill="#FFFFFF",
+        weight=600,
+        anchor="middle",
+        baseline="central",
     )
 
 
-def dot(x: float, y: float, color: str, r: float = 6) -> str:
+def dot(*, x: float, y: float, color: str, r: float = 6) -> str:
     """Return a filled circle."""
     return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{color}"/>'
 
@@ -284,6 +300,7 @@ def dot(x: float, y: float, color: str, r: float = 6) -> str:
 
 
 def svg_doc(
+    *,
     width: float,
     height: float,
     body: str,

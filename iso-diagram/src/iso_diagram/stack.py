@@ -397,15 +397,15 @@ def plate_content(
         inner.append(
             ptext(x + w / 2 - 18, y, z["label"], t["text"], theme, mono, weight)
         )
-        reg.child(l["id"], W, W, z["label"], (x, y, w, w))
+        reg.child(parent=l["id"], pw=W, pd=W, name=z["label"], rect=(x, y, w, w))
         reg.label(
-            f"{l['id']}/{z['label']}",
-            w,
-            w,
-            z["label"],
-            (w / 2 - 18, 0),
-            20,
-            theme.measure(z["label"], 20, mono, weight),
+            surface=f"{l['id']}/{z['label']}",
+            sw=w,
+            sd=w,
+            s=z["label"],
+            center=(w / 2 - 18, 0),
+            size=20,
+            length=theme.measure(z["label"], 20, mono, weight),
         )
     for via, a, b in hops:
         if via != i:
@@ -424,13 +424,13 @@ def plate_content(
             )
         )
         reg.label(
-            l["id"],
-            W,
-            W,
-            m["label"],
-            (x + 34, y + 6),
-            20,
-            theme.measure(m["label"], 20, False, 600),
+            surface=l["id"],
+            sw=W,
+            sd=W,
+            s=m["label"],
+            center=(x + 34, y + 6),
+            size=20,
+            length=theme.measure(m["label"], 20, False, 600),
         )
     if l.get("note"):
         note = l["note"]
@@ -442,7 +442,15 @@ def plate_content(
         inner.append(
             ptext(nx, ny, note["text"], t["text"], theme, note.get("mono", False))
         )
-        reg.label(l["id"], W, W, note["text"], (nx, ny), 20, length)
+        reg.label(
+            surface=l["id"],
+            sw=W,
+            sd=W,
+            s=note["text"],
+            center=(nx, ny),
+            size=20,
+            length=length,
+        )
     return f'<g transform="{plane_matrix(cx, cy)}">{"".join(inner)}</g>'
 
 
@@ -481,19 +489,25 @@ def resources(
                 f'<g transform="{plane_matrix(x, top_y)} rotate(-90)">{icon(r["icon"], t["text"], 50, 1.8)}</g>'
             )
             px, py = (dx / C + dy / S) / 2 + col[0], (dy / S - dx / C) / 2 + col[1]
-            reg.child(l["id"], W, W, r["label"], (px, py, RES_SIZE, RES_SIZE))
+            reg.child(
+                parent=l["id"],
+                pw=W,
+                pd=W,
+                name=r["label"],
+                rect=(px, py, RES_SIZE, RES_SIZE),
+            )
         lx, ly = res_label_pos(col, count)
         labels.append(
             ptext(lx, ly, r["label"], t["text"], theme, r.get("mono", False), 600)
         )
         reg.label(
-            l["id"],
-            W,
-            W,
-            r["label"],
-            (lx, ly),
-            20,
-            theme.measure(r["label"], 20, False, 600),
+            surface=l["id"],
+            sw=W,
+            sd=W,
+            s=r["label"],
+            center=(lx, ly),
+            size=20,
+            length=theme.measure(r["label"], 20, False, 600),
         )
     out.append(f'<g transform="{plane_matrix(cx, cy)}">{"".join(labels)}</g>')
     return "".join(out)

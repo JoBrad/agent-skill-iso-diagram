@@ -42,12 +42,15 @@ class Registry:
         self.slabs.append(s)
         return s
 
-    def child(self, parent: str, pw: float, pd: float, name: str, rect: Rect) -> None:
+    def child(
+        self, *, parent: str, pw: float, pd: float, name: str, rect: Rect
+    ) -> None:
         """Record a child rect drawn on a pw x pd parent, for the inset rule."""
         self.children.append((parent, pw, pd, name, rect))
 
     def label(
         self,
+        *,
         surface: str,
         sw: float,
         sd: float,
@@ -62,6 +65,7 @@ class Registry:
 
     def connector(
         self,
+        *,
         name: str,
         points: Sequence[Point],
         source: Slab | None = None,
@@ -97,7 +101,9 @@ class Registry:
             ):
                 out.append(f"surface: label '{s}' runs off '{surface}'")
         for name, pts, source, target in self.connectors:
-            out.extend(self._connector_issues(name, pts, source, target))
+            out.extend(
+                self._connector_issues(name=name, pts=pts, source=source, target=target)
+            )
         for s in self.slabs:
             xs, ys = [p[0] for p in s.body], [p[1] for p in s.body]
             if min(xs) < 0 or min(ys) < 0 or max(xs) > width or max(ys) > height:
@@ -106,6 +112,7 @@ class Registry:
 
     def _connector_issues(
         self,
+        *,
         name: str,
         pts: Sequence[Point],
         source: Slab | None,

@@ -212,7 +212,9 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
                 reg.issues.append(f"route: no clean route from '{n.id}' to '{c.id}'")
                 continue
             placed.append(pts)
-            reg.connector(f"{n.id}->{c.id}", pts, n.slab, c.slab)
+            reg.connector(
+                name=f"{n.id}->{c.id}", points=pts, source=n.slab, target=c.slab
+            )
             lines.append((pts, tiers[n.id]["stroke"], (n.id, c.id) in path_pairs))
     for pts, color, on_path in lines:
         if not on_path:
@@ -253,7 +255,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
         y_in = ly + first.slab.h * 0.45
         x_in = first.slab.hspan(y_in)[0]
         pts = [(sx, sy + 38), (sx, y_in), (x_in, y_in)]
-        reg.connector(f"{source['id']}->{first.id}", pts, None, first.slab)
+        reg.connector(name=f"{source['id']}->{first.id}", points=pts, target=first.slab)
         placed.append(pts)
         out.append(connector(pts, flow["text"], width=3))
         markers.append(flow["text"])
@@ -271,7 +273,7 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
             continue
         placed.append(pts)
         color = tiers[f["from"]]["stroke"]
-        reg.connector(f"{a.name}=>{b.name}", pts, a, b)
+        reg.connector(name=f"{a.name}=>{b.name}", points=pts, source=a, target=b)
         out.append(connector(pts, color, width=3))
         markers.append(color)
         longest = max(itertools.pairwise(pts), key=lambda s: math.dist(*s))
@@ -420,7 +422,16 @@ def draw_node(n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
             text(0, cy, s_text, font, size, t["text"], weight, "middle", "central")
         )
         length = theme.measure(s_text, size, mono, weight)
-        reg.label(s.name, s.w, s.d, s_text, (cy, 0), size, length, along_y=True)
+        reg.label(
+            surface=s.name,
+            sw=s.w,
+            sd=s.d,
+            s=s_text,
+            center=(cy, 0),
+            size=size,
+            length=length,
+            along_y=True,
+        )
         y += size + gap
     title = f"<title>{n.label}</title>" + (f"<desc>{n.desc}</desc>" if n.desc else "")
     return (

@@ -56,6 +56,7 @@ def test_source_downloads_and_caches_a_missing_icon(
     set_name, name = UNCACHED
     urls = serve(monkeypatch, fake_svg(name))
     path = icons.source(name=name)
+    assert path is not None
     assert path == icon_cache / set_name / f"{name}.svg"
     assert path.read_bytes() == fake_svg(name)
     assert urls == [f"{icons.CDN}/lucide-pkg@1.0.0/icons/{name}.svg"]

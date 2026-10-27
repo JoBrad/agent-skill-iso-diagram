@@ -349,7 +349,9 @@ def draw_source(tree: Tree) -> None:
     )
     _lx, ly = first.slab.vertex("left")
     y_in = ly + first.slab.h * 0.45
-    x_in = first.slab.hspan(y_in)[0]
+    span = first.slab.hspan(y_in)
+    assert span is not None, "y_in lies on the slab's left side face"
+    x_in = span[0]
     pts = [(sx, sy + 38), (sx, y_in), (x_in, y_in)]
     tree.reg.connector(
         name=f"{source['id']}->{first.id}", points=pts, target=first.slab
@@ -584,7 +586,7 @@ def clear(
     *,
     pts: Sequence[Point],
     slabs: list[Slab],
-    placed: list[list[Point]],
+    placed: Sequence[Sequence[Point]],
     spacing: float = 12,
 ) -> bool:
     """Return whether a route crosses no slab and keeps clear of parallel connectors."""
@@ -624,7 +626,7 @@ def clear(
 
 
 def route_parent_child(
-    *, p: Slab, q: Slab, slabs: list[Slab], placed: list[list[Point]]
+    *, p: Slab, q: Slab, slabs: list[Slab], placed: Sequence[Sequence[Point]]
 ) -> list[Point] | None:
     """Straight down if the shapes line up, else out a side corner and down: one bend."""
     qx = q.vertex("top")[0] + 30
@@ -645,7 +647,9 @@ def route_parent_child(
     side = "left" if q.cx < p.cx else "right"
     _vx, vy = p.vertex(side)
     y = vy + p.h * 0.6
-    xe = p.hspan(y)[0 if side == "left" else 1]
+    span = p.hspan(y)
+    assert span is not None, "y lies on the parent's side face"
+    xe = span[0 if side == "left" else 1]
     for k in offsets:
         x = qx + k
         qs = q.vspan(x)
@@ -670,7 +674,7 @@ def well_inside(slab: Slab, x: float, margin: float = 30) -> bool:
 
 
 def route_flow(
-    *, a: Slab, b: Slab, slabs: list[Slab], placed: list[list[Point]]
+    *, a: Slab, b: Slab, slabs: list[Slab], placed: Sequence[Sequence[Point]]
 ) -> list[Point] | None:
     """Route a sideways flow between two shapes: straight across, else under and up."""
     left_to_right = a.cx < b.cx

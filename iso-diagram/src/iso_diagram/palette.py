@@ -48,7 +48,7 @@ def rgb(h: str) -> list[int]:
     return [int(h[i : i + 2], 16) for i in (1, 3, 5)]
 
 
-def simulate_linear(h: str, m: list[list[float]]) -> list[float]:
+def simulate_linear(h: str, m: Sequence[Sequence[float]]) -> list[float]:
     """Return color h in linear RGB as seen through simulation matrix m."""
     v = [lin(c) for c in rgb(h)]
     return [max(0.0, min(1.0, sum(m[i][j] * v[j] for j in range(3)))) for i in range(3)]

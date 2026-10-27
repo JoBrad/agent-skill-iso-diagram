@@ -102,6 +102,7 @@ def test_clear_rejects_crossing_and_crowding() -> None:
 def test_route_parent_child_straight_down() -> None:
     parent, child = slab("p", 300, 100), slab("c", 300, 400)
     pts = tree.route_parent_child(p=parent, q=child, slabs=[parent, child], placed=[])
+    assert pts is not None
     assert len(pts) == 2
     assert pts[0][0] == pts[1][0]
 
@@ -109,6 +110,7 @@ def test_route_parent_child_straight_down() -> None:
 def test_route_parent_child_bends_out_a_side_corner() -> None:
     parent, child = slab("p", 300, 100), slab("c", 700, 400)
     pts = tree.route_parent_child(p=parent, q=child, slabs=[parent, child], placed=[])
+    assert pts is not None
     assert len(pts) == 3
     assert pts[0][1] == pts[1][1]
     assert pts[1][0] == pts[2][0]
@@ -123,16 +125,19 @@ def test_route_parent_child_gives_up_when_blocked() -> None:
 def test_route_flow_straight_across() -> None:
     a, b = slab("a", 200, 300), slab("b", 600, 300)
     pts = tree.route_flow(a=a, b=b, slabs=[a, b], placed=[])
+    assert pts is not None
     assert len(pts) == 2
     assert pts[0][1] == pts[1][1]
     assert pts[0][0] < pts[1][0]
     back = tree.route_flow(a=b, b=a, slabs=[a, b], placed=[])
+    assert back is not None
     assert back[0][0] > back[1][0]
 
 
 def test_route_flow_goes_under_when_not_level() -> None:
     a, b = slab("a", 200, 100), slab("b", 600, 500)
     pts = tree.route_flow(a=a, b=b, slabs=[a, b], placed=[])
+    assert pts is not None
     assert len(pts) == 4
 
 

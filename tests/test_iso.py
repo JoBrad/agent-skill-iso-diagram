@@ -76,9 +76,12 @@ def test_slab_vertex_corners(slab: Slab) -> None:
 
 
 def test_slab_spans_cover_the_body(slab: Slab) -> None:
-    top, bottom = slab.vspan(200)
+    vspan, hspan = slab.vspan(200), slab.hspan(200)
+    assert vspan is not None
+    assert hspan is not None
+    top, bottom = vspan
     assert top < 200 < bottom
-    left, right = slab.hspan(200)
+    left, right = hspan
     assert left < 200 < right
     assert slab.vspan(10_000) is None
     assert slab.hspan(-10_000) is None
@@ -87,7 +90,9 @@ def test_slab_spans_cover_the_body(slab: Slab) -> None:
 def test_slab_contains_respects_margin(slab: Slab) -> None:
     assert slab.contains(200, 200)
     assert not slab.contains(0, 0)
-    _, right = slab.hspan(200)
+    span = slab.hspan(200)
+    assert span is not None
+    _, right = span
     assert slab.contains(right - 2, 200)
     assert not slab.contains(right - 2, 200, margin=5)
 
@@ -147,6 +152,12 @@ def test_icon_inner_strips_comments(icon_cache) -> None:
     path = icon_cache / "feather" / "globe.svg"
     path.write_text('<!-- note --><svg viewBox="0 0 24 24"><circle r="1"/></svg>')
     assert iso.icon_inner("globe") == '<circle r="1"/>'
+
+
+def test_icon_inner_rejects_a_file_without_an_svg(icon_cache) -> None:
+    (icon_cache / "feather" / "globe.svg").write_text("<html>not an icon</html>")
+    with pytest.raises(ValueError, match=r"icon 'globe': .* holds no <svg> element"):
+        iso.icon_inner("globe")
 
 
 def test_icon_inner_rejects_unknown_names() -> None:

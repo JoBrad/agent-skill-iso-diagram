@@ -80,10 +80,10 @@ def hull(points: Iterable[Point]) -> list[Point]:
     return lower[:-1] + upper[:-1]
 
 
-def point_in_poly(x: float, y: float, poly: list[Point]) -> bool:
+def point_in_poly(x: float, y: float, poly: Sequence[Point]) -> bool:
     """Return whether (x, y) is inside polygon poly, by the even-odd rule."""
     inside = False
-    for (x0, y0), (x1, y1) in zip(poly, poly[1:] + poly[:1], strict=False):
+    for (x0, y0), (x1, y1) in zip(poly, [*poly[1:], *poly[:1]], strict=False):
         if (y0 > y) != (y1 > y) and x < x0 + (x1 - x0) * (y - y0) / (y1 - y0):
             inside = not inside
     return inside
@@ -229,7 +229,10 @@ def icon_inner(name: str) -> str:
             f"icon '{name}' is in neither Feather nor Lucide; draw it in Feather style"
         )
     raw = re.sub(r"<!--.*?-->", "", path.read_text(), flags=re.S)
-    return re.search(r"<svg[^>]*>(.*)</svg>", raw, re.S).group(1).strip()
+    match = re.search(r"<svg[^>]*>(.*)</svg>", raw, re.S)
+    if match is None:
+        raise ValueError(f"icon '{name}': {path} holds no <svg> element")
+    return match.group(1).strip()
 
 
 def icon(

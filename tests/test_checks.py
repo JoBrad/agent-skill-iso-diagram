@@ -106,8 +106,11 @@ def test_connector_crossing_a_slab(reg: Registry) -> None:
 def test_connector_ends_on_outlines(reg: Registry) -> None:
     top = reg.slab(Slab(name="top", cx=300, cy=200, w=80, d=80, h=10))
     bottom = reg.slab(Slab(name="bottom", cx=300, cy=500, w=80, d=80, h=10))
-    _, top_low = top.vspan(300)
-    bottom_high, _ = bottom.vspan(300)
+    top_span, bottom_span = top.vspan(300), bottom.vspan(300)
+    assert top_span is not None
+    assert bottom_span is not None
+    _, top_low = top_span
+    bottom_high, _ = bottom_span
     reg.connector(
         name="good",
         points=[(300, top_low), (300, bottom_high)],

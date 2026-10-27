@@ -12,6 +12,18 @@ package = false
 [tool.uv.sources]
 iso-diagram = { path = "iso-diagram", editable = true }
 
+[tool.pyright]
+# Pylance reads this table too, so the editor and `uv run pyright` agree.
+# One of: off, basic, standard. Strict mode is written as standard plus
+# `strict = ["src"]`, so tests stay at standard. Ruff's annotation rules follow it.
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"
+include = ["iso-diagram/src", "tests"]
+# fontTools ships no type information and has no stubs package; inferring types
+# from its source produces false errors. Untyped libraries are left unchecked.
+useLibraryCodeForTypes = false
+
 [tool.ruff]
 # Lets isort classify iso_diagram as first-party.
 src = ["iso-diagram/src", "tests"]

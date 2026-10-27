@@ -631,7 +631,9 @@ def draw_title(plan: Plan, i: int, plate: Slab) -> list[str]:
     """Return plate i's leader line, title, and subtitle, registering the text for fit."""
     layer, t, theme = plan.layers[i], plan.tiers[i], plan.theme
     lead_x, label_x = plan.lead_x, plan.label_x
-    top_edge = plate.vspan(lead_x)[0]
+    span = plate.vspan(lead_x)
+    assert span is not None, "lead_x sits inside the plate's right corner"
+    top_edge = span[0]
     y = plan.cys[i] - 90
     leader_path = rounded_path([(label_x, y), (lead_x, y), (lead_x, top_edge + 14)], 18)
     out = [

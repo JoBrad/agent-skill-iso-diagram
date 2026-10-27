@@ -17,8 +17,8 @@ from pathlib import Path
 
 import pytest
 
-from iso_diagram import SKILL_DIR, build, render, stack
-from iso_diagram.theme import Theme
+from iso_diagram import build, render, stack
+from iso_diagram.theme import SKILL_DIR, Theme
 
 
 EXAMPLES = SKILL_DIR / "examples"

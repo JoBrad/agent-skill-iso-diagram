@@ -8,6 +8,7 @@ import itertools
 import math
 
 from collections.abc import Iterator, Sequence
+from dataclasses import dataclass, field
 from xml.sax.saxutils import escape
 
 from iso_diagram.checks import Label, Registry, Surface
@@ -15,7 +16,9 @@ from iso_diagram.iso import (
     Point,
     Slab,
     Spec,
+    TextStyle,
     badge,
+    caption,
     connector,
     dot,
     icon,
@@ -41,7 +44,7 @@ STACK_STEP = (85, 42)  # screen offset between stacked tiles
 GAP_X = 75  # screen gap between sibling subtrees
 GAP_Y = 100  # screen gap between a level's bottom and the next level's top
 CARD_W = 650
-CAPTION_SIZE, CAPTION_LEADING = 18, 26
+CARD_GAP = 105  # screen gap between the tree's right edge and its cards
 
 
 class Node:
@@ -126,48 +129,127 @@ def place_x(node: Node, center: float, xs: dict[str, float]) -> None:
         left += wdt + GAP_X
 
 
+@dataclass
+class Tree:
+    """An iso-tree spec as laid out: its nodes and levels, their colors, and the drawing so far.
+
+    `placed` holds every connector route drawn so far, so later routes and leaders keep
+    clear of them. `steps` holds a badge spot (x, y, color) for each step of the story
+    path, in order; None marks a step that gets no badge.
+    """
+
+    spec: Spec
+    theme: Theme
+    reg: Registry
+    root: Node
+    levels: list[list[Node]]
+    tiers: dict[str, Tier]
+    out: list[str] = field(default_factory=list)
+    placed: list[list[Point]] = field(default_factory=list)
+    steps: list[tuple[float, float, str] | None] = field(default_factory=list)
+
+    @property
+    def nodes(self) -> dict[str, Node]:
+        """Every node by id, depth first."""
+        return {n.id: n for n in self.root.walk()}
+
+
 def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
     """Lay out and draw an iso-tree spec; return the SVG, its registry, and its size."""
+    tree = lay_out(spec, theme)
+    draw_slabs(tree)
+    draw_containment(tree)
+    draw_source(tree)
+    draw_flows(tree)
+    draw_badges(tree)
+    slabs = [n.slab for n in tree.root.walk()]
+    tree_right = max(max(p[0] for p in s.body) for s in slabs)
+    tree_bottom = max(max(p[1] for p in s.body) for s in slabs)
+    cards_bottom = draw_cards(tree, card_x=tree_right + CARD_GAP)
+    card_right = tree_right + CARD_GAP + CARD_W
+
+    width = tree_right + 60 if cards_bottom is None else card_right + 40
+    caption_svg, height = caption(
+        s=spec.get("caption") or default_caption(spec),
+        top=max(tree_bottom, cards_bottom or 0) + 70,
+        width=width,
+        theme=theme,
+        reg=tree.reg,
+    )
+    tree.out.append(caption_svg)
+    doc = svg_doc(
+        size=(width, height),
+        body="".join(tree.out),
+        background=theme.background,
+        title=spec.get("title"),
+        desc=spec.get("story"),
+    )
+    return doc, tree.reg, (width, height)
+
+
+# --- layout -----------------------------------------------------------------------------
+
+
+def lay_out(spec: Spec, theme: Theme) -> Tree:
+    """Build the node tree, place every slab, and pick each node's colors."""
     reg = Registry(theme)
     root = Node(spec["root"], 0)
-    nodes = {n.id: n for n in root.walk()}
-    for n in nodes.values():
+    nodes = list(root.walk())
+    for n in nodes:
         n.stacked = (
             spec.get("stack_leaves", True)
             and len(n.children) >= 2
             and all(not c.children for c in n.children)
         )
-    depth_count = max(n.depth for n in nodes.values()) + 1
+    depth_count = max(n.depth for n in nodes) + 1
     slots = theme.level_slots(depth_count)
-    levels = [[n for n in nodes.values() if n.depth == d] for d in range(depth_count)]
+    levels = [[n for n in nodes if n.depth == d] for d in range(depth_count)]
+    place_slabs(root, ys=level_ys(levels), has_source=bool(spec.get("source")), reg=reg)
+    return Tree(
+        spec=spec,
+        theme=theme,
+        reg=reg,
+        root=root,
+        levels=levels,
+        tiers={n.id: theme.tier(n.slot or slots[n.depth]) for n in nodes},
+    )
 
-    # Vertical placement, level by level.
-    ys = {}
-    root_w, root_d, _ = footprint(root)
-    ys[0] = 80 + (root_w + root_d) / 2 * 0.5
-    for d in range(1, depth_count):
-        prev = levels[d - 1]
+
+def level_ys(levels: list[list[Node]]) -> list[float]:
+    """Return the screen y of each level's slab centers, top level first."""
+    root_w, root_d, _ = footprint(levels[0][0])
+    ys = [80 + (root_w + root_d) / 2 * 0.5]
+    for d in range(1, len(levels)):
+        prev, lvl = levels[d - 1], levels[d]
         bottom = max(
             ys[d - 1] + (footprint(n)[0] + footprint(n)[1]) / 2 * 0.5 + footprint(n)[2]
             for n in prev
         )
-        lvl = levels[d]
+        # A level of only children the same size as their parents stacks closer.
         same = (
             all(len(p.children) == 1 for p in prev)
             and len(lvl) == len(prev)
-            and all(footprint(n)[:2] == footprint(n.parent)[:2] for n in lvl)
+            and all(
+                n.parent is not None and footprint(n)[:2] == footprint(n.parent)[:2]
+                for n in lvl
+            )
         )
         if same:
-            ys[d] = ys[d - 1] + 0.92 * footprint(lvl[0])[0]
+            ys.append(ys[d - 1] + 0.92 * footprint(lvl[0])[0])
         else:
             half = max((footprint(n)[0] + footprint(n)[1]) / 2 * 0.5 for n in lvl)
-            ys[d] = bottom + GAP_Y + half
+            ys.append(bottom + GAP_Y + half)
+    return ys
 
-    # Horizontal placement, then shift right so the left margin and the source fit.
-    xs = {}
+
+def place_slabs(
+    root: Node, *, ys: list[float], has_source: bool, reg: Registry
+) -> None:
+    """Give every node its slab, shifted right so the left margin and the source fit."""
+    xs: dict[str, float] = {}
     place_x(root, subtree_width(root) / 2, xs)
-    source = spec.get("source")
-    for n in nodes.values():
+    nodes = list(root.walk())
+    for n in nodes:
         w, d, h = footprint(n)
         y = ys[n.depth]
         if n.parent is not None and n.parent.stacked:
@@ -183,229 +265,199 @@ def build(spec: Spec, theme: Theme) -> tuple[str, Registry, Point]:
             h=h,
             r=12 if (w, d, h) == STACK_TILE else 18,
         )
-    min_x = min(min(p[0] for p in n.slab.body) for n in nodes.values())
+    min_x = min(min(p[0] for p in n.slab.body) for n in nodes)
     shift = 55 - min_x
-    if source:
+    if has_source:
         shift = max(shift, 300 - root.slab.vertex("left")[0])
-    for n in nodes.values():
+    for n in nodes:
         s = n.slab
         n.slab = reg.slab(
             Slab(name=n.id, cx=s.cx + shift, cy=s.cy, w=s.w, d=s.d, h=s.h, r=s.r)
         )
-    tree_right = max(max(p[0] for p in n.slab.body) for n in nodes.values())
-    tree_bottom = max(max(p[1] for p in n.slab.body) for n in nodes.values())
 
-    tiers = {n.id: theme.tier(n.slot or slots[n.depth]) for n in nodes.values()}
-    out, markers = [], []
 
-    # Slabs: deepest level first, back to front, so parents overlap their children.
-    for d in reversed(range(depth_count)):
-        out.extend(
-            n.slab.shadow(dy=30 if d >= 2 else 40)
-            for n in sorted(levels[d], key=lambda k: k.slab.cy)
+# --- drawing ----------------------------------------------------------------------------
+
+
+def draw_slabs(tree: Tree) -> None:
+    """Draw every slab, deepest level first and back to front, so parents overlap children."""
+    by_depth = [
+        (d, sorted(lvl, key=lambda k: k.slab.cy)) for d, lvl in enumerate(tree.levels)
+    ][::-1]
+    for d, lvl in by_depth:
+        tree.out.extend(n.slab.shadow(dy=30 if d >= 2 else 40) for n in lvl)
+    for _, lvl in by_depth:
+        tree.out.extend(
+            draw_node(n=n, t=tree.tiers[n.id], theme=tree.theme, reg=tree.reg)
+            for n in lvl
         )
-    for d in reversed(range(depth_count)):
-        out.extend(
-            draw_node(n=n, t=tiers[n.id], theme=theme, reg=reg)
-            for n in sorted(levels[d], key=lambda k: k.slab.cy)
-        )
 
-    # Connectors.
-    path = spec.get("path", [])
-    path_pairs = set(itertools.pairwise(path))
-    placed = []
+
+def draw_containment(tree: Tree) -> None:
+    """Connect each parent to its children: faint lines, bold arrows along the story path."""
+    reg = tree.reg
+    path_pairs = set(itertools.pairwise(tree.spec.get("path", [])))
     lines = []
-    for n in nodes.values():
+    for n in tree.root.walk():
         for c in n.children:
-            pts = route_parent_child(p=n.slab, q=c.slab, slabs=reg.slabs, placed=placed)
+            pts = route_parent_child(
+                p=n.slab, q=c.slab, slabs=reg.slabs, placed=tree.placed
+            )
             if pts is None:
                 reg.issues.append(f"route: no clean route from '{n.id}' to '{c.id}'")
                 continue
-            placed.append(pts)
+            tree.placed.append(pts)
             reg.connector(
                 name=f"{n.id}->{c.id}", points=pts, source=n.slab, target=c.slab
             )
-            lines.append((pts, tiers[n.id]["stroke"], (n.id, c.id) in path_pairs))
-    for pts, color, on_path in lines:
-        if not on_path:
-            out.append(
-                connector(
-                    points=pts,
-                    color=color,
-                    width=1.5,
-                    arrow=False,
-                    opacity=theme.muted_opacity,
-                )
-            )
-    for pts, color, on_path in lines:
-        if on_path:
-            out.append(connector(points=pts, color=color, width=3))
-            markers.append(color)
+            lines.append((pts, tree.tiers[n.id]["stroke"], (n.id, c.id) in path_pairs))
+    tree.out.extend(
+        connector(
+            points=pts,
+            color=color,
+            width=1.5,
+            arrow=False,
+            opacity=tree.theme.muted_opacity,
+        )
+        for pts, color, on_path in lines
+        if not on_path
+    )
+    tree.out.extend(
+        connector(points=pts, color=color, width=3)
+        for pts, color, on_path in lines
+        if on_path
+    )
 
-    flow = theme.flow
-    steps = []
-    if source:
-        first = (
-            nodes[path[1]]
-            if path and path[0] == source["id"] and len(path) > 1
-            else root
-        )
-        sx, sy = 90, 62
-        out.append(
-            f'<g transform="translate({sx},{sy})">{icon(name=source.get("icon", "globe"), color=flow["text"], size=52)}</g>'
-        )
-        out.append(
-            text(
-                x=sx + 40,
-                y=sy + 8,
-                s=source.get("label", source["id"]),
-                font=theme.sans,
-                size=22,
-                fill=flow["text"],
-                weight=600,
-            )
-        )
-        _lx, ly = first.slab.vertex("left")
-        y_in = ly + first.slab.h * 0.45
-        x_in = first.slab.hspan(y_in)[0]
-        pts = [(sx, sy + 38), (sx, y_in), (x_in, y_in)]
-        reg.connector(name=f"{source['id']}->{first.id}", points=pts, target=first.slab)
-        placed.append(pts)
-        out.append(connector(points=pts, color=flow["text"], width=3))
-        markers.append(flow["text"])
-        steps.append((sx - 32, (sy + 38 + y_in) / 2, flow["text"]))
-    elif path:
-        steps.append(None)
 
-    for f in spec.get("flows", []):
+def draw_source(tree: Tree) -> None:
+    """Draw the source and its feed into the first node on the path, or the root."""
+    spec, flow = tree.spec, tree.theme.flow
+    source, path = spec.get("source"), spec.get("path", [])
+    if not source:
+        if path:
+            tree.steps.append(None)
+        return
+    first = tree.root
+    if path and path[0] == source["id"] and len(path) > 1:
+        first = tree.nodes[path[1]]
+    sx, sy = 90, 62
+    glyph = icon(name=source.get("icon", "globe"), color=flow["text"], size=52)
+    style = TextStyle(font=tree.theme.sans, size=22, fill=flow["text"], weight=600)
+    tree.out.append(f'<g transform="translate({sx},{sy})">{glyph}</g>')
+    tree.out.append(
+        text(x=sx + 40, y=sy + 8, s=source.get("label", source["id"]), style=style)
+    )
+    _lx, ly = first.slab.vertex("left")
+    y_in = ly + first.slab.h * 0.45
+    x_in = first.slab.hspan(y_in)[0]
+    pts = [(sx, sy + 38), (sx, y_in), (x_in, y_in)]
+    tree.reg.connector(
+        name=f"{source['id']}->{first.id}", points=pts, target=first.slab
+    )
+    tree.placed.append(pts)
+    tree.out.append(connector(points=pts, color=flow["text"], width=3))
+    tree.steps.append((sx - 32, (sy + 38 + y_in) / 2, flow["text"]))
+
+
+def draw_flows(tree: Tree) -> None:
+    """Draw each sideways flow between two nodes, with its label, as a step of the path."""
+    nodes, reg = tree.nodes, tree.reg
+    for f in tree.spec.get("flows", []):
         a, b = nodes[f["from"]].slab, nodes[f["to"]].slab
-        pts = route_flow(a=a, b=b, slabs=reg.slabs, placed=placed)
+        pts = route_flow(a=a, b=b, slabs=reg.slabs, placed=tree.placed)
         if pts is None:
             reg.issues.append(
                 f"route: no clean route for flow '{a.name}' to '{b.name}'"
             )
             continue
-        placed.append(pts)
-        color = tiers[f["from"]]["stroke"]
+        tree.placed.append(pts)
+        tier = tree.tiers[f["from"]]
         reg.connector(name=f"{a.name}=>{b.name}", points=pts, source=a, target=b)
-        out.append(connector(points=pts, color=color, width=3))
-        markers.append(color)
-        longest = max(itertools.pairwise(pts), key=lambda s: math.dist(*s))
-        mx, my = (
-            (longest[0][0] + longest[1][0]) / 2,
-            (longest[0][1] + longest[1][1]) / 2,
-        )
-        steps.append((mx, my, color))
+        tree.out.append(connector(points=pts, color=tier["stroke"], width=3))
+        (x0, y0), (x1, y1) = max(itertools.pairwise(pts), key=lambda s: math.dist(*s))
+        mx, my = (x0 + x1) / 2, (y0 + y1) / 2
+        tree.steps.append((mx, my, tier["stroke"]))
         if f.get("label"):
-            out.append(
-                text(
-                    x=mx,
-                    y=my + 34,
-                    s=f["label"],
-                    font=theme.mono,
-                    size=18,
-                    fill=tiers[f["from"]]["text"],
-                    weight=500,
-                    anchor="middle",
-                )
+            style = TextStyle(
+                font=tree.theme.mono,
+                size=18,
+                fill=tier["text"],
+                weight=500,
+                anchor="middle",
             )
-    for i, st in enumerate(steps, start=1):
-        if st is not None and len(steps) > 1:
-            out.append(badge(x=st[0], y=st[1], n=i, fill=st[2], font=theme.sans))
+            tree.out.append(text(x=mx, y=my + 34, s=f["label"], style=style))
 
-    # Callout cards with leader lines, one per level that has a card.
-    card_x = tree_right + 105
-    prev_bottom = 0
-    cards_bottom = 0
-    has_card = False
-    level_specs = spec.get("levels", [])
-    for d, lvl in enumerate(levels):
+
+def draw_badges(tree: Tree) -> None:
+    """Draw a numbered badge on each step of the path, when it has more than one."""
+    if len(tree.steps) < 2:
+        return
+    for i, st in enumerate(tree.steps, start=1):
+        if st is not None:
+            x, y, color = st
+            tree.out.append(badge(at=(x, y), n=i, fill=color, font=tree.theme.sans))
+
+
+def draw_cards(tree: Tree, *, card_x: float) -> float | None:
+    """Draw a callout card, with its leader, for each level that has one.
+
+    Returns the bottom of the lowest card, or None when no card is drawn.
+    """
+    reg = tree.reg
+    level_specs = tree.spec.get("levels", [])
+    reg.issues.extend(unused_cards(level_specs, len(tree.levels)))
+    bottom = None
+    for d, lvl in enumerate(tree.levels):
         card = level_specs[d].get("card") if d < len(level_specs) else None
         if not card:
             continue
         n = max(lvl, key=lambda k: k.slab.vertex("right")[0])
-        color = tiers[n.id]["stroke"]
-        rx, ry = n.slab.vertex("right")
-        tx, ty = n.slab.vertex("top")
-        lead = None
-        for t in (0.15, 0.3, 0.45, 0.6):
-            ex, ey = rx + (tx - rx) * t, ry + (ty - ry) * t  # along the top-right edge
-            px, py = (
-                ex + (n.slab.cx - ex) * 0.15,
-                ey + (n.slab.cy - ey) * 0.15,
-            )  # nudged onto the face
-            if not any(
-                abs(py - a[1]) < 22 and abs(a[1] - b[1]) < 0.5 and max(a[0], b[0]) > px
-                for pts in placed
-                for a, b in itertools.pairwise(pts)
-            ):
-                lead = (px, py)
-                break
-        if lead is None:
-            lead = (rx - 25, ry)
-            reg.issues.append(f"leader: '{n.id}' leader runs close to a connector")
+        color = tree.tiers[n.id]["stroke"]
+        lx, ly = leader_point(tree, n)
         rows = math.ceil(len(card.get("items", [])) / 2)
         h = 104 + rows * 38 if rows else 90
-        top = max(prev_bottom + 30, 40, lead[1] - 90)
-        if not top + 24 <= lead[1] <= top + h - 24:
+        top = max((bottom or 0) + 30, 40, ly - 90)
+        if not top + 24 <= ly <= top + h - 24:
             reg.issues.append(
                 f"leader: '{card.get('title')}' card cannot sit level with its leader"
             )
-        out.append(
-            f'<line x1="{lead[0]:.1f}" y1="{lead[1]:.1f}" x2="{card_x:.1f}" y2="{lead[1]:.1f}" '
+        tree.out.append(
+            f'<line x1="{lx:.1f}" y1="{ly:.1f}" x2="{card_x:.1f}" y2="{ly:.1f}" '
             f'stroke="{color}" stroke-width="2.5"/>'
         )
-        out.append(dot(x=lead[0], y=lead[1], color=color))
-        out.append(
+        tree.out.append(dot(x=lx, y=ly, color=color))
+        tree.out.append(
             callout_card(
-                x=card_x,
-                y=top,
-                w=CARD_W,
-                h=h,
+                tree,
+                box=(card_x, top, CARD_W, h),
                 color=color,
                 title=card.get("title", n.label),
                 items=card.get("items", []),
-                theme=theme,
-                reg=reg,
             )
         )
-        prev_bottom = top + h
-        cards_bottom = max(cards_bottom, top + h)
-        has_card = True
-    reg.issues.extend(unused_cards(level_specs, depth_count))
+        bottom = top + h
+    return bottom
 
-    width = card_x + CARD_W + 40 if has_card else tree_right + 60
-    caption_y = max(tree_bottom, cards_bottom) + 70
-    caption = spec.get("caption") or default_caption(spec)
-    lines = theme.wrap_lines(s=caption, size=CAPTION_SIZE, width=width - 80)
-    for i, line in enumerate(lines):
-        out.append(
-            text(
-                x=40,
-                y=caption_y + i * CAPTION_LEADING,
-                s=line,
-                font=theme.sans,
-                size=CAPTION_SIZE,
-                fill=theme.ink["caption"],
-            )
-        )
-        reg.text(
-            text=line, left=40, right=40 + theme.measure(s=line, size=CAPTION_SIZE)
-        )
-    height = caption_y + 30 + max(len(lines) - 1, 0) * CAPTION_LEADING
-    return (
-        svg_doc(
-            width=width,
-            height=height,
-            body="".join(out),
-            marker_colors=markers,
-            background=theme.background,
-            title=spec.get("title"),
-            desc=spec.get("story"),
-        ),
-        reg,
-        (width, height),
-    )
+
+def leader_point(tree: Tree, n: Node) -> Point:
+    """Return where a card's leader starts on n: on its face, clear of connectors.
+
+    Tries points along the top-right edge, nudged onto the face; records an issue when
+    none is clear.
+    """
+    rx, ry = n.slab.vertex("right")
+    tx, ty = n.slab.vertex("top")
+    for t in (0.15, 0.3, 0.45, 0.6):
+        ex, ey = rx + (tx - rx) * t, ry + (ty - ry) * t
+        px, py = ex + (n.slab.cx - ex) * 0.15, ey + (n.slab.cy - ey) * 0.15
+        if not any(
+            abs(py - a[1]) < 22 and abs(a[1] - b[1]) < 0.5 and max(a[0], b[0]) > px
+            for pts in tree.placed
+            for a, b in itertools.pairwise(pts)
+        ):
+            return (px, py)
+    tree.reg.issues.append(f"leader: '{n.id}' leader runs close to a connector")
+    return (rx - 25, ry)
 
 
 def unused_cards(level_specs: list[Spec], depth_count: int) -> list[str]:
@@ -428,23 +480,18 @@ def default_caption(spec: Spec) -> str:
 def draw_node(*, n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
     """Return a node's slab and labels, shrinking the label to fit, and register them."""
     s = n.slab
-    lines = [
-        (
-            n.label,
-            max(20, min(46, round(min(s.w, s.d) * 0.17)))
-            if not n.parent or not n.parent.stacked
-            else 20,
-            600,
-            n.mono,
-        )
-    ]
-    label, size, weight, mono = lines[0]
+    size = (
+        max(20, min(46, round(min(s.w, s.d) * 0.17)))
+        if not n.parent or not n.parent.stacked
+        else 20
+    )
+    # Shrink to fit the surface, never below the floor; checks flag what still overflows.
     while (
         size > theme.min_surface_text
-        and theme.measure(s=label, size=size, mono=mono, weight=weight) > s.d - 28
+        and theme.measure(s=n.label, size=size, mono=n.mono, weight=600) > s.d - 28
     ):
-        size -= 1  # shrink to fit the surface, never below the floor; checks flag what still overflows
-    lines[0] = (label, size, weight, mono)
+        size -= 1
+    lines = [(n.label, size, 600, n.mono)]
     if n.sublabel:
         lines.append((n.sublabel, 20, 500 if n.mono_sub else 400, n.mono_sub))
     gap = 6
@@ -454,20 +501,15 @@ def draw_node(*, n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
     texts = []
     for s_text, size, weight, mono in lines:
         cy = y + size / 2
-        font = theme.mono if mono else theme.sans
-        texts.append(
-            text(
-                x=0,
-                y=cy,
-                s=s_text,
-                font=font,
-                size=size,
-                fill=t["text"],
-                weight=weight,
-                anchor="middle",
-                baseline="central",
-            )
+        style = TextStyle(
+            font=theme.mono if mono else theme.sans,
+            size=size,
+            fill=t["text"],
+            weight=weight,
+            anchor="middle",
+            baseline="central",
         )
+        texts.append(text(x=0, y=cy, s=s_text, style=style))
         length = theme.measure(s=s_text, size=size, mono=mono, weight=weight)
         reg.label(
             Label(
@@ -482,25 +524,26 @@ def draw_node(*, n: Node, t: Tier, theme: Theme, reg: Registry) -> str:
     title = f"<title>{escape(n.label)}</title>" + (
         f"<desc>{escape(n.desc)}</desc>" if n.desc else ""
     )
-    return (
-        f"<g>{title}{s.svg(top=t['top'], side=t['side'], stroke=t['stroke'])}"
-        f'<g transform="{plane_matrix(s.cx, s.cy)} rotate(-90)">{"".join(texts)}</g></g>'
+    labels = (
+        f'<g transform="{plane_matrix(s.cx, s.cy)} rotate(-90)">{"".join(texts)}</g>'
     )
+    return f"<g>{title}{s.svg(top=t['top'], side=t['side'], stroke=t['stroke'])}{labels}</g>"
 
 
 def callout_card(
+    tree: Tree,
     *,
-    x: float,
-    y: float,
-    w: float,
-    h: float,
+    box: tuple[float, float, float, float],
     color: str,
     title: str,
     items: list[str],
-    theme: Theme,
-    reg: Registry,
 ) -> str:
-    """Return a callout card: a title over its items in two columns, registering its text."""
+    """Return a callout card in box (x, y, w, h): a title over its items in two columns.
+
+    Registers the card's text, so the fit rule reports what runs past the card.
+    """
+    x, y, w, h = box
+    theme, reg = tree.theme, tree.reg
     within = f"card '{title}'"
     reg.text(
         text=title,
@@ -509,18 +552,12 @@ def callout_card(
         within=within,
         box=(x, x + w - 30),
     )
+    title_style = TextStyle(font=theme.sans, size=32, fill=color, weight=600)
+    item_style = TextStyle(font=theme.sans, size=19, fill=theme.ink["body"])
     out = [
         f'<rect x="{x:.1f}" y="{y:.1f}" width="{w}" height="{h}" rx="22" fill="#FFFFFF" '
         f'stroke="{color}" stroke-width="3"/>',
-        text(
-            x=x + 30,
-            y=y + 52,
-            s=title,
-            font=theme.sans,
-            size=32,
-            fill=color,
-            weight=600,
-        ),
+        text(x=x + 30, y=y + 52, s=title, style=title_style),
     ]
     per_col = math.ceil(len(items) / 2) if items else 0
     col_w = (w - 60) / 2
@@ -536,16 +573,7 @@ def callout_card(
             within=within,
             box=(x, right),
         )
-        out.append(
-            text(
-                x=cx,
-                y=y + 100 + (i % per_col) * 38,
-                s=item,
-                font=theme.sans,
-                size=19,
-                fill=theme.ink["body"],
-            )
-        )
+        out.append(text(x=cx, y=y + 100 + (i % per_col) * 38, s=item, style=item_style))
     return "".join(out)
 
 

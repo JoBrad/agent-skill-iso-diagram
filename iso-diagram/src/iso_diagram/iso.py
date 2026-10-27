@@ -8,10 +8,16 @@ import math
 import re
 
 from collections.abc import Iterable, Sequence
-from typing import Any
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Any
 from xml.sax.saxutils import escape
 
 from iso_diagram import icons
+from iso_diagram.theme import Theme
+
+
+if TYPE_CHECKING:
+    from iso_diagram.checks import Registry
 
 
 C = math.cos(math.radians(30))
@@ -88,34 +94,27 @@ def poly(points: Iterable[Point]) -> str:
     return " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
 
 
+@dataclass(kw_only=True, eq=False)
 class Slab:
-    """A rounded isometric slab. (cx, cy) is the screen center of its top face."""
+    """A w x d rounded isometric slab, h deep, with its top face centered at screen (cx, cy)."""
 
-    def __init__(
-        self,
-        *,
-        name: str,
-        cx: float,
-        cy: float,
-        w: float,
-        d: float,
-        h: float,
-        r: float = 18,
-    ) -> None:
-        """Build a w x d slab, h deep, with corner radius r, its top centered at (cx, cy)."""
-        self.name, self.cx, self.cy, self.w, self.d, self.h, self.r = (
-            name,
-            cx,
-            cy,
-            w,
-            d,
-            h,
-            r,
-        )
+    name: str
+    cx: float
+    cy: float
+    w: float
+    d: float
+    h: float
+    r: float = 18
+    top_pts: list[Point] = field(init=False)
+    body: list[Point] = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Trace the top face and the outline of the whole slab."""
         self.top_pts = [
-            to_screen(cx=cx, cy=cy, x=x, y=y) for x, y in rr_points(w=w, d=d, r=r)
+            to_screen(cx=self.cx, cy=self.cy, x=x, y=y)
+            for x, y in rr_points(w=self.w, d=self.d, r=self.r)
         ]
-        self.body = hull(self.top_pts + [(x, y + h) for x, y in self.top_pts])
+        self.body = hull(self.top_pts + [(x, y + self.h) for x, y in self.top_pts])
 
     def vertex(self, which: str) -> Point:
         """Screen point of a top-face corner: 'top', 'right', 'bottom', 'left'."""
@@ -162,42 +161,64 @@ class Slab:
 
     def svg(self, *, top: str, side: str, stroke: str, sw: float = 2.0) -> str:
         """Return the slab as SVG: body in the side color, top face in the top color."""
+        edge = f'stroke="{stroke}" stroke-width="{sw}" stroke-linejoin="round"'
         return (
-            f'<polygon points="{poly(self.body)}" fill="{side}" stroke="{stroke}" stroke-width="{sw}" '
-            f'stroke-linejoin="round"/>'
-            f'<polygon points="{poly(self.top_pts)}" fill="{top}" stroke="{stroke}" stroke-width="{sw}" '
-            f'stroke-linejoin="round"/>'
+            f'<polygon points="{poly(self.body)}" fill="{side}" {edge}/>'
+            f'<polygon points="{poly(self.top_pts)}" fill="{top}" {edge}/>'
         )
 
     def shadow(self, dy: float = 40) -> str:
         """Return a soft shadow of the top face, dy below the slab's bottom."""
         pts = [(x, y + self.h + dy) for x, y in self.top_pts]
-        return f'<polygon points="{poly(pts)}" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>'
+        return (
+            f'<polygon points="{poly(pts)}" fill="#1e293b" opacity="0.10" '
+            f'filter="url(#soft)"/>'
+        )
 
 
 # --- text and icons ---------------------------------------------------------------------
 
 
+@dataclass(frozen=True, kw_only=True)
+class TextStyle:
+    """How a run of text looks: font family list, size, fill, weight, anchor, and baseline."""
+
+    font: str
+    size: float
+    fill: str
+    weight: int = 400
+    anchor: str = "start"
+    baseline: str | None = None
+
+
 def text(
-    *,
-    x: float,
-    y: float,
-    s: object,
-    font: str,
-    size: float,
-    fill: str,
-    weight: int = 400,
-    anchor: str = "start",
-    baseline: str | None = None,
-    transform: str | None = None,
+    *, x: float, y: float, s: object, style: TextStyle, transform: str | None = None
 ) -> str:
     """Return an SVG text element; s is escaped."""
     tr = f' transform="{transform}"' if transform else ""
-    bl = f' dominant-baseline="{baseline}"' if baseline else ""
+    bl = f' dominant-baseline="{style.baseline}"' if style.baseline else ""
     return (
-        f'<text x="{x:.1f}" y="{y:.1f}"{tr} text-anchor="{anchor}"{bl} font-family="{font}" '
-        f'font-size="{size}" font-weight="{weight}" fill="{fill}">{escape(str(s))}</text>'
+        f'<text x="{x:.1f}" y="{y:.1f}"{tr} text-anchor="{style.anchor}"{bl} '
+        f'font-family="{style.font}" font-size="{style.size}" '
+        f'font-weight="{style.weight}" fill="{style.fill}">{escape(str(s))}</text>'
     )
+
+
+def caption(
+    *, s: str, top: float, width: float, theme: Theme, reg: "Registry"
+) -> tuple[str, float]:
+    """Return a caption wrapped to the canvas width, and the canvas height it needs.
+
+    Each line is registered, so a word too long to wrap is reported.
+    """
+    size, leading = 18, 26
+    style = TextStyle(font=theme.sans, size=size, fill=theme.ink["caption"])
+    lines = theme.wrap_lines(s=s, size=size, width=width - 80)
+    out = []
+    for i, line in enumerate(lines):
+        out.append(text(x=40, y=top + i * leading, s=line, style=style))
+        reg.text(text=line, left=40, right=40 + theme.measure(s=line, size=size))
+    return "".join(out), top + 30 + max(len(lines) - 1, 0) * leading
 
 
 def icon_inner(name: str) -> str:
@@ -222,7 +243,8 @@ def icon(
     s = size / 24
     return (
         f'<g transform="scale({s:.3f}) translate(-12,-12)" fill="none" stroke="{color}" '
-        f'stroke-width="{stroke}" stroke-linecap="round" stroke-linejoin="round">{icon_inner(name)}</g>'
+        f'stroke-width="{stroke}" stroke-linecap="round" stroke-linejoin="round">'
+        f"{icon_inner(name)}</g>"
     )
 
 
@@ -257,14 +279,13 @@ def connector(
     width: float = 3.0,
     arrow: bool = True,
     opacity: float = 1.0,
-    r: float = 16,
 ) -> str:
     """Return a rounded connector path, with an arrowhead at its end when arrow is set."""
     marker = f' marker-end="url(#{marker_id(color)})"' if arrow else ""
     op = f' opacity="{opacity}"' if opacity < 1 else ""
     return (
-        f'<path d="{rounded_path(points, r)}" fill="none" stroke="{color}" stroke-width="{width}" '
-        f'stroke-linecap="round"{op}{marker}/>'
+        f'<path d="{rounded_path(points)}" fill="none" stroke="{color}" '
+        f'stroke-width="{width}" stroke-linecap="round"{op}{marker}/>'
     )
 
 
@@ -277,20 +298,19 @@ def arrow_marker(color: str) -> str:
     )
 
 
-def badge(
-    *, x: float, y: float, n: object, fill: str, font: str, size: float = 18
-) -> str:
-    """Return a numbered step badge: a filled disc with n in white."""
-    return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{size - 3}" fill="{fill}"/>' + text(
-        x=x,
-        y=y,
-        s=n,
+def badge(*, at: Point, n: object, fill: str, font: str, size: float = 18) -> str:
+    """Return a numbered step badge centered at at: a filled disc with n in white."""
+    x, y = at
+    style = TextStyle(
         font=font,
         size=size,
         fill="#FFFFFF",
         weight=600,
         anchor="middle",
         baseline="central",
+    )
+    return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{size - 3}" fill="{fill}"/>' + text(
+        x=x, y=y, s=n, style=style
     )
 
 
@@ -304,16 +324,19 @@ def dot(*, x: float, y: float, color: str, r: float = 6) -> str:
 
 def svg_doc(
     *,
-    width: float,
-    height: float,
+    size: Point,
     body: str,
-    marker_colors: Iterable[str],
     background: str,
     title: str | None = None,
     desc: str | None = None,
 ) -> str:
-    """Return a complete SVG document: metadata, arrow markers, background, and body."""
-    defs = "".join(arrow_marker(c) for c in sorted(set(marker_colors)))
+    """Return a complete SVG document: metadata, arrow markers, background, and body.
+
+    Defines an arrowhead marker for every color whose connector in body points to one.
+    """
+    width, height = size
+    colors = {"#" + c for c in re.findall(r'marker-end="url\(#arrow-([^)"]+)\)"', body)}
+    defs = "".join(arrow_marker(c) for c in sorted(colors))
     meta = (f"<title>{escape(title)}</title>" if title else "") + (
         f"<desc>{escape(desc)}</desc>" if desc else ""
     )

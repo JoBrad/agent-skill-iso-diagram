@@ -22,7 +22,7 @@ from pathlib import Path
 
 import truststore
 
-from iso_diagram import SKILL_DIR
+from iso_diagram.theme import SKILL_DIR
 
 
 ICONS_DIR = SKILL_DIR / "assets" / "icons"

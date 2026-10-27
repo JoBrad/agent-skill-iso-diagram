@@ -5,9 +5,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-from iso_diagram import SKILL_DIR
 
-
+# The skill's root: SKILL.md, themes/, assets/, and examples/ sit here.
+SKILL_DIR = Path(__file__).resolve().parents[2]
 THEMES_DIR = SKILL_DIR / "themes"
 
 # Colors for one slot: slot, hue, top, side, stroke, text.

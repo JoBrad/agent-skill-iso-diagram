@@ -1,6 +1,7 @@
 """Build an isometric diagram from a JSON spec.
 
-    uv run --project SKILL_DIR iso-build SPEC.json -o OUT.svg [--png] [--scale 2] [--theme NAME|PATH]
+    uv run --project SKILL_DIR iso-build SPEC.json -o OUT.svg \
+        [--png] [--scale 2] [--theme NAME|PATH]
 
 Writes an SVG with its fonts embedded. --png also writes OUT.png through headless Chrome.
 Prints every layout-rule problem it finds and exits 1 when there are any (--allow-issues
@@ -93,9 +94,8 @@ def main() -> None:
     output_svg_file.parent.mkdir(exist_ok=True, parents=True)
     with output_svg_file.open("w") as f:
         f.write(svg)
-    print(
-        f"wrote {output_svg_file} ({len(svg) / 1024:.0f} KB, {width:.0f}x{height:.0f}, theme {theme.data['name']})"
-    )
+    size = f"{len(svg) / 1024:.0f} KB, {width:.0f}x{height:.0f}"
+    print(f"wrote {output_svg_file} ({size}, theme {theme.data['name']})")
     if args.png:
         png = output_svg_file.with_suffix(".png")
         render.png(

@@ -7,7 +7,9 @@ import warnings
 import pytest
 
 from iso_diagram import iso
+from iso_diagram.checks import Registry
 from iso_diagram.iso import Slab
+from iso_diagram.theme import Theme
 
 
 def test_to_screen_maps_plane_axes_to_isometric_screen() -> None:
@@ -104,29 +106,34 @@ def test_slab_is_keyword_only() -> None:
         Slab("s", 0, 0, 10, 10, 2)  # type: ignore[misc]
 
 
+STYLE = iso.TextStyle(font="Roboto", size=20, fill="#000")
+
+
 def test_text_escapes_and_sets_optional_attributes() -> None:
     out = iso.text(
         x=1,
         y=2,
         s="a < b & c",
-        font="Roboto",
-        size=20,
-        fill="#000",
-        anchor="middle",
-        baseline="central",
+        style=iso.TextStyle(
+            font="Roboto", size=20, fill="#000", anchor="middle", baseline="central"
+        ),
         transform="rotate(-90)",
     )
     assert "a &lt; b &amp; c" in out
     assert 'dominant-baseline="central"' in out
     assert 'transform="rotate(-90)"' in out
-    plain = iso.text(x=1, y=2, s="x", font="Roboto", size=20, fill="#000")
+    plain = iso.text(
+        x=1, y=2, s="x", style=iso.TextStyle(font="Roboto", size=20, fill="#000")
+    )
     assert "dominant-baseline" not in plain
     assert "transform" not in plain
 
 
 def test_text_is_keyword_only() -> None:
     with pytest.raises(TypeError):
-        iso.text(1, 2, "x", "Roboto", 20, "#000")  # type: ignore[misc]
+        iso.text(1, 2, "x", STYLE)  # type: ignore[misc]
+    with pytest.raises(TypeError):
+        iso.TextStyle("Roboto", 20, "#000")  # type: ignore[misc]
 
 
 def test_icon_draws_the_cached_icon() -> None:
@@ -175,7 +182,8 @@ def test_arrow_marker_id_matches_connector() -> None:
 
 
 def test_badge_and_dot() -> None:
-    badge = iso.badge(x=10, y=20, n=3, fill="#00F", font="Roboto", size=18)
+    badge = iso.badge(at=(10, 20), n=3, fill="#00F", font="Roboto", size=18)
+    assert '<circle cx="10.0" cy="20.0"' in badge
     assert 'r="15"' in badge
     assert ">3</text>" in badge
     assert iso.dot(x=1, y=2, color="#F00") == (
@@ -184,24 +192,28 @@ def test_badge_and_dot() -> None:
 
 
 def test_svg_doc_includes_markers_metadata_and_background() -> None:
+    pts = [(0, 0), (0, 50)]
+    body = "".join(
+        [
+            iso.connector(points=pts, color="#B00"),
+            iso.connector(points=pts, color="#A00"),
+            iso.connector(points=pts, color="#B00"),
+            iso.connector(points=pts, color="#C00", arrow=False),
+        ]
+    )
     doc = iso.svg_doc(
-        width=100.4,
-        height=50,
-        body="<g/>",
-        marker_colors=["#B00", "#A00", "#B00"],
-        background="#FFF",
-        title="T & co",
-        desc="D",
+        size=(100.4, 50), body=body, background="#FFF", title="T & co", desc="D"
     )
     assert doc.startswith('<svg xmlns="http://www.w3.org/2000/svg" width="100"')
     assert "<title>T &amp; co</title><desc>D</desc>" in doc
     assert doc.count("<marker") == 2
     assert doc.index("arrow-A00") < doc.index("arrow-B00")
-    assert doc.endswith('fill="#FFF"/><g/></svg>\n')
+    assert "arrow-C00" not in doc
+    assert doc.endswith(f'fill="#FFF"/>{body}</svg>\n')
 
 
 def test_svg_doc_omits_empty_metadata() -> None:
-    doc = iso.svg_doc(width=10, height=10, body="", marker_colors=[], background="#FFF")
+    doc = iso.svg_doc(size=(10, 10), body="", background="#FFF")
     assert "<title>" not in doc
     assert "<desc>" not in doc
 
@@ -217,3 +229,18 @@ def test_icon_inner_closes_the_icon_file() -> None:
         iso.icon_inner("globe")
         gc.collect()
     assert not [w for w in caught if issubclass(w.category, ResourceWarning)]
+
+
+def test_caption_wraps_registers_and_sizes_the_canvas() -> None:
+    theme = Theme()
+    reg = Registry(theme)
+    story = "word " * 40
+    svg, height = iso.caption(s=story, top=100, width=400, theme=theme, reg=reg)
+    lines = svg.count("<text")
+    assert lines > 1
+    assert height == 100 + 30 + (lines - 1) * 26
+    assert len(reg.texts) == lines
+    assert reg.check(400, height) == []
+    one, one_height = iso.caption(s="short", top=100, width=400, theme=theme, reg=reg)
+    assert one.count("<text") == 1
+    assert one_height == 130

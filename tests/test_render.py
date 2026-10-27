@@ -66,8 +66,6 @@ def test_png_window_matches_the_svg_size(
         width=width,
         height=width,
     )
-    doc = svg_doc(
-        width=width, height=width, body="", marker_colors=[], background="#FFF"
-    )
+    doc = svg_doc(size=(width, width), body="", background="#FFF")
     assert f'width="{size}"' in doc
     assert f"--window-size={size},{size}" in calls[0]

@@ -9,13 +9,12 @@ theme can be judged before any diagram uses it.
 import argparse
 import itertools
 import math
-import os
 
 from collections.abc import Sequence
 from pathlib import Path
 
 from iso_diagram import fonts, render
-from iso_diagram.iso import Slab, plane_matrix, svg_doc, text
+from iso_diagram.iso import Slab, TextStyle, plane_matrix, svg_doc, text
 from iso_diagram.theme import Theme
 
 
@@ -88,19 +87,14 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
             x=40,
             y=64,
             s=f"{theme.data['name'].title()} palette",
-            font=theme.sans,
-            size=36,
-            fill=ink["title"],
-            weight=600,
+            style=TextStyle(font=theme.sans, size=36, fill=ink["title"], weight=600),
         ),
         text(
             x=40,
             y=98,
             s=f"{len(slots)} slots, assigned in order; the last is the leaf tier. Tints mix the "
             f"stroke toward white. Contrast is against white.",
-            font=theme.sans,
-            size=18,
-            fill=ink["caption"],
+            style=TextStyle(font=theme.sans, size=18, fill=ink["caption"]),
         ),
     ]
     x0, colw = 200, 210
@@ -123,12 +117,14 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
                 x=0,
                 y=0,
                 s=slot.title(),
-                font=theme.sans,
-                size=20,
-                fill=t["text"],
-                weight=600,
-                anchor="middle",
-                baseline="central",
+                style=TextStyle(
+                    font=theme.sans,
+                    size=20,
+                    fill=t["text"],
+                    weight=600,
+                    anchor="middle",
+                    baseline="central",
+                ),
             )
             + "</g>"
         )
@@ -137,11 +133,13 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
                 x=cx,
                 y=330,
                 s=f"{i + 1}. {slot.title()}",
-                font=theme.sans,
-                size=20,
-                fill=ink["title"],
-                weight=600,
-                anchor="middle",
+                style=TextStyle(
+                    font=theme.sans,
+                    size=20,
+                    fill=ink["title"],
+                    weight=600,
+                    anchor="middle",
+                ),
             )
         )
         for r, (_, key) in enumerate(rows):
@@ -155,10 +153,9 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
                     x=cx - 18,
                     y=y + 20,
                     s=t[key],
-                    font=theme.mono,
-                    size=17,
-                    fill=ink["title"],
-                    weight=500,
+                    style=TextStyle(
+                        font=theme.mono, size=17, fill=ink["title"], weight=500
+                    ),
                 )
             )
             if key in ("hue", "text"):
@@ -167,9 +164,7 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
                         x=cx - 18,
                         y=y + 40,
                         s=f"{contrast(t[key]):.1f}:1",
-                        font=theme.sans,
-                        size=15,
-                        fill=ink["caption"],
+                        style=TextStyle(font=theme.sans, size=15, fill=ink["caption"]),
                     )
                 )
     for r, (label, _) in enumerate(rows):
@@ -178,10 +173,9 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
                 x=40,
                 y=388 + r * 66,
                 s=label,
-                font=theme.sans,
-                size=18,
-                fill=ink["label"],
-                weight=600,
+                style=TextStyle(
+                    font=theme.sans, size=18, fill=ink["label"], weight=600
+                ),
             )
         )
 
@@ -190,10 +184,7 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
             x=40,
             y=690,
             s="Simulated color vision (stroke colors)",
-            font=theme.sans,
-            size=26,
-            fill=ink["title"],
-            weight=600,
+            style=TextStyle(font=theme.sans, size=26, fill=ink["title"], weight=600),
         )
     )
     report = []
@@ -204,10 +195,9 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
                 x=40,
                 y=y + 34,
                 s=label,
-                font=theme.sans,
-                size=18,
-                fill=ink["label"],
-                weight=600,
+                style=TextStyle(
+                    font=theme.sans, size=18, fill=ink["label"], weight=600
+                ),
             )
         )
         sims = {}
@@ -233,18 +223,14 @@ def build(theme: Theme) -> tuple[str, list[str], float]:
             y=1040,
             s=f"Simulation: Machado et al. 2009, full severity. Outlines for light slots ({light}) "
             f"use the text shade.",
-            font=theme.sans,
-            size=16,
-            fill=ink["caption"],
+            style=TextStyle(font=theme.sans, size=16, fill=ink["caption"]),
         )
     )
     width = x0 + len(slots) * colw + 40
     return (
         svg_doc(
-            width=width,
-            height=1070,
+            size=(width, 1070),
             body="".join(out),
-            marker_colors=[],
             background=theme.background,
             title=f"{theme.data['name']} palette",
         ),

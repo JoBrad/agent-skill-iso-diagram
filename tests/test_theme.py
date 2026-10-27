@@ -6,8 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from iso_diagram import SKILL_DIR
-from iso_diagram.theme import Theme, tint
+from iso_diagram.theme import SKILL_DIR, Theme, tint
 
 
 DEFAULT = SKILL_DIR / "themes" / "default.json"

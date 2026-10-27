@@ -21,7 +21,11 @@ Rect = tuple[float, float, float, float]  # plane x, y, w, d
 
 
 class Registry:
-    """What a layout drew that the layout rules cover, plus issues it found itself."""
+    """Shapes, labels, and connectors a layout drew, checked against the layout rules.
+
+    The layout records each element as it draws it, and adds to `issues` any problem it
+    hits along the way. `check()` then returns every rule the drawing breaks.
+    """
 
     def __init__(self, theme: Theme) -> None:
         """Start an empty registry; theme supplies the text-size floor."""
@@ -43,7 +47,13 @@ class Registry:
         return s
 
     def child(
-        self, *, parent: str, pw: float, pd: float, name: str, rect: Rect
+        self,
+        *,
+        parent: str,
+        pw: float,
+        pd: float,
+        name: str,
+        rect: Rect,
     ) -> None:
         """Record a child rect drawn on a pw x pd parent, for the inset rule."""
         self.children.append((parent, pw, pd, name, rect))

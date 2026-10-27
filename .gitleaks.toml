@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Icon manifest: SHA-256 hashes beside icon names that contain 'key'"
+paths = ['''^iso-diagram/assets/icons/manifest\.json$''']

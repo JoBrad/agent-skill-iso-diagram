@@ -1,0 +1,18 @@
+[project]
+name = "iso-diagram"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "brotli>=1.2.1",
+    "fonttools>=4.67.0",
+    "truststore>=0.10.5",
+]
+
+[project.scripts]
+iso-build = "iso_diagram.build:main"
+iso-palette = "iso_diagram.palette:main"
+iso-icons = "iso_diagram.icons:main"
+
+[build-system]
+requires = ["uv_build>=0.13.4,<0.14.0"]
+build-backend = "uv_build"

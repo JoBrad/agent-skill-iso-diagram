@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1778" height="1271" viewBox="0 0 1778 1271">
+<title>AWS containment</title>
+<desc>Each container holds the next, and a request crosses every boundary on its way in.</desc>
+<defs>
+<style>@font-face{font-family:'Roboto';font-weight:400;src:url(data:font/woff2;base64,FONT) format('woff2');}@font-face{font-family:'Roboto';font-weight:600;src:url(data:font/woff2;base64,FONT) format('woff2');}@font-face{font-family:'Roboto Mono';font-weight:500;src:url(data:font/woff2;base64,FONT) format('woff2');}@font-face{font-family:'Roboto Mono';font-weight:600;src:url(data:font/woff2;base64,FONT) format('woff2');}</style>
+<marker id="arrow-17A07A" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#17A07A"/>
+</marker>
+<marker id="arrow-2B6F98" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#2B6F98"/>
+</marker>
+<marker id="arrow-3478C8" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#3478C8"/>
+</marker>
+<marker id="arrow-6B7280" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#6B7280"/>
+</marker>
+<marker id="arrow-E26D33" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="13" markerHeight="13" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#E26D33"/>
+</marker>
+<filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+<feGaussianBlur stdDeviation="18"/>
+</filter>
+</defs>
+<rect width="1778" height="1271" fill="#FFFFFF"/>
+<polygon points="224.1,1049.2 225.9,1050.5 227.3,1052.0 228.1,1053.5 228.4,1055.2 228.1,1056.9 227.3,1058.4 225.9,1059.9 224.1,1061.2 132.3,1114.2 130.0,1115.3 127.5,1116.0 124.7,1116.5 121.9,1116.7 119.0,1116.5 116.3,1116.0 113.7,1115.3 111.5,1114.2 71.6,1091.2 69.8,1089.9 68.5,1088.4 67.6,1086.9 67.3,1085.2 67.6,1083.5 68.5,1082.0 69.8,1080.5 71.6,1079.2 163.4,1026.2 165.7,1025.1 168.2,1024.4 171.0,1023.9 173.8,1023.7 176.7,1023.9 179.5,1024.4 182.0,1025.1 184.2,1026.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="558.9,1049.2 560.7,1050.5 562.1,1052.0 562.9,1053.5 563.2,1055.2 562.9,1056.9 562.1,1058.4 560.7,1059.9 558.9,1061.2 467.1,1114.2 464.9,1115.3 462.3,1116.0 459.6,1116.5 456.7,1116.7 453.8,1116.5 451.1,1116.0 448.5,1115.3 446.3,1114.2 406.5,1091.2 404.6,1089.9 403.3,1088.4 402.4,1086.9 402.2,1085.2 402.4,1083.5 403.3,1082.0 404.6,1080.5 406.5,1079.2 498.3,1026.2 500.5,1025.1 503.0,1024.4 505.8,1023.9 508.6,1023.7 511.5,1023.9 514.3,1024.4 516.8,1025.1 519.0,1026.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="893.7,1049.2 895.5,1050.5 896.9,1052.0 897.7,1053.5 898.0,1055.2 897.7,1056.9 896.9,1058.4 895.5,1059.9 893.7,1061.2 801.9,1114.2 799.7,1115.3 797.1,1116.0 794.4,1116.5 791.5,1116.7 788.6,1116.5 785.9,1116.0 783.3,1115.3 781.1,1114.2 741.3,1091.2 739.4,1089.9 738.1,1088.4 737.2,1086.9 737.0,1085.2 737.2,1083.5 738.1,1082.0 739.4,1080.5 741.3,1079.2 833.1,1026.2 835.3,1025.1 837.8,1024.4 840.6,1023.9 843.5,1023.7 846.3,1023.9 849.1,1024.4 851.6,1025.1 853.8,1026.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="309.1,1091.2 310.9,1092.5 312.3,1094.0 313.1,1095.5 313.4,1097.2 313.1,1098.9 312.3,1100.4 310.9,1101.9 309.1,1103.2 217.3,1156.2 215.0,1157.3 212.5,1158.0 209.7,1158.5 206.9,1158.7 204.0,1158.5 201.3,1158.0 198.7,1157.3 196.5,1156.2 156.6,1133.2 154.8,1131.9 153.5,1130.4 152.6,1128.9 152.3,1127.2 152.6,1125.5 153.5,1124.0 154.8,1122.5 156.6,1121.2 248.4,1068.2 250.7,1067.1 253.2,1066.4 256.0,1065.9 258.8,1065.7 261.7,1065.9 264.5,1066.4 267.0,1067.1 269.2,1068.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="643.9,1091.2 645.7,1092.5 647.1,1094.0 647.9,1095.5 648.2,1097.2 647.9,1098.9 647.1,1100.4 645.7,1101.9 643.9,1103.2 552.1,1156.2 549.9,1157.3 547.3,1158.0 544.6,1158.5 541.7,1158.7 538.8,1158.5 536.1,1158.0 533.5,1157.3 531.3,1156.2 491.5,1133.2 489.6,1131.9 488.3,1130.4 487.4,1128.9 487.2,1127.2 487.4,1125.5 488.3,1124.0 489.6,1122.5 491.5,1121.2 583.3,1068.2 585.5,1067.1 588.0,1066.4 590.8,1065.9 593.6,1065.7 596.5,1065.9 599.3,1066.4 601.8,1067.1 604.0,1068.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="978.7,1091.2 980.5,1092.5 981.9,1094.0 982.7,1095.5 983.0,1097.2 982.7,1098.9 981.9,1100.4 980.5,1101.9 978.7,1103.2 886.9,1156.2 884.7,1157.3 882.1,1158.0 879.4,1158.5 876.5,1158.7 873.6,1158.5 870.9,1158.0 868.3,1157.3 866.1,1156.2 826.3,1133.2 824.4,1131.9 823.1,1130.4 822.2,1128.9 822.0,1127.2 822.2,1125.5 823.1,1124.0 824.4,1122.5 826.3,1121.2 918.1,1068.2 920.3,1067.1 922.8,1066.4 925.6,1065.9 928.5,1065.7 931.3,1065.9 934.1,1066.4 936.6,1067.1 938.8,1068.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="304.7,835.2 307.4,837.1 309.5,839.3 310.7,841.7 311.1,844.2 310.7,846.7 309.5,849.1 307.4,851.3 304.7,853.2 205.9,910.2 202.6,911.8 198.8,913.0 194.7,913.7 190.4,913.9 186.1,913.7 181.9,913.0 178.1,911.8 174.8,910.2 76.0,853.2 73.3,851.3 71.3,849.1 70.0,846.7 69.6,844.2 70.0,841.7 71.3,839.3 73.3,837.1 76.0,835.2 174.8,778.2 178.1,776.6 181.9,775.4 186.1,774.7 190.4,774.5 194.7,774.7 198.8,775.4 202.6,776.6 205.9,778.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="639.5,835.2 642.2,837.1 644.3,839.3 645.5,841.7 645.9,844.2 645.5,846.7 644.3,849.1 642.2,851.3 639.5,853.2 540.8,910.2 537.4,911.8 533.6,913.0 529.5,913.7 525.2,913.9 520.9,913.7 516.7,913.0 512.9,911.8 509.6,910.2 410.9,853.2 408.1,851.3 406.1,849.1 404.8,846.7 404.4,844.2 404.8,841.7 406.1,839.3 408.1,837.1 410.9,835.2 509.6,778.2 512.9,776.6 516.7,775.4 520.9,774.7 525.2,774.5 529.5,774.7 533.6,775.4 537.4,776.6 540.8,778.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="974.3,835.2 977.0,837.1 979.1,839.3 980.3,841.7 980.7,844.2 980.3,846.7 979.1,849.1 977.0,851.3 974.3,853.2 875.6,910.2 872.2,911.8 868.4,913.0 864.3,913.7 860.0,913.9 855.7,913.7 851.5,913.0 847.7,911.8 844.4,910.2 745.7,853.2 742.9,851.3 740.9,849.1 739.6,846.7 739.2,844.2 739.6,841.7 740.9,839.3 742.9,837.1 745.7,835.2 844.4,778.2 847.7,776.6 851.5,775.4 855.7,774.7 860.0,774.5 864.3,774.7 868.4,775.4 872.2,776.6 875.6,778.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="734.7,514.2 737.5,516.1 739.5,518.3 740.8,520.7 741.2,523.2 740.8,525.7 739.5,528.1 737.5,530.3 734.7,532.2 540.8,644.2 537.4,645.8 533.6,647.0 529.5,647.7 525.2,647.9 520.9,647.7 516.7,647.0 512.9,645.8 509.6,644.2 315.6,532.2 312.8,530.3 310.8,528.1 309.6,525.7 309.1,523.2 309.6,520.7 310.8,518.3 312.8,516.1 315.6,514.2 509.6,402.2 512.9,400.6 516.7,399.4 520.9,398.7 525.2,398.5 529.5,398.7 533.6,399.4 537.4,400.6 540.8,402.2" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<polygon points="734.7,275.0 737.5,276.9 739.5,279.1 740.8,281.5 741.2,284.0 740.8,286.5 739.5,288.9 737.5,291.1 734.7,293.0 540.8,405.0 537.4,406.6 533.6,407.8 529.5,408.5 525.2,408.7 520.9,408.5 516.7,407.8 512.9,406.6 509.6,405.0 315.6,293.0 312.8,291.1 310.8,288.9 309.6,286.5 309.1,284.0 309.6,281.5 310.8,279.1 312.8,276.9 315.6,275.0 509.6,163.0 512.9,161.4 516.7,160.2 520.9,159.5 525.2,159.3 529.5,159.5 533.6,160.2 537.4,161.4 540.8,163.0" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<g>
+<title>bastion-sg</title>
+<polygon points="67.3,1033.2 67.6,1031.5 68.5,1030.0 69.8,1028.5 71.6,1027.2 163.4,974.2 165.7,973.1 168.2,972.4 171.0,971.9 173.8,971.7 176.7,971.9 179.5,972.4 182.0,973.1 184.2,974.2 224.1,997.2 225.9,998.5 227.3,1000.0 228.1,1001.5 228.4,1003.2 228.4,1025.2 228.1,1026.9 227.3,1028.4 225.9,1029.9 224.1,1031.2 132.3,1084.2 130.0,1085.3 127.5,1086.0 124.7,1086.5 121.9,1086.7 119.0,1086.5 116.3,1086.0 113.7,1085.3 111.5,1084.2 71.6,1061.2 69.8,1059.9 68.5,1058.4 67.6,1056.9 67.3,1055.2" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="224.1,997.2 225.9,998.5 227.3,1000.0 228.1,1001.5 228.4,1003.2 228.1,1004.9 227.3,1006.4 225.9,1007.9 224.1,1009.2 132.3,1062.2 130.0,1063.3 127.5,1064.0 124.7,1064.5 121.9,1064.7 119.0,1064.5 116.3,1064.0 113.7,1063.3 111.5,1062.2 71.6,1039.2 69.8,1037.9 68.5,1036.4 67.6,1034.9 67.3,1033.2 67.6,1031.5 68.5,1030.0 69.8,1028.5 71.6,1027.2 163.4,974.2 165.7,973.1 168.2,972.4 171.0,971.9 173.8,971.7 176.7,971.9 179.5,972.4 182.0,973.1 184.2,974.2" fill="#EFEFF1" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(147.9,1018.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="0.0" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="600" fill="#374151">bastion-sg</text>
+</g>
+</g>
+<g>
+<title>worker-sg</title>
+<polygon points="402.2,1033.2 402.4,1031.5 403.3,1030.0 404.6,1028.5 406.5,1027.2 498.3,974.2 500.5,973.1 503.0,972.4 505.8,971.9 508.6,971.7 511.5,971.9 514.3,972.4 516.8,973.1 519.0,974.2 558.9,997.2 560.7,998.5 562.1,1000.0 562.9,1001.5 563.2,1003.2 563.2,1025.2 562.9,1026.9 562.1,1028.4 560.7,1029.9 558.9,1031.2 467.1,1084.2 464.9,1085.3 462.3,1086.0 459.6,1086.5 456.7,1086.7 453.8,1086.5 451.1,1086.0 448.5,1085.3 446.3,1084.2 406.5,1061.2 404.6,1059.9 403.3,1058.4 402.4,1056.9 402.2,1055.2" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="558.9,997.2 560.7,998.5 562.1,1000.0 562.9,1001.5 563.2,1003.2 562.9,1004.9 562.1,1006.4 560.7,1007.9 558.9,1009.2 467.1,1062.2 464.9,1063.3 462.3,1064.0 459.6,1064.5 456.7,1064.7 453.8,1064.5 451.1,1064.0 448.5,1063.3 446.3,1062.2 406.5,1039.2 404.6,1037.9 403.3,1036.4 402.4,1034.9 402.2,1033.2 402.4,1031.5 403.3,1030.0 404.6,1028.5 406.5,1027.2 498.3,974.2 500.5,973.1 503.0,972.4 505.8,971.9 508.6,971.7 511.5,971.9 514.3,972.4 516.8,973.1 519.0,974.2" fill="#EFEFF1" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(482.7,1018.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="0.0" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="600" fill="#374151">worker-sg</text>
+</g>
+</g>
+<g>
+<title>cache-sg</title>
+<polygon points="737.0,1033.2 737.2,1031.5 738.1,1030.0 739.4,1028.5 741.3,1027.2 833.1,974.2 835.3,973.1 837.8,972.4 840.6,971.9 843.5,971.7 846.3,971.9 849.1,972.4 851.6,973.1 853.8,974.2 893.7,997.2 895.5,998.5 896.9,1000.0 897.7,1001.5 898.0,1003.2 898.0,1025.2 897.7,1026.9 896.9,1028.4 895.5,1029.9 893.7,1031.2 801.9,1084.2 799.7,1085.3 797.1,1086.0 794.4,1086.5 791.5,1086.7 788.6,1086.5 785.9,1086.0 783.3,1085.3 781.1,1084.2 741.3,1061.2 739.4,1059.9 738.1,1058.4 737.2,1056.9 737.0,1055.2" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="893.7,997.2 895.5,998.5 896.9,1000.0 897.7,1001.5 898.0,1003.2 897.7,1004.9 896.9,1006.4 895.5,1007.9 893.7,1009.2 801.9,1062.2 799.7,1063.3 797.1,1064.0 794.4,1064.5 791.5,1064.7 788.6,1064.5 785.9,1064.0 783.3,1063.3 781.1,1062.2 741.3,1039.2 739.4,1037.9 738.1,1036.4 737.2,1034.9 737.0,1033.2 737.2,1031.5 738.1,1030.0 739.4,1028.5 741.3,1027.2 833.1,974.2 835.3,973.1 837.8,972.4 840.6,971.9 843.5,971.7 846.3,971.9 849.1,972.4 851.6,973.1 853.8,974.2" fill="#EFEFF1" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(817.5,1018.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="0.0" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="600" fill="#374151">cache-sg</text>
+</g>
+</g>
+<g>
+<title>alb-sg</title>
+<polygon points="152.3,1075.2 152.6,1073.5 153.5,1072.0 154.8,1070.5 156.6,1069.2 248.4,1016.2 250.7,1015.1 253.2,1014.4 256.0,1013.9 258.8,1013.7 261.7,1013.9 264.5,1014.4 267.0,1015.1 269.2,1016.2 309.1,1039.2 310.9,1040.5 312.3,1042.0 313.1,1043.5 313.4,1045.2 313.4,1067.2 313.1,1068.9 312.3,1070.4 310.9,1071.9 309.1,1073.2 217.3,1126.2 215.0,1127.3 212.5,1128.0 209.7,1128.5 206.9,1128.7 204.0,1128.5 201.3,1128.0 198.7,1127.3 196.5,1126.2 156.6,1103.2 154.8,1101.9 153.5,1100.4 152.6,1098.9 152.3,1097.2" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="309.1,1039.2 310.9,1040.5 312.3,1042.0 313.1,1043.5 313.4,1045.2 313.1,1046.9 312.3,1048.4 310.9,1049.9 309.1,1051.2 217.3,1104.2 215.0,1105.3 212.5,1106.0 209.7,1106.5 206.9,1106.7 204.0,1106.5 201.3,1106.0 198.7,1105.3 196.5,1104.2 156.6,1081.2 154.8,1079.9 153.5,1078.4 152.6,1076.9 152.3,1075.2 152.6,1073.5 153.5,1072.0 154.8,1070.5 156.6,1069.2 248.4,1016.2 250.7,1015.1 253.2,1014.4 256.0,1013.9 258.8,1013.7 261.7,1013.9 264.5,1014.4 267.0,1015.1 269.2,1016.2" fill="#EFEFF1" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(232.9,1060.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="0.0" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="600" fill="#374151">alb-sg</text>
+</g>
+</g>
+<g>
+<title>app-sg</title>
+<polygon points="487.2,1075.2 487.4,1073.5 488.3,1072.0 489.6,1070.5 491.5,1069.2 583.3,1016.2 585.5,1015.1 588.0,1014.4 590.8,1013.9 593.6,1013.7 596.5,1013.9 599.3,1014.4 601.8,1015.1 604.0,1016.2 643.9,1039.2 645.7,1040.5 647.1,1042.0 647.9,1043.5 648.2,1045.2 648.2,1067.2 647.9,1068.9 647.1,1070.4 645.7,1071.9 643.9,1073.2 552.1,1126.2 549.9,1127.3 547.3,1128.0 544.6,1128.5 541.7,1128.7 538.8,1128.5 536.1,1128.0 533.5,1127.3 531.3,1126.2 491.5,1103.2 489.6,1101.9 488.3,1100.4 487.4,1098.9 487.2,1097.2" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="643.9,1039.2 645.7,1040.5 647.1,1042.0 647.9,1043.5 648.2,1045.2 647.9,1046.9 647.1,1048.4 645.7,1049.9 643.9,1051.2 552.1,1104.2 549.9,1105.3 547.3,1106.0 544.6,1106.5 541.7,1106.7 538.8,1106.5 536.1,1106.0 533.5,1105.3 531.3,1104.2 491.5,1081.2 489.6,1079.9 488.3,1078.4 487.4,1076.9 487.2,1075.2 487.4,1073.5 488.3,1072.0 489.6,1070.5 491.5,1069.2 583.3,1016.2 585.5,1015.1 588.0,1014.4 590.8,1013.9 593.6,1013.7 596.5,1013.9 599.3,1014.4 601.8,1015.1 604.0,1016.2" fill="#EFEFF1" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(567.7,1060.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="0.0" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="600" fill="#374151">app-sg</text>
+</g>
+</g>
+<g>
+<title>db-sg</title>
+<polygon points="822.0,1075.2 822.2,1073.5 823.1,1072.0 824.4,1070.5 826.3,1069.2 918.1,1016.2 920.3,1015.1 922.8,1014.4 925.6,1013.9 928.5,1013.7 931.3,1013.9 934.1,1014.4 936.6,1015.1 938.8,1016.2 978.7,1039.2 980.5,1040.5 981.9,1042.0 982.7,1043.5 983.0,1045.2 983.0,1067.2 982.7,1068.9 981.9,1070.4 980.5,1071.9 978.7,1073.2 886.9,1126.2 884.7,1127.3 882.1,1128.0 879.4,1128.5 876.5,1128.7 873.6,1128.5 870.9,1128.0 868.3,1127.3 866.1,1126.2 826.3,1103.2 824.4,1101.9 823.1,1100.4 822.2,1098.9 822.0,1097.2" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="978.7,1039.2 980.5,1040.5 981.9,1042.0 982.7,1043.5 983.0,1045.2 982.7,1046.9 981.9,1048.4 980.5,1049.9 978.7,1051.2 886.9,1104.2 884.7,1105.3 882.1,1106.0 879.4,1106.5 876.5,1106.7 873.6,1106.5 870.9,1106.0 868.3,1105.3 866.1,1104.2 826.3,1081.2 824.4,1079.9 823.1,1078.4 822.2,1076.9 822.0,1075.2 822.2,1073.5 823.1,1072.0 824.4,1070.5 826.3,1069.2 918.1,1016.2 920.3,1015.1 922.8,1014.4 925.6,1013.9 928.5,1013.7 931.3,1013.9 934.1,1014.4 936.6,1015.1 938.8,1016.2" fill="#EFEFF1" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(902.5,1060.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="0.0" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="600" fill="#374151">db-sg</text>
+</g>
+</g>
+<g>
+<title>Public</title>
+<polygon points="69.6,788.2 70.0,785.7 71.3,783.3 73.3,781.1 76.0,779.2 174.8,722.2 178.1,720.6 181.9,719.4 186.1,718.7 190.4,718.5 194.7,718.7 198.8,719.4 202.6,720.6 205.9,722.2 304.7,779.2 307.4,781.1 309.5,783.3 310.7,785.7 311.1,788.2 311.1,814.2 310.7,816.7 309.5,819.1 307.4,821.3 304.7,823.2 205.9,880.2 202.6,881.8 198.8,883.0 194.7,883.7 190.4,883.9 186.1,883.7 181.9,883.0 178.1,881.8 174.8,880.2 76.0,823.2 73.3,821.3 71.3,819.1 70.0,816.7 69.6,814.2" fill="#A7DBCC" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="304.7,779.2 307.4,781.1 309.5,783.3 310.7,785.7 311.1,788.2 310.7,790.7 309.5,793.1 307.4,795.3 304.7,797.2 205.9,854.2 202.6,855.8 198.8,857.0 194.7,857.7 190.4,857.9 186.1,857.7 181.9,857.0 178.1,855.8 174.8,854.2 76.0,797.2 73.3,795.3 71.3,793.1 70.0,790.7 69.6,788.2 70.0,785.7 71.3,783.3 73.3,781.1 76.0,779.2 174.8,722.2 178.1,720.6 181.9,719.4 186.1,718.7 190.4,718.5 194.7,718.7 198.8,719.4 202.6,720.6 205.9,722.2" fill="#E5F5F0" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(190.4,788.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="-4.0" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#0C7558">Public</text>
+<text x="0.0" y="25.0" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="400" fill="#0C7558">AZ a</text>
+</g>
+</g>
+<g>
+<title>Private app</title>
+<polygon points="404.4,788.2 404.8,785.7 406.1,783.3 408.1,781.1 410.9,779.2 509.6,722.2 512.9,720.6 516.7,719.4 520.9,718.7 525.2,718.5 529.5,718.7 533.6,719.4 537.4,720.6 540.8,722.2 639.5,779.2 642.2,781.1 644.3,783.3 645.5,785.7 645.9,788.2 645.9,814.2 645.5,816.7 644.3,819.1 642.2,821.3 639.5,823.2 540.8,880.2 537.4,881.8 533.6,883.0 529.5,883.7 525.2,883.9 520.9,883.7 516.7,883.0 512.9,881.8 509.6,880.2 410.9,823.2 408.1,821.3 406.1,819.1 404.8,816.7 404.4,814.2" fill="#A7DBCC" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="639.5,779.2 642.2,781.1 644.3,783.3 645.5,785.7 645.9,788.2 645.5,790.7 644.3,793.1 642.2,795.3 639.5,797.2 540.8,854.2 537.4,855.8 533.6,857.0 529.5,857.7 525.2,857.9 520.9,857.7 516.7,857.0 512.9,855.8 509.6,854.2 410.9,797.2 408.1,795.3 406.1,793.1 404.8,790.7 404.4,788.2 404.8,785.7 406.1,783.3 408.1,781.1 410.9,779.2 509.6,722.2 512.9,720.6 516.7,719.4 520.9,718.7 525.2,718.5 529.5,718.7 533.6,719.4 537.4,720.6 540.8,722.2" fill="#E5F5F0" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(525.2,788.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="-4.0" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="23" font-weight="600" fill="#0C7558">Private app</text>
+<text x="0.0" y="23.5" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="400" fill="#0C7558">AZ b</text>
+</g>
+</g>
+<g>
+<title>Private data</title>
+<polygon points="739.2,788.2 739.6,785.7 740.9,783.3 742.9,781.1 745.7,779.2 844.4,722.2 847.7,720.6 851.5,719.4 855.7,718.7 860.0,718.5 864.3,718.7 868.4,719.4 872.2,720.6 875.6,722.2 974.3,779.2 977.0,781.1 979.1,783.3 980.3,785.7 980.7,788.2 980.7,814.2 980.3,816.7 979.1,819.1 977.0,821.3 974.3,823.2 875.6,880.2 872.2,881.8 868.4,883.0 864.3,883.7 860.0,883.9 855.7,883.7 851.5,883.0 847.7,881.8 844.4,880.2 745.7,823.2 742.9,821.3 740.9,819.1 739.6,816.7 739.2,814.2" fill="#A7DBCC" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="974.3,779.2 977.0,781.1 979.1,783.3 980.3,785.7 980.7,788.2 980.3,790.7 979.1,793.1 977.0,795.3 974.3,797.2 875.6,854.2 872.2,855.8 868.4,857.0 864.3,857.7 860.0,857.9 855.7,857.7 851.5,857.0 847.7,855.8 844.4,854.2 745.7,797.2 742.9,795.3 740.9,793.1 739.6,790.7 739.2,788.2 739.6,785.7 740.9,783.3 742.9,781.1 745.7,779.2 844.4,722.2 847.7,720.6 851.5,719.4 855.7,718.7 860.0,718.5 864.3,718.7 868.4,719.4 872.2,720.6 875.6,722.2" fill="#E5F5F0" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(860.0,788.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="-4.0" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="21" font-weight="600" fill="#0C7558">Private data</text>
+<text x="0.0" y="22.5" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="400" fill="#0C7558">AZ c</text>
+</g>
+</g>
+<g>
+<title>VPC</title>
+<polygon points="309.1,449.2 309.6,446.7 310.8,444.3 312.8,442.1 315.6,440.2 509.6,328.2 512.9,326.6 516.7,325.4 520.9,324.7 525.2,324.5 529.5,324.7 533.6,325.4 537.4,326.6 540.8,328.2 734.7,440.2 737.5,442.1 739.5,444.3 740.8,446.7 741.2,449.2 741.2,483.2 740.8,485.7 739.5,488.1 737.5,490.3 734.7,492.2 540.8,604.2 537.4,605.8 533.6,607.0 529.5,607.7 525.2,607.9 520.9,607.7 516.7,607.0 512.9,605.8 509.6,604.2 315.6,492.2 312.8,490.3 310.8,488.1 309.6,485.7 309.1,483.2" fill="#F4C8B1" stroke="#E26D33" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="734.7,440.2 737.5,442.1 739.5,444.3 740.8,446.7 741.2,449.2 740.8,451.7 739.5,454.1 737.5,456.3 734.7,458.2 540.8,570.2 537.4,571.8 533.6,573.0 529.5,573.7 525.2,573.9 520.9,573.7 516.7,573.0 512.9,571.8 509.6,570.2 315.6,458.2 312.8,456.3 310.8,454.1 309.6,451.7 309.1,449.2 309.6,446.7 310.8,444.3 312.8,442.1 315.6,440.2 509.6,328.2 512.9,326.6 516.7,325.4 520.9,324.7 525.2,324.5 529.5,324.7 533.6,325.4 537.4,326.6 540.8,328.2" fill="#FCEFE9" stroke="#E26D33" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(525.2,449.2) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="2.6" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="44" font-weight="600" fill="#B44F1C">VPC</text>
+<text x="0.0" y="40.6" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="500" fill="#B44F1C">10.0.0.0/16</text>
+</g>
+</g>
+<g>
+<title>Region</title>
+<polygon points="309.1,210.0 309.6,207.5 310.8,205.1 312.8,202.9 315.6,201.0 509.6,89.0 512.9,87.4 516.7,86.2 520.9,85.5 525.2,85.3 529.5,85.5 533.6,86.2 537.4,87.4 540.8,89.0 734.7,201.0 737.5,202.9 739.5,205.1 740.8,207.5 741.2,210.0 741.2,244.0 740.8,246.5 739.5,248.9 737.5,251.1 734.7,253.0 540.8,365.0 537.4,366.6 533.6,367.8 529.5,368.5 525.2,368.7 520.9,368.5 516.7,367.8 512.9,366.6 509.6,365.0 315.6,253.0 312.8,251.1 310.8,248.9 309.6,246.5 309.1,244.0" fill="#B2CCEA" stroke="#3478C8" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="734.7,201.0 737.5,202.9 739.5,205.1 740.8,207.5 741.2,210.0 740.8,212.5 739.5,214.9 737.5,217.1 734.7,219.0 540.8,331.0 537.4,332.6 533.6,333.8 529.5,334.5 525.2,334.7 520.9,334.5 516.7,333.8 512.9,332.6 509.6,331.0 315.6,219.0 312.8,217.1 310.8,214.9 309.6,212.5 309.1,210.0 309.6,207.5 310.8,205.1 312.8,202.9 315.6,201.0 509.6,89.0 512.9,87.4 516.7,86.2 520.9,85.5 525.2,85.3 529.5,85.5 533.6,86.2 537.4,87.4 540.8,89.0" fill="#E9F0F9" stroke="#3478C8" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(525.2,210.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<text x="0.0" y="2.6" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="44" font-weight="600" fill="#215EA3">Region</text>
+<text x="0.0" y="40.6" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="500" fill="#215EA3">us-east-1</text>
+</g>
+</g>
+<path d="M 555.2,595.9 L 555.2,730.5" fill="none" stroke="#E26D33" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+<path d="M 741.2,469.6 L 874.0,469.6 Q 890.0,469.6 890.0,485.6 L 890.0,730.5" fill="none" stroke="#E26D33" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+<path d="M 193.8,883.7 L 193.8,979.7" fill="none" stroke="#17A07A" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+<path d="M 528.6,883.7 L 528.6,979.7" fill="none" stroke="#17A07A" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+<path d="M 613.6,838.1 L 613.6,1021.7" fill="none" stroke="#17A07A" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+<path d="M 863.5,883.7 L 863.5,979.7" fill="none" stroke="#17A07A" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+<path d="M 948.5,838.1 L 948.5,1021.7" fill="none" stroke="#17A07A" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+<path d="M 615.2,322.0 L 615.2,371.2" fill="none" stroke="#3478C8" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow-3478C8)"/>
+<path d="M 309.1,469.6 L 236.4,469.6 Q 220.4,469.6 220.4,485.6 L 220.4,730.5" fill="none" stroke="#E26D33" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow-E26D33)"/>
+<path d="M 278.8,838.1 L 278.8,1021.7" fill="none" stroke="#17A07A" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow-17A07A)"/>
+<g transform="translate(90,62)">
+<g transform="scale(2.167) translate(-12,-12)" fill="none" stroke="#2B6F98" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M2 2 L7 22"/>
+</g>
+</g>
+<text x="130.0" y="70.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="600" fill="#2B6F98">Internet</text>
+<path d="M 90.0,100.0 L 90.0,209.3 Q 90.0,225.3 106.0,225.3 L 309.1,225.3" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow-2B6F98)"/>
+<path d="M 286.6,1086.2 L 487.2,1086.2" fill="none" stroke="#6B7280" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow-6B7280)"/>
+<text x="386.9" y="1120.2" text-anchor="middle" font-family="'Roboto Mono', Menlo, monospace" font-size="18" font-weight="500" fill="#374151">:8080</text>
+<path d="M 621.4,1086.2 L 822.0,1086.2" fill="none" stroke="#6B7280" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow-6B7280)"/>
+<text x="721.7" y="1120.2" text-anchor="middle" font-family="'Roboto Mono', Menlo, monospace" font-size="18" font-weight="500" fill="#374151">:5432</text>
+<circle cx="58.0" cy="162.7" r="15" fill="#2B6F98"/>
+<text x="58.0" y="162.7" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">1</text>
+<circle cx="386.9" cy="1086.2" r="15" fill="#6B7280"/>
+<text x="386.9" y="1086.2" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">2</text>
+<circle cx="721.7" cy="1086.2" r="15" fill="#6B7280"/>
+<text x="721.7" y="1086.2" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">3</text>
+<line x1="687.8" y1="193.4" x2="1088.0" y2="193.4" stroke="#3478C8" stroke-width="2.5"/>
+<circle cx="687.8" cy="193.4" r="6" fill="#3478C8"/>
+<rect x="1088.0" y="103.4" width="650" height="180" rx="22" fill="#FFFFFF" stroke="#3478C8" stroke-width="3"/>
+<text x="1118.0" y="155.4" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="32" font-weight="600" fill="#3478C8">Region</text>
+<text x="1118.0" y="203.4" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Availability Zones</text>
+<text x="1118.0" y="241.4" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">VPCs</text>
+<text x="1413.0" y="203.4" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Regional services</text>
+<text x="1413.0" y="241.4" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Endpoints</text>
+<line x1="687.8" y1="432.6" x2="1088.0" y2="432.6" stroke="#E26D33" stroke-width="2.5"/>
+<circle cx="687.8" cy="432.6" r="6" fill="#E26D33"/>
+<rect x="1088.0" y="342.6" width="650" height="218" rx="22" fill="#FFFFFF" stroke="#E26D33" stroke-width="3"/>
+<text x="1118.0" y="394.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="32" font-weight="600" fill="#E26D33">VPC</text>
+<text x="1118.0" y="442.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">CIDR block</text>
+<text x="1118.0" y="480.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Subnets</text>
+<text x="1118.0" y="518.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Route tables</text>
+<text x="1413.0" y="442.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Internet gateway</text>
+<text x="1413.0" y="480.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">NAT gateways</text>
+<text x="1413.0" y="518.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Network ACLs</text>
+<line x1="953.8" y1="778.6" x2="1088.0" y2="778.6" stroke="#17A07A" stroke-width="2.5"/>
+<circle cx="953.8" cy="778.6" r="6" fill="#17A07A"/>
+<rect x="1088.0" y="688.6" width="650" height="218" rx="22" fill="#FFFFFF" stroke="#17A07A" stroke-width="3"/>
+<text x="1118.0" y="740.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="32" font-weight="600" fill="#17A07A">Subnet</text>
+<text x="1118.0" y="788.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">One Availability Zone</text>
+<text x="1118.0" y="826.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">CIDR range</text>
+<text x="1118.0" y="864.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Route table</text>
+<text x="1413.0" y="788.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Network ACL</text>
+<text x="1413.0" y="826.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Public or private</text>
+<text x="1413.0" y="864.6" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Network interfaces</text>
+<line x1="968.4" y1="1043.0" x2="1088.0" y2="1043.0" stroke="#6B7280" stroke-width="2.5"/>
+<circle cx="968.4" cy="1043.0" r="6" fill="#6B7280"/>
+<rect x="1088.0" y="953.0" width="650" height="218" rx="22" fill="#FFFFFF" stroke="#6B7280" stroke-width="3"/>
+<text x="1118.0" y="1005.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="32" font-weight="600" fill="#6B7280">Security Group</text>
+<text x="1118.0" y="1053.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Inbound rules</text>
+<text x="1118.0" y="1091.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Outbound rules</text>
+<text x="1118.0" y="1129.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Load balancers</text>
+<text x="1413.0" y="1053.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">EC2 instances</text>
+<text x="1413.0" y="1091.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">RDS databases</text>
+<text x="1413.0" y="1129.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="400" fill="#0F172A">Lambda functions</text>
+<text x="40.0" y="1241.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Each container holds the next, and a request crosses every boundary on its way in. Faint lines: contains. Bold arrows: the path, steps numbered.</text>
+</svg>

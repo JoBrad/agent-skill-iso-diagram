@@ -1,0 +1,40 @@
+{
+  "style": "iso-tree",
+  "title": "AWS containment",
+  "story": "Each container holds the next, and a request crosses every boundary on its way in.",
+  "points": [
+    "Region holds a VPC, the VPC holds subnets, and subnets hold security groups.",
+    "Each level has its own job, listed in its card.",
+    "A request enters through the Region and VPC, reaches the load balancer, then the app, then the database."
+  ],
+  "color_by": "level",
+  "levels": [
+    {"name": "Region", "card": {"title": "Region", "items": ["Availability Zones", "VPCs", "Regional services", "Endpoints"]}},
+    {"name": "VPC", "card": {"title": "VPC", "items": ["CIDR block", "Subnets", "Route tables", "Internet gateway", "NAT gateways", "Network ACLs"]}},
+    {"name": "Subnet", "card": {"title": "Subnet", "items": ["One Availability Zone", "CIDR range", "Route table", "Network ACL", "Public or private", "Network interfaces"]}},
+    {"name": "Security group", "card": {"title": "Security Group", "items": ["Inbound rules", "Outbound rules", "Load balancers", "EC2 instances", "RDS databases", "Lambda functions"]}}
+  ],
+  "source": {"id": "internet", "label": "Internet", "icon": "globe"},
+  "root": {
+    "id": "region", "label": "Region", "sublabel": "us-east-1", "mono_sublabel": true,
+    "children": [{
+      "id": "vpc", "label": "VPC", "sublabel": "10.0.0.0/16", "mono_sublabel": true,
+      "children": [
+        {"id": "public", "label": "Public", "sublabel": "AZ a", "children": [
+          {"id": "bastion-sg", "label": "bastion-sg", "mono": true},
+          {"id": "alb-sg", "label": "alb-sg", "mono": true}]},
+        {"id": "app", "label": "Private app", "sublabel": "AZ b", "children": [
+          {"id": "worker-sg", "label": "worker-sg", "mono": true},
+          {"id": "app-sg", "label": "app-sg", "mono": true}]},
+        {"id": "data", "label": "Private data", "sublabel": "AZ c", "children": [
+          {"id": "cache-sg", "label": "cache-sg", "mono": true},
+          {"id": "db-sg", "label": "db-sg", "mono": true}]}
+      ]
+    }]
+  },
+  "path": ["internet", "region", "vpc", "public", "alb-sg"],
+  "flows": [
+    {"from": "alb-sg", "to": "app-sg", "label": ":8080"},
+    {"from": "app-sg", "to": "db-sg", "label": ":5432"}
+  ]
+}

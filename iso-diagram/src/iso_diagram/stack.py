@@ -32,12 +32,12 @@ from iso_diagram.theme import Theme, Tier
 GAP = 260  # screen distance between plate centers
 MAX_GAP = 600
 H = 24  # plate thickness
-SPACING = 170  # plane distance between column centers, along each axis
+SPACING = 130  # plane distance between column centers, along each axis
 INSET = 18
 LANE = 16  # plane offset of the A and B lanes from a column's center
 ZONE_MIN, ZONE_MAX = 100, SPACING - 6
 RES_SIZE, RES_H = 64, 18
-LABEL = 26  # surface label size, in line with iso-tree slab labels
+NOTE = 40  # plate note size, near iso-tree's top slab labels
 RES_OFFSETS = {1: [(0, 6)], 2: [(-34, 40), (34, 58)], 3: [(-50, 30), (0, 52), (50, 74)]}
 
 # Column name to its plane center, shared by every plate.
@@ -112,7 +112,7 @@ class Plan:
         """Return text lying flat on a plate at plane point at, upright to the reader."""
         style = TextStyle(
             font=self.theme.mono if mono else self.theme.sans,
-            size=LABEL,
+            size=20,
             fill=fill,
             weight=weight,
             anchor="middle",
@@ -209,7 +209,7 @@ def zone_widths(layers: list[Spec], theme: Theme) -> ZoneWidths:
         zones = layer.get("zones", [])
         for z in zones:
             length = theme.measure(
-                s=z["label"], size=LABEL, mono=z.get("mono", False), weight=500
+                s=z["label"], size=20, mono=z.get("mono", False), weight=500
             )
             zone_w[i, z["column"]] = z.get("size") or max(
                 ZONE_MIN, min(ZONE_MAX, round(length + 34))
@@ -249,8 +249,7 @@ def plate_width(
                 reach = max(reach, abs(px) + RES_SIZE / 2, abs(py) + RES_SIZE / 2)
             lx, ly = res_label_pos(col, r.get("count", 1))
             half = (
-                theme.measure(s=r["label"], size=LABEL, mono=r.get("mono"), weight=600)
-                / 2
+                theme.measure(s=r["label"], size=20, mono=r.get("mono"), weight=600) / 2
             )
             reach = max(reach, abs(lx) + 9, abs(ly) + half)
     return 2 * (reach + INSET)
@@ -441,30 +440,39 @@ def plate_content(plan: Plan, i: int) -> str:
             )
         )
         length = plan.theme.measure(
-            s=m["label"], size=LABEL, mono=m.get("mono"), weight=600
+            s=m["label"], size=20, mono=m.get("mono"), weight=600
         )
         reg.label(
             Label(
                 surface=plate,
                 text=m["label"],
                 center=(x + 34, y + 6),
-                size=LABEL,
+                size=20,
                 length=length,
             )
         )
     if layer.get("note"):
         note = layer["note"]
         length = plan.theme.measure(
-            s=note["text"], size=LABEL, mono=note.get("mono"), weight=500
+            s=note["text"], size=NOTE, mono=note.get("mono"), weight=500
         )
         # Along the front-right edge, near the front corner.
-        nx, ny = plan.plate_w / 2 - 34, plan.plate_w / 2 - 30 - length / 2
+        nx, ny = plan.plate_w / 2 - 24 - NOTE / 2, plan.plate_w / 2 - 30 - length / 2
+        style = TextStyle(
+            font=plan.theme.mono if note.get("mono") else plan.theme.sans,
+            size=NOTE,
+            fill=t["text"],
+            weight=500,
+            anchor="middle",
+            baseline="central",
+        )
         inner.append(
-            plan.flat_text(
-                at=(nx, ny),
+            text(
+                x=0,
+                y=0,
                 s=note["text"],
-                fill=t["text"],
-                mono=note.get("mono", False),
+                style=style,
+                transform=f"translate({nx:.1f},{ny:.1f}) rotate(-90)",
             )
         )
         reg.label(
@@ -472,7 +480,7 @@ def plate_content(plan: Plan, i: int) -> str:
                 surface=plate,
                 text=note["text"],
                 center=(nx, ny),
-                size=LABEL,
+                size=NOTE,
                 length=length,
             )
         )
@@ -510,9 +518,9 @@ def zones(plan: Plan, i: int) -> list[str]:
                 surface=Surface(name=f"{layer['id']}/{z['label']}", w=w, d=w),
                 text=z["label"],
                 center=(w / 2 - 18, 0),
-                size=LABEL,
+                size=20,
                 length=plan.theme.measure(
-                    s=z["label"], size=LABEL, mono=mono, weight=weight
+                    s=z["label"], size=20, mono=mono, weight=weight
                 ),
             )
         )
@@ -580,9 +588,9 @@ def resources(plan: Plan, i: int) -> str:
                 surface=plate,
                 text=r["label"],
                 center=(lx, ly),
-                size=LABEL,
+                size=20,
                 length=plan.theme.measure(
-                    s=r["label"], size=LABEL, mono=r.get("mono"), weight=600
+                    s=r["label"], size=20, mono=r.get("mono"), weight=600
                 ),
             )
         )

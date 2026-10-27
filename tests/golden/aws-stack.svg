@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1909" height="2126" viewBox="0 0 1909 2126">
+<svg xmlns="http://www.w3.org/2000/svg" width="1726" height="1833" viewBox="0 0 1726 1833">
 <title>AWS request path</title>
 <desc>A request crosses every boundary from the Internet to the database.</desc>
 <defs>
@@ -7,190 +7,190 @@
 <feGaussianBlur stdDeviation="18"/>
 </filter>
 </defs>
-<rect width="1909" height="2126" fill="#FFFFFF"/>
-<polygon points="1051.7,1771.0 1055.7,1773.8 1058.6,1777.0 1060.4,1780.4 1061.0,1784.0 1060.4,1787.6 1058.6,1791.0 1055.7,1794.2 1051.7,1797.0 577.1,2071.0 572.3,2073.3 566.8,2075.0 560.8,2076.0 554.6,2076.4 548.4,2076.0 542.4,2075.0 536.9,2073.3 532.1,2071.0 57.5,1797.0 53.6,1794.2 50.6,1791.0 48.8,1787.6 48.2,1784.0 48.8,1780.4 50.6,1777.0 53.6,1773.8 57.5,1771.0 532.1,1497.0 536.9,1494.7 542.4,1493.0 548.4,1492.0 554.6,1491.6 560.8,1492.0 566.8,1493.0 572.3,1494.7 577.1,1497.0" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
+<rect width="1726" height="1833" fill="#FFFFFF"/>
+<polygon points="868.1,1531.0 872.1,1533.8 875.0,1537.0 876.8,1540.4 877.4,1544.0 876.8,1547.6 875.0,1551.0 872.1,1554.2 868.1,1557.0 485.3,1778.0 480.5,1780.3 475.0,1782.0 469.0,1783.0 462.8,1783.4 456.6,1783.0 450.6,1782.0 445.1,1780.3 440.3,1778.0 57.5,1557.0 53.6,1554.2 50.6,1551.0 48.8,1547.6 48.2,1544.0 48.8,1540.4 50.6,1537.0 53.6,1533.8 57.5,1531.0 440.3,1310.0 445.1,1307.7 450.6,1306.0 456.6,1305.0 462.8,1304.6 469.0,1305.0 475.0,1306.0 480.5,1307.7 485.3,1310.0" fill="#1e293b" opacity="0.10" filter="url(#soft)"/>
 <g>
 <title>Resources</title>
-<polygon points="48.2,1710.0 48.8,1706.4 50.6,1703.0 53.6,1699.8 57.5,1697.0 532.1,1423.0 536.9,1420.7 542.4,1419.0 548.4,1418.0 554.6,1417.6 560.8,1418.0 566.8,1419.0 572.3,1420.7 577.1,1423.0 1051.7,1697.0 1055.7,1699.8 1058.6,1703.0 1060.4,1706.4 1061.0,1710.0 1061.0,1734.0 1060.4,1737.6 1058.6,1741.0 1055.7,1744.2 1051.7,1747.0 577.1,2021.0 572.3,2023.3 566.8,2025.0 560.8,2026.0 554.6,2026.4 548.4,2026.0 542.4,2025.0 536.9,2023.3 532.1,2021.0 57.5,1747.0 53.6,1744.2 50.6,1741.0 48.8,1737.6 48.2,1734.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="1051.7,1697.0 1055.7,1699.8 1058.6,1703.0 1060.4,1706.4 1061.0,1710.0 1060.4,1713.6 1058.6,1717.0 1055.7,1720.2 1051.7,1723.0 577.1,1997.0 572.3,1999.3 566.8,2001.0 560.8,2002.0 554.6,2002.4 548.4,2002.0 542.4,2001.0 536.9,1999.3 532.1,1997.0 57.5,1723.0 53.6,1720.2 50.6,1717.0 48.8,1713.6 48.2,1710.0 48.8,1706.4 50.6,1703.0 53.6,1699.8 57.5,1697.0 532.1,1423.0 536.9,1420.7 542.4,1419.0 548.4,1418.0 554.6,1417.6 560.8,1418.0 566.8,1419.0 572.3,1420.7 577.1,1423.0" fill="#EFEFF1" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="48.2,1470.0 48.8,1466.4 50.6,1463.0 53.6,1459.8 57.5,1457.0 440.3,1236.0 445.1,1233.7 450.6,1232.0 456.6,1231.0 462.8,1230.6 469.0,1231.0 475.0,1232.0 480.5,1233.7 485.3,1236.0 868.1,1457.0 872.1,1459.8 875.0,1463.0 876.8,1466.4 877.4,1470.0 877.4,1494.0 876.8,1497.6 875.0,1501.0 872.1,1504.2 868.1,1507.0 485.3,1728.0 480.5,1730.3 475.0,1732.0 469.0,1733.0 462.8,1733.4 456.6,1733.0 450.6,1732.0 445.1,1730.3 440.3,1728.0 57.5,1507.0 53.6,1504.2 50.6,1501.0 48.8,1497.6 48.2,1494.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="868.1,1457.0 872.1,1459.8 875.0,1463.0 876.8,1466.4 877.4,1470.0 876.8,1473.6 875.0,1477.0 872.1,1480.2 868.1,1483.0 485.3,1704.0 480.5,1706.3 475.0,1708.0 469.0,1709.0 462.8,1709.4 456.6,1709.0 450.6,1708.0 445.1,1706.3 440.3,1704.0 57.5,1483.0 53.6,1480.2 50.6,1477.0 48.8,1473.6 48.2,1470.0 48.8,1466.4 50.6,1463.0 53.6,1459.8 57.5,1457.0 440.3,1236.0 445.1,1233.7 450.6,1232.0 456.6,1231.0 462.8,1230.6 469.0,1231.0 475.0,1232.0 480.5,1233.7 485.3,1236.0" fill="#EFEFF1" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
 </g>
-<g transform="translate(554.6,1710.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
+<g transform="translate(462.8,1470.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
 </g>
-<ellipse cx="232.5" cy="1740.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="526.9" cy="1740.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="821.4" cy="1740.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="287.9" cy="1740.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="582.3" cy="1740.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<line x1="232.5" y1="1400.0" x2="232.5" y2="1740.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="226.5,1691.5 232.5,1698.5 238.5,1691.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="526.9" y1="1400.0" x2="526.9" y2="1740.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="520.9,1691.5 526.9,1698.5 532.9,1691.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="821.4" y1="1400.0" x2="821.4" y2="1740.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="815.4,1691.5 821.4,1698.5 827.4,1691.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="287.9" y1="1400.0" x2="287.9" y2="1740.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="281.9,1698.5 287.9,1691.5 293.9,1698.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="582.3" y1="1400.0" x2="582.3" y2="1740.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="576.3,1698.5 582.3,1691.5 588.3,1698.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<polygon points="209.8,1728.0 210.0,1726.6 210.7,1725.3 211.9,1724.1 213.4,1723.0 251.5,1701.0 253.4,1700.1 255.5,1699.5 257.8,1699.1 260.2,1698.9 262.6,1699.1 264.9,1699.5 267.0,1700.1 268.8,1701.0 306.9,1723.0 308.5,1724.1 309.6,1725.3 310.3,1726.6 310.5,1728.0 310.5,1746.0 310.3,1747.4 309.6,1748.7 308.5,1749.9 306.9,1751.0 268.8,1773.0 267.0,1773.9 264.9,1774.5 262.6,1774.9 260.2,1775.1 257.8,1774.9 255.5,1774.5 253.4,1773.9 251.5,1773.0 213.4,1751.0 211.9,1749.9 210.7,1748.7 210.0,1747.4 209.8,1746.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="306.9,1723.0 308.5,1724.1 309.6,1725.3 310.3,1726.6 310.5,1728.0 310.3,1729.4 309.6,1730.7 308.5,1731.9 306.9,1733.0 268.8,1755.0 267.0,1755.9 264.9,1756.5 262.6,1756.9 260.2,1757.1 257.8,1756.9 255.5,1756.5 253.4,1755.9 251.5,1755.0 213.4,1733.0 211.9,1731.9 210.7,1730.7 210.0,1729.4 209.8,1728.0 210.0,1726.6 210.7,1725.3 211.9,1724.1 213.4,1723.0 251.5,1701.0 253.4,1700.1 255.5,1699.5 257.8,1699.1 260.2,1698.9 262.6,1699.1 264.9,1699.5 267.0,1700.1 268.8,1701.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<g transform="translate(260.2,1728.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<ellipse cx="209.9" cy="1500.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="435.1" cy="1500.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="660.3" cy="1500.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="265.4" cy="1500.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="490.5" cy="1500.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<line x1="209.9" y1="1220.0" x2="209.9" y2="1500.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="203.9,1451.5 209.9,1458.5 215.9,1451.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="435.1" y1="1220.0" x2="435.1" y2="1500.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="429.1,1451.5 435.1,1458.5 441.1,1451.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="660.3" y1="1220.0" x2="660.3" y2="1500.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="654.3,1451.5 660.3,1458.5 666.3,1451.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="265.4" y1="1220.0" x2="265.4" y2="1500.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="259.4,1458.5 265.4,1451.5 271.4,1458.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="490.5" y1="1220.0" x2="490.5" y2="1500.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="484.5,1458.5 490.5,1451.5 496.5,1458.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="187.3,1488.0 187.5,1486.6 188.2,1485.3 189.4,1484.1 190.9,1483.0 229.0,1461.0 230.8,1460.1 233.0,1459.5 235.3,1459.1 237.6,1458.9 240.0,1459.1 242.3,1459.5 244.5,1460.1 246.3,1461.0 284.4,1483.0 285.9,1484.1 287.1,1485.3 287.8,1486.6 288.0,1488.0 288.0,1506.0 287.8,1507.4 287.1,1508.7 285.9,1509.9 284.4,1511.0 246.3,1533.0 244.5,1533.9 242.3,1534.5 240.0,1534.9 237.6,1535.1 235.3,1534.9 233.0,1534.5 230.8,1533.9 229.0,1533.0 190.9,1511.0 189.4,1509.9 188.2,1508.7 187.5,1507.4 187.3,1506.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="284.4,1483.0 285.9,1484.1 287.1,1485.3 287.8,1486.6 288.0,1488.0 287.8,1489.4 287.1,1490.7 285.9,1491.9 284.4,1493.0 246.3,1515.0 244.5,1515.9 242.3,1516.5 240.0,1516.9 237.6,1517.1 235.3,1516.9 233.0,1516.5 230.8,1515.9 229.0,1515.0 190.9,1493.0 189.4,1491.9 188.2,1490.7 187.5,1489.4 187.3,1488.0 187.5,1486.6 188.2,1485.3 189.4,1484.1 190.9,1483.0 229.0,1461.0 230.8,1460.1 233.0,1459.5 235.3,1459.1 237.6,1458.9 240.0,1459.1 242.3,1459.5 244.5,1460.1 246.3,1461.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(237.6,1488.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
 <g transform="scale(2.083) translate(-12,-12)" fill="none" stroke="#374151" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M2 2 L9 22"/>
 </g>
 </g>
-<polygon points="470.3,1762.0 470.5,1760.6 471.2,1759.3 472.3,1758.1 473.8,1757.0 512.0,1735.0 513.8,1734.1 515.9,1733.5 518.2,1733.1 520.6,1732.9 523.0,1733.1 525.3,1733.5 527.4,1734.1 529.3,1735.0 567.4,1757.0 568.9,1758.1 570.0,1759.3 570.7,1760.6 571.0,1762.0 571.0,1780.0 570.7,1781.4 570.0,1782.7 568.9,1783.9 567.4,1785.0 529.3,1807.0 527.4,1807.9 525.3,1808.5 523.0,1808.9 520.6,1809.1 518.2,1808.9 515.9,1808.5 513.8,1807.9 512.0,1807.0 473.8,1785.0 472.3,1783.9 471.2,1782.7 470.5,1781.4 470.3,1780.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="567.4,1757.0 568.9,1758.1 570.0,1759.3 570.7,1760.6 571.0,1762.0 570.7,1763.4 570.0,1764.7 568.9,1765.9 567.4,1767.0 529.3,1789.0 527.4,1789.9 525.3,1790.5 523.0,1790.9 520.6,1791.1 518.2,1790.9 515.9,1790.5 513.8,1789.9 512.0,1789.0 473.8,1767.0 472.3,1765.9 471.2,1764.7 470.5,1763.4 470.3,1762.0 470.5,1760.6 471.2,1759.3 472.3,1758.1 473.8,1757.0 512.0,1735.0 513.8,1734.1 515.9,1733.5 518.2,1733.1 520.6,1732.9 523.0,1733.1 525.3,1733.5 527.4,1734.1 529.3,1735.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<g transform="translate(520.6,1762.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<polygon points="378.5,1522.0 378.7,1520.6 379.4,1519.3 380.5,1518.1 382.1,1517.0 420.2,1495.0 422.0,1494.1 424.1,1493.5 426.4,1493.1 428.8,1492.9 431.2,1493.1 433.5,1493.5 435.6,1494.1 437.5,1495.0 475.6,1517.0 477.1,1518.1 478.2,1519.3 478.9,1520.6 479.2,1522.0 479.2,1540.0 478.9,1541.4 478.2,1542.7 477.1,1543.9 475.6,1545.0 437.5,1567.0 435.6,1567.9 433.5,1568.5 431.2,1568.9 428.8,1569.1 426.4,1568.9 424.1,1568.5 422.0,1567.9 420.2,1567.0 382.1,1545.0 380.5,1543.9 379.4,1542.7 378.7,1541.4 378.5,1540.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="475.6,1517.0 477.1,1518.1 478.2,1519.3 478.9,1520.6 479.2,1522.0 478.9,1523.4 478.2,1524.7 477.1,1525.9 475.6,1527.0 437.5,1549.0 435.6,1549.9 433.5,1550.5 431.2,1550.9 428.8,1551.1 426.4,1550.9 424.1,1550.5 422.0,1549.9 420.2,1549.0 382.1,1527.0 380.5,1525.9 379.4,1524.7 378.7,1523.4 378.5,1522.0 378.7,1520.6 379.4,1519.3 380.5,1518.1 382.1,1517.0 420.2,1495.0 422.0,1494.1 424.1,1493.5 426.4,1493.1 428.8,1492.9 431.2,1493.1 433.5,1493.5 435.6,1494.1 437.5,1495.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(428.8,1522.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
 <g transform="scale(2.083) translate(-12,-12)" fill="none" stroke="#374151" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M2 2 L8 22"/>
 </g>
 </g>
-<polygon points="538.3,1780.0 538.5,1778.6 539.2,1777.3 540.3,1776.1 541.8,1775.0 580.0,1753.0 581.8,1752.1 583.9,1751.5 586.2,1751.1 588.6,1750.9 591.0,1751.1 593.3,1751.5 595.4,1752.1 597.3,1753.0 635.4,1775.0 636.9,1776.1 638.0,1777.3 638.7,1778.6 639.0,1780.0 639.0,1798.0 638.7,1799.4 638.0,1800.7 636.9,1801.9 635.4,1803.0 597.3,1825.0 595.4,1825.9 593.3,1826.5 591.0,1826.9 588.6,1827.1 586.2,1826.9 583.9,1826.5 581.8,1825.9 580.0,1825.0 541.8,1803.0 540.3,1801.9 539.2,1800.7 538.5,1799.4 538.3,1798.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="635.4,1775.0 636.9,1776.1 638.0,1777.3 638.7,1778.6 639.0,1780.0 638.7,1781.4 638.0,1782.7 636.9,1783.9 635.4,1785.0 597.3,1807.0 595.4,1807.9 593.3,1808.5 591.0,1808.9 588.6,1809.1 586.2,1808.9 583.9,1808.5 581.8,1807.9 580.0,1807.0 541.8,1785.0 540.3,1783.9 539.2,1782.7 538.5,1781.4 538.3,1780.0 538.5,1778.6 539.2,1777.3 540.3,1776.1 541.8,1775.0 580.0,1753.0 581.8,1752.1 583.9,1751.5 586.2,1751.1 588.6,1750.9 591.0,1751.1 593.3,1751.5 595.4,1752.1 597.3,1753.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<g transform="translate(588.6,1780.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<polygon points="446.5,1540.0 446.7,1538.6 447.4,1537.3 448.5,1536.1 450.1,1535.0 488.2,1513.0 490.0,1512.1 492.1,1511.5 494.4,1511.1 496.8,1510.9 499.2,1511.1 501.5,1511.5 503.6,1512.1 505.5,1513.0 543.6,1535.0 545.1,1536.1 546.2,1537.3 546.9,1538.6 547.2,1540.0 547.2,1558.0 546.9,1559.4 546.2,1560.7 545.1,1561.9 543.6,1563.0 505.5,1585.0 503.6,1585.9 501.5,1586.5 499.2,1586.9 496.8,1587.1 494.4,1586.9 492.1,1586.5 490.0,1585.9 488.2,1585.0 450.1,1563.0 448.5,1561.9 447.4,1560.7 446.7,1559.4 446.5,1558.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="543.6,1535.0 545.1,1536.1 546.2,1537.3 546.9,1538.6 547.2,1540.0 546.9,1541.4 546.2,1542.7 545.1,1543.9 543.6,1545.0 505.5,1567.0 503.6,1567.9 501.5,1568.5 499.2,1568.9 496.8,1569.1 494.4,1568.9 492.1,1568.5 490.0,1567.9 488.2,1567.0 450.1,1545.0 448.5,1543.9 447.4,1542.7 446.7,1541.4 446.5,1540.0 446.7,1538.6 447.4,1537.3 448.5,1536.1 450.1,1535.0 488.2,1513.0 490.0,1512.1 492.1,1511.5 494.4,1511.1 496.8,1510.9 499.2,1511.1 501.5,1511.5 503.6,1512.1 505.5,1513.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(496.8,1540.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
 <g transform="scale(2.083) translate(-12,-12)" fill="none" stroke="#374151" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M2 2 L8 22"/>
 </g>
 </g>
-<polygon points="798.7,1728.0 798.9,1726.6 799.6,1725.3 800.8,1724.1 802.3,1723.0 840.4,1701.0 842.3,1700.1 844.4,1699.5 846.7,1699.1 849.1,1698.9 851.5,1699.1 853.8,1699.5 855.9,1700.1 857.7,1701.0 895.8,1723.0 897.4,1724.1 898.5,1725.3 899.2,1726.6 899.4,1728.0 899.4,1746.0 899.2,1747.4 898.5,1748.7 897.4,1749.9 895.8,1751.0 857.7,1773.0 855.9,1773.9 853.8,1774.5 851.5,1774.9 849.1,1775.1 846.7,1774.9 844.4,1774.5 842.3,1773.9 840.4,1773.0 802.3,1751.0 800.8,1749.9 799.6,1748.7 798.9,1747.4 798.7,1746.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="895.8,1723.0 897.4,1724.1 898.5,1725.3 899.2,1726.6 899.4,1728.0 899.2,1729.4 898.5,1730.7 897.4,1731.9 895.8,1733.0 857.7,1755.0 855.9,1755.9 853.8,1756.5 851.5,1756.9 849.1,1757.1 846.7,1756.9 844.4,1756.5 842.3,1755.9 840.4,1755.0 802.3,1733.0 800.8,1731.9 799.6,1730.7 798.9,1729.4 798.7,1728.0 798.9,1726.6 799.6,1725.3 800.8,1724.1 802.3,1723.0 840.4,1701.0 842.3,1700.1 844.4,1699.5 846.7,1699.1 849.1,1698.9 851.5,1699.1 853.8,1699.5 855.9,1700.1 857.7,1701.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
-<g transform="translate(849.1,1728.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
+<polygon points="637.6,1488.0 637.9,1486.6 638.6,1485.3 639.7,1484.1 641.2,1483.0 679.3,1461.0 681.2,1460.1 683.3,1459.5 685.6,1459.1 688.0,1458.9 690.4,1459.1 692.7,1459.5 694.8,1460.1 696.6,1461.0 734.7,1483.0 736.3,1484.1 737.4,1485.3 738.1,1486.6 738.3,1488.0 738.3,1506.0 738.1,1507.4 737.4,1508.7 736.3,1509.9 734.7,1511.0 696.6,1533.0 694.8,1533.9 692.7,1534.5 690.4,1534.9 688.0,1535.1 685.6,1534.9 683.3,1534.5 681.2,1533.9 679.3,1533.0 641.2,1511.0 639.7,1509.9 638.6,1508.7 637.9,1507.4 637.6,1506.0" fill="#C7C9CF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="734.7,1483.0 736.3,1484.1 737.4,1485.3 738.1,1486.6 738.3,1488.0 738.1,1489.4 737.4,1490.7 736.3,1491.9 734.7,1493.0 696.6,1515.0 694.8,1515.9 692.7,1516.5 690.4,1516.9 688.0,1517.1 685.6,1516.9 683.3,1516.5 681.2,1515.9 679.3,1515.0 641.2,1493.0 639.7,1491.9 638.6,1490.7 637.9,1489.4 637.6,1488.0 637.9,1486.6 638.6,1485.3 639.7,1484.1 641.2,1483.0 679.3,1461.0 681.2,1460.1 683.3,1459.5 685.6,1459.1 688.0,1458.9 690.4,1459.1 692.7,1459.5 694.8,1460.1 696.6,1461.0" fill="#FFFFFF" stroke="#6B7280" stroke-width="2.0" stroke-linejoin="round"/>
+<g transform="translate(688.0,1488.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) rotate(-90)">
 <g transform="scale(2.083) translate(-12,-12)" fill="none" stroke="#374151" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
 <path d="M2 2 L10 22"/>
 </g>
 </g>
-<g transform="translate(554.6,1710.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
-<text x="0.0" y="0.0" transform="translate(-80.0,206.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#374151">ALB</text>
-<text x="0.0" y="0.0" transform="translate(161.6,68.4) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#374151">EC2</text>
-<text x="0.0" y="0.0" transform="translate(260.0,-134.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#374151">RDS</text>
+<g transform="translate(462.8,1470.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
+<text x="0.0" y="0.0" transform="translate(-40.0,166.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#374151">ALB</text>
+<text x="0.0" y="0.0" transform="translate(161.6,68.4) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#374151">EC2</text>
+<text x="0.0" y="0.0" transform="translate(220.0,-94.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#374151">RDS</text>
 </g>
 <g>
 <title>Security groups</title>
-<polygon points="48.2,1370.0 48.8,1366.4 50.6,1363.0 53.6,1359.8 57.5,1357.0 532.1,1083.0 536.9,1080.7 542.4,1079.0 548.4,1078.0 554.6,1077.6 560.8,1078.0 566.8,1079.0 572.3,1080.7 577.1,1083.0 1051.7,1357.0 1055.7,1359.8 1058.6,1363.0 1060.4,1366.4 1061.0,1370.0 1061.0,1394.0 1060.4,1397.6 1058.6,1401.0 1055.7,1404.2 1051.7,1407.0 577.1,1681.0 572.3,1683.3 566.8,1685.0 560.8,1686.0 554.6,1686.4 548.4,1686.0 542.4,1685.0 536.9,1683.3 532.1,1681.0 57.5,1407.0 53.6,1404.2 50.6,1401.0 48.8,1397.6 48.2,1394.0" fill="#ECCAE0" stroke="#CC74AE" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="1051.7,1357.0 1055.7,1359.8 1058.6,1363.0 1060.4,1366.4 1061.0,1370.0 1060.4,1373.6 1058.6,1377.0 1055.7,1380.2 1051.7,1383.0 577.1,1657.0 572.3,1659.3 566.8,1661.0 560.8,1662.0 554.6,1662.4 548.4,1662.0 542.4,1661.0 536.9,1659.3 532.1,1657.0 57.5,1383.0 53.6,1380.2 50.6,1377.0 48.8,1373.6 48.2,1370.0 48.8,1366.4 50.6,1363.0 53.6,1359.8 57.5,1357.0 532.1,1083.0 536.9,1080.7 542.4,1079.0 548.4,1078.0 554.6,1077.6 560.8,1078.0 566.8,1079.0 572.3,1080.7 577.1,1083.0" fill="#F9F0F6" stroke="#CC74AE" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="48.2,1190.0 48.8,1186.4 50.6,1183.0 53.6,1179.8 57.5,1177.0 440.3,956.0 445.1,953.7 450.6,952.0 456.6,951.0 462.8,950.6 469.0,951.0 475.0,952.0 480.5,953.7 485.3,956.0 868.1,1177.0 872.1,1179.8 875.0,1183.0 876.8,1186.4 877.4,1190.0 877.4,1214.0 876.8,1217.6 875.0,1221.0 872.1,1224.2 868.1,1227.0 485.3,1448.0 480.5,1450.3 475.0,1452.0 469.0,1453.0 462.8,1453.4 456.6,1453.0 450.6,1452.0 445.1,1450.3 440.3,1448.0 57.5,1227.0 53.6,1224.2 50.6,1221.0 48.8,1217.6 48.2,1214.0" fill="#ECCAE0" stroke="#CC74AE" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="868.1,1177.0 872.1,1179.8 875.0,1183.0 876.8,1186.4 877.4,1190.0 876.8,1193.6 875.0,1197.0 872.1,1200.2 868.1,1203.0 485.3,1424.0 480.5,1426.3 475.0,1428.0 469.0,1429.0 462.8,1429.4 456.6,1429.0 450.6,1428.0 445.1,1426.3 440.3,1424.0 57.5,1203.0 53.6,1200.2 50.6,1197.0 48.8,1193.6 48.2,1190.0 48.8,1186.4 50.6,1183.0 53.6,1179.8 57.5,1177.0 440.3,956.0 445.1,953.7 450.6,952.0 456.6,951.0 462.8,950.6 469.0,951.0 475.0,952.0 480.5,953.7 485.3,956.0" fill="#F9F0F6" stroke="#CC74AE" stroke-width="2.0" stroke-linejoin="round"/>
 </g>
-<g transform="translate(554.6,1370.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
-<rect x="-204.0" y="136.0" width="128" height="128" rx="14" fill="#FFFFFF" stroke="#CC74AE" stroke-width="2.5" stroke-dasharray="8 7"/>
-<text x="0.0" y="0.0" transform="translate(-94.0,200.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="26" font-weight="500" fill="#A04E85">alb-sg</text>
-<rect x="-34.0" y="-34.0" width="128" height="128" rx="14" fill="#FFFFFF" stroke="#CC74AE" stroke-width="2.5" stroke-dasharray="8 7"/>
-<text x="0.0" y="0.0" transform="translate(76.0,30.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="26" font-weight="500" fill="#A04E85">app-sg</text>
-<rect x="136.0" y="-204.0" width="128" height="128" rx="14" fill="#FFFFFF" stroke="#CC74AE" stroke-width="2.5" stroke-dasharray="8 7"/>
-<text x="0.0" y="0.0" transform="translate(246.0,-140.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="26" font-weight="500" fill="#A04E85">db-sg</text>
+<g transform="translate(462.8,1190.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
+<rect x="-153.0" y="107.0" width="106" height="106" rx="14" fill="#FFFFFF" stroke="#CC74AE" stroke-width="2.5" stroke-dasharray="8 7"/>
+<text x="0.0" y="0.0" transform="translate(-65.0,160.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="500" fill="#A04E85">alb-sg</text>
+<rect x="-23.0" y="-23.0" width="106" height="106" rx="14" fill="#FFFFFF" stroke="#CC74AE" stroke-width="2.5" stroke-dasharray="8 7"/>
+<text x="0.0" y="0.0" transform="translate(65.0,30.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="500" fill="#A04E85">app-sg</text>
+<rect x="107.0" y="-153.0" width="106" height="106" rx="14" fill="#FFFFFF" stroke="#CC74AE" stroke-width="2.5" stroke-dasharray="8 7"/>
+<text x="0.0" y="0.0" transform="translate(195.0,-100.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="20" font-weight="500" fill="#A04E85">db-sg</text>
 </g>
-<ellipse cx="232.5" cy="1400.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="526.9" cy="1400.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="821.4" cy="1400.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="287.9" cy="1400.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="582.3" cy="1400.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<line x1="232.5" y1="1060.0" x2="232.5" y2="1400.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="226.5,1351.5 232.5,1358.5 238.5,1351.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="526.9" y1="1060.0" x2="526.9" y2="1400.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="520.9,1351.5 526.9,1358.5 532.9,1351.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="821.4" y1="1060.0" x2="821.4" y2="1400.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="815.4,1351.5 821.4,1358.5 827.4,1351.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="287.9" y1="1060.0" x2="287.9" y2="1400.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="281.9,1358.5 287.9,1351.5 293.9,1358.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="582.3" y1="1060.0" x2="582.3" y2="1400.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="576.3,1358.5 582.3,1351.5 588.3,1358.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="209.9" cy="1220.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="435.1" cy="1220.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="660.3" cy="1220.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="265.4" cy="1220.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="490.5" cy="1220.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<line x1="209.9" y1="940.0" x2="209.9" y2="1220.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="203.9,1171.5 209.9,1178.5 215.9,1171.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="435.1" y1="940.0" x2="435.1" y2="1220.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="429.1,1171.5 435.1,1178.5 441.1,1171.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="660.3" y1="940.0" x2="660.3" y2="1220.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="654.3,1171.5 660.3,1178.5 666.3,1171.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="265.4" y1="940.0" x2="265.4" y2="1220.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="259.4,1178.5 265.4,1171.5 271.4,1178.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="490.5" y1="940.0" x2="490.5" y2="1220.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="484.5,1178.5 490.5,1171.5 496.5,1178.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 <g>
 <title>Subnets</title>
-<polygon points="48.2,1030.0 48.8,1026.4 50.6,1023.0 53.6,1019.8 57.5,1017.0 532.1,743.0 536.9,740.7 542.4,739.0 548.4,738.0 554.6,737.6 560.8,738.0 566.8,739.0 572.3,740.7 577.1,743.0 1051.7,1017.0 1055.7,1019.8 1058.6,1023.0 1060.4,1026.4 1061.0,1030.0 1061.0,1054.0 1060.4,1057.6 1058.6,1061.0 1055.7,1064.2 1051.7,1067.0 577.1,1341.0 572.3,1343.3 566.8,1345.0 560.8,1346.0 554.6,1346.4 548.4,1346.0 542.4,1345.0 536.9,1343.3 532.1,1341.0 57.5,1067.0 53.6,1064.2 50.6,1061.0 48.8,1057.6 48.2,1054.0" fill="#A7DBCC" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="1051.7,1017.0 1055.7,1019.8 1058.6,1023.0 1060.4,1026.4 1061.0,1030.0 1060.4,1033.6 1058.6,1037.0 1055.7,1040.2 1051.7,1043.0 577.1,1317.0 572.3,1319.3 566.8,1321.0 560.8,1322.0 554.6,1322.4 548.4,1322.0 542.4,1321.0 536.9,1319.3 532.1,1317.0 57.5,1043.0 53.6,1040.2 50.6,1037.0 48.8,1033.6 48.2,1030.0 48.8,1026.4 50.6,1023.0 53.6,1019.8 57.5,1017.0 532.1,743.0 536.9,740.7 542.4,739.0 548.4,738.0 554.6,737.6 560.8,738.0 566.8,739.0 572.3,740.7 577.1,743.0" fill="#E5F5F0" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="48.2,910.0 48.8,906.4 50.6,903.0 53.6,899.8 57.5,897.0 440.3,676.0 445.1,673.7 450.6,672.0 456.6,671.0 462.8,670.6 469.0,671.0 475.0,672.0 480.5,673.7 485.3,676.0 868.1,897.0 872.1,899.8 875.0,903.0 876.8,906.4 877.4,910.0 877.4,934.0 876.8,937.6 875.0,941.0 872.1,944.2 868.1,947.0 485.3,1168.0 480.5,1170.3 475.0,1172.0 469.0,1173.0 462.8,1173.4 456.6,1173.0 450.6,1172.0 445.1,1170.3 440.3,1168.0 57.5,947.0 53.6,944.2 50.6,941.0 48.8,937.6 48.2,934.0" fill="#A7DBCC" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="868.1,897.0 872.1,899.8 875.0,903.0 876.8,906.4 877.4,910.0 876.8,913.6 875.0,917.0 872.1,920.2 868.1,923.0 485.3,1144.0 480.5,1146.3 475.0,1148.0 469.0,1149.0 462.8,1149.4 456.6,1149.0 450.6,1148.0 445.1,1146.3 440.3,1144.0 57.5,923.0 53.6,920.2 50.6,917.0 48.8,913.6 48.2,910.0 48.8,906.4 50.6,903.0 53.6,899.8 57.5,897.0 440.3,676.0 445.1,673.7 450.6,672.0 456.6,671.0 462.8,670.6 469.0,671.0 475.0,672.0 480.5,673.7 485.3,676.0" fill="#E5F5F0" stroke="#17A07A" stroke-width="2.0" stroke-linejoin="round"/>
 </g>
-<g transform="translate(554.6,1030.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
-<rect x="-222.0" y="118.0" width="164" height="164" rx="14" fill="#FFFFFF" stroke="#17A07A" stroke-width="2.5"/>
-<text x="0.0" y="0.0" transform="translate(-76.0,200.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#0C7558">Public</text>
-<rect x="-52.0" y="-52.0" width="164" height="164" rx="14" fill="#FFFFFF" stroke="#17A07A" stroke-width="2.5"/>
-<text x="0.0" y="0.0" transform="translate(94.0,30.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#0C7558">Private app</text>
-<rect x="118.0" y="-222.0" width="164" height="164" rx="14" fill="#FFFFFF" stroke="#17A07A" stroke-width="2.5"/>
-<text x="0.0" y="0.0" transform="translate(264.0,-140.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#0C7558">Private data</text>
+<g transform="translate(462.8,910.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
+<rect x="-162.0" y="98.0" width="124" height="124" rx="14" fill="#FFFFFF" stroke="#17A07A" stroke-width="2.5"/>
+<text x="0.0" y="0.0" transform="translate(-56.0,160.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#0C7558">Public</text>
+<rect x="-32.0" y="-32.0" width="124" height="124" rx="14" fill="#FFFFFF" stroke="#17A07A" stroke-width="2.5"/>
+<text x="0.0" y="0.0" transform="translate(74.0,30.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#0C7558">Private app</text>
+<rect x="98.0" y="-162.0" width="124" height="124" rx="14" fill="#FFFFFF" stroke="#17A07A" stroke-width="2.5"/>
+<text x="0.0" y="0.0" transform="translate(204.0,-100.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#0C7558">Private data</text>
 </g>
-<ellipse cx="232.5" cy="1060.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="526.9" cy="1060.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="821.4" cy="1060.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="287.9" cy="1060.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="582.3" cy="1060.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<line x1="232.5" y1="720.0" x2="232.5" y2="1060.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="226.5,1011.5 232.5,1018.5 238.5,1011.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="526.9" y1="720.0" x2="526.9" y2="1060.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="520.9,1011.5 526.9,1018.5 532.9,1011.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="821.4" y1="720.0" x2="821.4" y2="1060.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="815.4,1011.5 821.4,1018.5 827.4,1011.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="287.9" y1="720.0" x2="287.9" y2="1060.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="281.9,1018.5 287.9,1011.5 293.9,1018.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="582.3" y1="720.0" x2="582.3" y2="1060.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="576.3,1018.5 582.3,1011.5 588.3,1018.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="209.9" cy="940.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="435.1" cy="940.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="660.3" cy="940.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="265.4" cy="940.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="490.5" cy="940.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<line x1="209.9" y1="660.0" x2="209.9" y2="940.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="203.9,891.5 209.9,898.5 215.9,891.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="435.1" y1="660.0" x2="435.1" y2="940.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="429.1,891.5 435.1,898.5 441.1,891.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="660.3" y1="660.0" x2="660.3" y2="940.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="654.3,891.5 660.3,898.5 666.3,891.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="265.4" y1="660.0" x2="265.4" y2="940.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="259.4,898.5 265.4,891.5 271.4,898.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="490.5" y1="660.0" x2="490.5" y2="940.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="484.5,898.5 490.5,891.5 496.5,898.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 <g>
 <title>VPC</title>
-<polygon points="48.2,690.0 48.8,686.4 50.6,683.0 53.6,679.8 57.5,677.0 532.1,403.0 536.9,400.7 542.4,399.0 548.4,398.0 554.6,397.6 560.8,398.0 566.8,399.0 572.3,400.7 577.1,403.0 1051.7,677.0 1055.7,679.8 1058.6,683.0 1060.4,686.4 1061.0,690.0 1061.0,714.0 1060.4,717.6 1058.6,721.0 1055.7,724.2 1051.7,727.0 577.1,1001.0 572.3,1003.3 566.8,1005.0 560.8,1006.0 554.6,1006.4 548.4,1006.0 542.4,1005.0 536.9,1003.3 532.1,1001.0 57.5,727.0 53.6,724.2 50.6,721.0 48.8,717.6 48.2,714.0" fill="#F4C8B1" stroke="#E26D33" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="1051.7,677.0 1055.7,679.8 1058.6,683.0 1060.4,686.4 1061.0,690.0 1060.4,693.6 1058.6,697.0 1055.7,700.2 1051.7,703.0 577.1,977.0 572.3,979.3 566.8,981.0 560.8,982.0 554.6,982.4 548.4,982.0 542.4,981.0 536.9,979.3 532.1,977.0 57.5,703.0 53.6,700.2 50.6,697.0 48.8,693.6 48.2,690.0 48.8,686.4 50.6,683.0 53.6,679.8 57.5,677.0 532.1,403.0 536.9,400.7 542.4,399.0 548.4,398.0 554.6,397.6 560.8,398.0 566.8,399.0 572.3,400.7 577.1,403.0" fill="#FCEFE9" stroke="#E26D33" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="48.2,630.0 48.8,626.4 50.6,623.0 53.6,619.8 57.5,617.0 440.3,396.0 445.1,393.7 450.6,392.0 456.6,391.0 462.8,390.6 469.0,391.0 475.0,392.0 480.5,393.7 485.3,396.0 868.1,617.0 872.1,619.8 875.0,623.0 876.8,626.4 877.4,630.0 877.4,654.0 876.8,657.6 875.0,661.0 872.1,664.2 868.1,667.0 485.3,888.0 480.5,890.3 475.0,892.0 469.0,893.0 462.8,893.4 456.6,893.0 450.6,892.0 445.1,890.3 440.3,888.0 57.5,667.0 53.6,664.2 50.6,661.0 48.8,657.6 48.2,654.0" fill="#F4C8B1" stroke="#E26D33" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="868.1,617.0 872.1,619.8 875.0,623.0 876.8,626.4 877.4,630.0 876.8,633.6 875.0,637.0 872.1,640.2 868.1,643.0 485.3,864.0 480.5,866.3 475.0,868.0 469.0,869.0 462.8,869.4 456.6,869.0 450.6,868.0 445.1,866.3 440.3,864.0 57.5,643.0 53.6,640.2 50.6,637.0 48.8,633.6 48.2,630.0 48.8,626.4 50.6,623.0 53.6,619.8 57.5,617.0 440.3,396.0 445.1,393.7 450.6,392.0 456.6,391.0 462.8,390.6 469.0,391.0 475.0,392.0 480.5,393.7 485.3,396.0" fill="#FCEFE9" stroke="#E26D33" stroke-width="2.0" stroke-linejoin="round"/>
 </g>
-<g transform="translate(554.6,690.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
-<path d="M -124.0,184.0 L -154.9,153.1 Q -169.0,139.0 -154.9,124.9 L -45.1,15.1 Q -31.0,1.0 -16.9,15.1 L 14.0,46.0" fill="none" stroke="#68BDEA" stroke-width="18" stroke-linecap="round"/>
-<path d="M 46.0,14.0 L 15.1,-16.9 Q 1.0,-31.0 15.1,-45.1 L 124.9,-154.9 Q 139.0,-169.0 153.1,-154.9 L 184.0,-124.0" fill="none" stroke="#68BDEA" stroke-width="18" stroke-linecap="round"/>
-<text x="0.0" y="0.0" transform="translate(-106.0,206.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="600" fill="#B44F1C">IGW</text>
-<text x="0.0" y="0.0" transform="translate(266.0,184.2) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="26" font-weight="500" fill="#B44F1C">10.0.0.0/16</text>
+<g transform="translate(462.8,630.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
+<path d="M -84.0,144.0 L -114.9,113.1 Q -129.0,99.0 -114.9,84.9 L -45.1,15.1 Q -31.0,1.0 -16.9,15.1 L 14.0,46.0" fill="none" stroke="#68BDEA" stroke-width="18" stroke-linecap="round"/>
+<path d="M 46.0,14.0 L 15.1,-16.9 Q 1.0,-31.0 15.1,-45.1 L 84.9,-114.9 Q 99.0,-129.0 113.1,-114.9 L 144.0,-84.0" fill="none" stroke="#68BDEA" stroke-width="18" stroke-linecap="round"/>
+<text x="0.0" y="0.0" transform="translate(-66.0,166.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#B44F1C">IGW</text>
+<text x="0.0" y="0.0" transform="translate(203.0,85.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="40" font-weight="500" fill="#B44F1C">10.0.0.0/16</text>
 </g>
-<ellipse cx="232.5" cy="720.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="526.9" cy="720.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="821.4" cy="720.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="287.9" cy="720.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<ellipse cx="582.3" cy="720.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<line x1="232.5" y1="380.0" x2="232.5" y2="720.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="226.5,671.5 232.5,678.5 238.5,671.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="209.9" cy="660.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="435.1" cy="660.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="660.3" cy="660.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="265.4" cy="660.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<ellipse cx="490.5" cy="660.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<line x1="209.9" y1="380.0" x2="209.9" y2="660.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="203.9,611.5 209.9,618.5 215.9,611.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 <g>
 <title>Region</title>
-<polygon points="48.2,350.0 48.8,346.4 50.6,343.0 53.6,339.8 57.5,337.0 532.1,63.0 536.9,60.7 542.4,59.0 548.4,58.0 554.6,57.6 560.8,58.0 566.8,59.0 572.3,60.7 577.1,63.0 1051.7,337.0 1055.7,339.8 1058.6,343.0 1060.4,346.4 1061.0,350.0 1061.0,374.0 1060.4,377.6 1058.6,381.0 1055.7,384.2 1051.7,387.0 577.1,661.0 572.3,663.3 566.8,665.0 560.8,666.0 554.6,666.4 548.4,666.0 542.4,665.0 536.9,663.3 532.1,661.0 57.5,387.0 53.6,384.2 50.6,381.0 48.8,377.6 48.2,374.0" fill="#B2CCEA" stroke="#3478C8" stroke-width="2.0" stroke-linejoin="round"/>
-<polygon points="1051.7,337.0 1055.7,339.8 1058.6,343.0 1060.4,346.4 1061.0,350.0 1060.4,353.6 1058.6,357.0 1055.7,360.2 1051.7,363.0 577.1,637.0 572.3,639.3 566.8,641.0 560.8,642.0 554.6,642.4 548.4,642.0 542.4,641.0 536.9,639.3 532.1,637.0 57.5,363.0 53.6,360.2 50.6,357.0 48.8,353.6 48.2,350.0 48.8,346.4 50.6,343.0 53.6,339.8 57.5,337.0 532.1,63.0 536.9,60.7 542.4,59.0 548.4,58.0 554.6,57.6 560.8,58.0 566.8,59.0 572.3,60.7 577.1,63.0" fill="#E9F0F9" stroke="#3478C8" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="48.2,350.0 48.8,346.4 50.6,343.0 53.6,339.8 57.5,337.0 440.3,116.0 445.1,113.7 450.6,112.0 456.6,111.0 462.8,110.6 469.0,111.0 475.0,112.0 480.5,113.7 485.3,116.0 868.1,337.0 872.1,339.8 875.0,343.0 876.8,346.4 877.4,350.0 877.4,374.0 876.8,377.6 875.0,381.0 872.1,384.2 868.1,387.0 485.3,608.0 480.5,610.3 475.0,612.0 469.0,613.0 462.8,613.4 456.6,613.0 450.6,612.0 445.1,610.3 440.3,608.0 57.5,387.0 53.6,384.2 50.6,381.0 48.8,377.6 48.2,374.0" fill="#B2CCEA" stroke="#3478C8" stroke-width="2.0" stroke-linejoin="round"/>
+<polygon points="868.1,337.0 872.1,339.8 875.0,343.0 876.8,346.4 877.4,350.0 876.8,353.6 875.0,357.0 872.1,360.2 868.1,363.0 485.3,584.0 480.5,586.3 475.0,588.0 469.0,589.0 462.8,589.4 456.6,589.0 450.6,588.0 445.1,586.3 440.3,584.0 57.5,363.0 53.6,360.2 50.6,357.0 48.8,353.6 48.2,350.0 48.8,346.4 50.6,343.0 53.6,339.8 57.5,337.0 440.3,116.0 445.1,113.7 450.6,112.0 456.6,111.0 462.8,110.6 469.0,111.0 475.0,112.0 480.5,113.7 485.3,116.0" fill="#E9F0F9" stroke="#3478C8" stroke-width="2.0" stroke-linejoin="round"/>
 </g>
-<g transform="translate(554.6,350.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
-<rect x="-200.0" y="140.0" width="120" height="120" rx="14" fill="none" stroke="#3478C8" stroke-width="2.5" stroke-dasharray="8 7"/>
-<text x="0.0" y="0.0" transform="translate(-98.0,200.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="500" fill="#215EA3">AZ a</text>
+<g transform="translate(462.8,350.0) matrix(0.86603,0.5,-0.86603,0.5,0,0)">
+<rect x="-160.0" y="100.0" width="120" height="120" rx="14" fill="none" stroke="#3478C8" stroke-width="2.5" stroke-dasharray="8 7"/>
+<text x="0.0" y="0.0" transform="translate(-58.0,160.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="500" fill="#215EA3">AZ a</text>
 <rect x="-30.0" y="-30.0" width="120" height="120" rx="14" fill="none" stroke="#3478C8" stroke-width="2.5" stroke-dasharray="8 7"/>
-<text x="0.0" y="0.0" transform="translate(72.0,30.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="500" fill="#215EA3">AZ b</text>
-<rect x="140.0" y="-200.0" width="120" height="120" rx="14" fill="none" stroke="#3478C8" stroke-width="2.5" stroke-dasharray="8 7"/>
-<text x="0.0" y="0.0" transform="translate(242.0,-140.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="500" fill="#215EA3">AZ c</text>
-<text x="0.0" y="0.0" transform="translate(266.0,199.8) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="26" font-weight="500" fill="#215EA3">us-east-1</text>
+<text x="0.0" y="0.0" transform="translate(72.0,30.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="500" fill="#215EA3">AZ b</text>
+<rect x="100.0" y="-160.0" width="120" height="120" rx="14" fill="none" stroke="#3478C8" stroke-width="2.5" stroke-dasharray="8 7"/>
+<text x="0.0" y="0.0" transform="translate(202.0,-100.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="500" fill="#215EA3">AZ c</text>
+<text x="0.0" y="0.0" transform="translate(203.0,109.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="'Roboto Mono', Menlo, monospace" font-size="40" font-weight="500" fill="#215EA3">us-east-1</text>
 </g>
-<ellipse cx="232.5" cy="380.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<line x1="232.5" y1="100" x2="232.5" y2="380.0" stroke="#68BDEA" stroke-width="18"/>
-<polyline points="226.5,316.5 232.5,323.5 238.5,316.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<ellipse cx="232.5" cy="380.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
-<g transform="translate(232.5,60)">
+<ellipse cx="209.9" cy="380.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<line x1="209.9" y1="100" x2="209.9" y2="380.0" stroke="#68BDEA" stroke-width="18"/>
+<polyline points="203.9,316.5 209.9,323.5 215.9,316.5" fill="none" stroke="#2B6F98" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="209.9" cy="380.0" rx="13" ry="7.5" fill="#2B6F98" opacity="0.75"/>
+<g transform="translate(209.9,60)">
 <g transform="scale(2.167) translate(-12,-12)" fill="none" stroke="#2B6F98" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
 <path d="M2 2 L7 22"/>
 </g>
 </g>
-<text x="272.5" y="68.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="600" fill="#2B6F98">Internet</text>
-<circle cx="198.5" cy="150.0" r="15" fill="#2B6F98"/>
-<text x="198.5" y="150.0" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">1</text>
-<g transform="translate(554.6,1710.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) translate(-104.0,124.0) rotate(-90)">
+<text x="249.9" y="68.0" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="600" fill="#2B6F98">Internet</text>
+<circle cx="175.9" cy="150.0" r="15" fill="#2B6F98"/>
+<text x="175.9" y="150.0" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">1</text>
+<g transform="translate(462.8,1470.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) translate(-64.0,84.0) rotate(-90)">
 <circle cx="0.0" cy="0.0" r="17" fill="#2B6F98"/>
 <text x="0.0" y="0.0" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#FFFFFF">2</text>
 </g>
-<g transform="translate(554.6,1710.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) translate(66.0,-46.0) rotate(-90)">
+<g transform="translate(462.8,1470.0) matrix(0.86603,0.5,-0.86603,0.5,0,0) translate(66.0,-46.0) rotate(-90)">
 <circle cx="0.0" cy="0.0" r="17" fill="#2B6F98"/>
 <text x="0.0" y="0.0" text-anchor="middle" dominant-baseline="central" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="20" font-weight="600" fill="#FFFFFF">3</text>
 </g>
-<path d="M 1849.2,260.0 L 1017.2,260.0 Q 999.2,260.0 999.2,278.0 L 999.2,320.7" fill="none" stroke="#3478C8" stroke-width="2.5"/>
-<circle cx="999.2" cy="320.7" r="6" fill="#3478C8"/>
-<text x="1849.2" y="246.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#215EA3">Region</text>
-<text x="1849.2" y="290.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Availability Zones and regional services</text>
-<path d="M 1849.2,600.0 L 1017.2,600.0 Q 999.2,600.0 999.2,618.0 L 999.2,660.7" fill="none" stroke="#E26D33" stroke-width="2.5"/>
-<circle cx="999.2" cy="660.7" r="6" fill="#E26D33"/>
-<text x="1849.2" y="586.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#B44F1C">VPC</text>
-<text x="1849.2" y="630.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Network boundary, routing, gateways</text>
-<path d="M 1849.2,940.0 L 1017.2,940.0 Q 999.2,940.0 999.2,958.0 L 999.2,1000.7" fill="none" stroke="#17A07A" stroke-width="2.5"/>
-<circle cx="999.2" cy="1000.7" r="6" fill="#17A07A"/>
-<text x="1849.2" y="926.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#0C7558">Subnets</text>
-<text x="1849.2" y="970.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">One AZ each, public or private</text>
-<path d="M 1849.2,1280.0 L 1017.2,1280.0 Q 999.2,1280.0 999.2,1298.0 L 999.2,1340.7" fill="none" stroke="#CC74AE" stroke-width="2.5"/>
-<circle cx="999.2" cy="1340.7" r="6" fill="#CC74AE"/>
-<text x="1849.2" y="1266.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#A04E85">Security groups</text>
-<text x="1849.2" y="1310.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Stateful allow rules per resource</text>
-<path d="M 1849.2,1620.0 L 1017.2,1620.0 Q 999.2,1620.0 999.2,1638.0 L 999.2,1680.7" fill="none" stroke="#6B7280" stroke-width="2.5"/>
-<circle cx="999.2" cy="1680.7" r="6" fill="#6B7280"/>
-<text x="1849.2" y="1606.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#374151">Resources</text>
-<text x="1849.2" y="1650.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Load balancer, instances, database</text>
-<text x="40.0" y="2096.4" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Steps: (1) Internet to ALB, (2) ALB to EC2, (3) EC2 to RDS. Traffic between subnets crosses the VPC router.</text>
+<path d="M 1665.6,260.0 L 833.6,260.0 Q 815.6,260.0 815.6,278.0 L 815.6,320.7" fill="none" stroke="#3478C8" stroke-width="2.5"/>
+<circle cx="815.6" cy="320.7" r="6" fill="#3478C8"/>
+<text x="1665.6" y="246.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#215EA3">Region</text>
+<text x="1665.6" y="290.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Availability Zones and regional services</text>
+<path d="M 1665.6,540.0 L 833.6,540.0 Q 815.6,540.0 815.6,558.0 L 815.6,600.7" fill="none" stroke="#E26D33" stroke-width="2.5"/>
+<circle cx="815.6" cy="600.7" r="6" fill="#E26D33"/>
+<text x="1665.6" y="526.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#B44F1C">VPC</text>
+<text x="1665.6" y="570.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Network boundary, routing, gateways</text>
+<path d="M 1665.6,820.0 L 833.6,820.0 Q 815.6,820.0 815.6,838.0 L 815.6,880.7" fill="none" stroke="#17A07A" stroke-width="2.5"/>
+<circle cx="815.6" cy="880.7" r="6" fill="#17A07A"/>
+<text x="1665.6" y="806.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#0C7558">Subnets</text>
+<text x="1665.6" y="850.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">One AZ each, public or private</text>
+<path d="M 1665.6,1100.0 L 833.6,1100.0 Q 815.6,1100.0 815.6,1118.0 L 815.6,1160.7" fill="none" stroke="#CC74AE" stroke-width="2.5"/>
+<circle cx="815.6" cy="1160.7" r="6" fill="#CC74AE"/>
+<text x="1665.6" y="1086.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#A04E85">Security groups</text>
+<text x="1665.6" y="1130.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Stateful allow rules per resource</text>
+<path d="M 1665.6,1380.0 L 833.6,1380.0 Q 815.6,1380.0 815.6,1398.0 L 815.6,1440.7" fill="none" stroke="#6B7280" stroke-width="2.5"/>
+<circle cx="815.6" cy="1440.7" r="6" fill="#6B7280"/>
+<text x="1665.6" y="1366.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="40" font-weight="500" fill="#374151">Resources</text>
+<text x="1665.6" y="1410.0" text-anchor="end" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Load balancer, instances, database</text>
+<text x="40.0" y="1803.4" text-anchor="start" font-family="Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="400" fill="#6B7280">Steps: (1) Internet to ALB, (2) ALB to EC2, (3) EC2 to RDS. Traffic between subnets crosses the VPC router.</text>
 </svg>

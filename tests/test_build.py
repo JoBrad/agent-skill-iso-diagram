@@ -195,8 +195,8 @@ def test_mono_labels_are_measured_in_the_mono_font() -> None:
     _, reg, _ = stack.build(spec, theme)
     lengths = {lb.text: lb.length for lb in reg.labels}
     for label in (marker["label"], resource["label"]):
-        mono = theme.measure(s=label, size=stack.LABEL, mono=True, weight=600)
-        assert mono != theme.measure(s=label, size=stack.LABEL, mono=False, weight=600)
+        mono = theme.measure(s=label, size=20, mono=True, weight=600)
+        assert mono != theme.measure(s=label, size=20, mono=False, weight=600)
         assert lengths[label] == mono
 
 

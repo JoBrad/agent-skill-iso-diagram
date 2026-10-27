@@ -2,7 +2,7 @@
 
 ## Overview
 
-This skill creates isometric diagrams in 2 opinionated styles with text callouts and simplified detail.
+This skill creates isometric diagrams in 2 opinionated styles with text callouts and simplified detail. I got the idea from diagrams like the one in [this Scalr doc](https://docs.scalr.io/docs/structuring-scalr), and wanted to be able to use that diagram type elsewhere.
 
 ### `iso-tree`
 

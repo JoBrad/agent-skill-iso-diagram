@@ -1,0 +1,17 @@
+# Python-specific files and directories
+__pycache__/
+.venv/
+venv/
+*.py[cod]
+
+# Devbox
+.devbox/
+
+# System-specific files
+.DS_Store
+Thumbs.db
+
+# Secrets and env files
+.env
+.envrc
+*.secret

@@ -23,9 +23,36 @@ The default output is `svg`, but it also supports `png`. The assumption is that 
 
 This skill has a default set of fonts, icons, color palettes, and design principles which guide the creation of each diagram. You may provide customization options as part of the skill invocation to change these.
 
-## Installation
+### Requirements
 
-Install this skill by copying the `iso-diagram` folder to your agent's `skills` directory. Nothing in the skill is agent-specific, so it should work with your agent of choice.
+- [`uv`](https://docs.astral.sh/uv/getting-started/installation/) installs the skill's Python dependencies and runs its scripts.
+- Chrome or Chromium, for PNG export only. SVG output works without it.
+- Network access on first use. `uv` downloads the Python dependencies, and the skill downloads each icon the first time a diagram uses it.
+
+### Installation
+
+Use the [GitHub CLI](https://cli.github.com/manual/gh_skill_install) to install the skill. Note that you must have permission to write to the installation target.
+
+The `--scope user` flag installs the skill in your home directory. Remove it to install the skill in your current path.
+
+**From GitHub**
+
+```sh
+gh skill install https://github.com/JoBrad/agent-skill-iso-diagram --scope user
+```
+
+**From a local path**
+
+```sh
+gh skill install path-to-the-skill --from-local --scope user
+```
+
+You can also use the [--agent](https://cli.github.com/manual/gh_skill_install) flag to directly specify a specific agent for the installation target.
+
+```sh
+gh skill install https://github.com/JoBrad/agent-skill-iso-diagram --agent claude-code --scope user
+```
+
 
 ## License
 

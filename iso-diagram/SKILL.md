@@ -102,8 +102,8 @@ skill, ask.
 - `src/iso_diagram/` is the package. `iso-build` (`build.py`) builds a spec;
   `iso-palette THEME -o OUT.svg` (`palette.py`) draws a theme's swatch sheet with a
   color-blindness check.
-- `themes/default.json` is the default theme.
-  asking.
+- `themes/default.json` is the default theme. Save a custom theme beside it, as
+  `themes/NAME.json`, only after asking.
 - `examples/` holds the AWS specs and their output: `aws-tree.json`, `aws-stack.json`.
 - `assets/` holds the fonts (OFL) and the manifest and licenses for the Feather (MIT) and
   Lucide (ISC) icon sets. Icons download on first use; see `references/icons.md`.

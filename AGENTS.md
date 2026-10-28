@@ -22,10 +22,17 @@ Process the `README.md` file in the root of this repo. It contains an overview o
 |   License detail for this project.
 ├── pyproject.toml
 |   Development dependencies and tooling. Not part of the skill.
-└── README.md
-    An overview file primarily for humans. Agents should also read it.
+├── README.md
+|   An overview file primarily for humans. Agents should also read it.
+├── scripts/
+|   Repo scripts, run with `uv run scripts/NAME.py`. Not part of the skill.
+└── tests/
+    Tests for the skill's package and the repo scripts. Not part of the skill.
 ```
 
+# Installing the skill
+
+There are instructions on using the `gh` CLI to install the skill in the README.md file. An advanced user may also wish to simply use a symlink to install the skill, targeting a locally-cloned copy of the repository.
 
 # Requirements
 
@@ -46,7 +53,7 @@ uv --version
 
 If `uv` is not installed, you have 2 options:
 
-1. When working on this repo, and `devbox` is installed, start the devbox environment from the repo root (`devbox shell`) to install `uv`. Devbox is for development only; the skill itself never uses it.
+1. (Preferred): When working from this repo, use `devbox`. Prompt the user to install `devbox` if it is not installed. Then run `devbox run install` to setup the virtual environment. Devbox is for development only; the skill itself never uses it.
 2. Prompt the user to install `uv` from its official source: `https://docs.astral.sh/uv/getting-started/installation/`
 
 ## Check for `chrome` or `chromium`

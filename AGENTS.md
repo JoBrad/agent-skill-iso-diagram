@@ -22,8 +22,13 @@ Process the `README.md` file in the root of this repo. It contains an overview o
 |   License detail for this project.
 ├── pyproject.toml
 |   Development dependencies and tooling. Not part of the skill.
-└── README.md
-    An overview file primarily for humans. Agents should also read it.
+├── README.md
+|   An overview file primarily for humans. Agents should also read it.
+├── scripts/
+|   Repo scripts, run with `uv run scripts/NAME.py`. Not part of the skill.
+|   `install.py` installs the skill; `icon_manifest.py` regenerates the icon manifest.
+└── tests/
+    Tests for the skill's package and the repo scripts. Not part of the skill.
 ```
 
 
@@ -59,4 +64,5 @@ When the skill is updated, you should perform several checks:
 
 - Except for noted requirements, the skill should be self-contained, and not require any other skills or tools.
 - Nothing in the skill should reference resources (e.g. color palettes, etc.) that are not part of the skill, or would violate either the license of the utilized resource or the licensing of this skill.
+- If the skill starts writing a new kind of file into its own folder at runtime, add it to `SAVED_FILES` in `scripts/install.py` so updates keep it, and update the "Installation" section of `README.md`.
 - Scan the skill detail to ensure secrets, keys, etc. are not included. Nothing in the skill should require access to privileged info. If present, you may use a tool such as `gitleaks` to scan the code.

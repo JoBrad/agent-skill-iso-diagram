@@ -1,1 +1,4 @@
+# Custom themes are saved here at runtime. Only the default theme is tracked.
+*
+!.gitignore
 !default.json

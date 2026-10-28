@@ -23,44 +23,36 @@ The default output is `svg`, but it also supports `png`. The assumption is that 
 
 This skill has a default set of fonts, icons, color palettes, and design principles which guide the creation of each diagram. You may provide customization options as part of the skill invocation to change these.
 
-## Installation
-
-Nothing in the skill is agent-specific, so it should work with your agent of choice.
-
 ### Requirements
 
-- [`uv`](https://docs.astral.sh/uv/getting-started/installation/) installs the skill's Python dependencies and runs its scripts. It also runs the installer.
+- [`uv`](https://docs.astral.sh/uv/getting-started/installation/) installs the skill's Python dependencies and runs its scripts.
 - Chrome or Chromium, for PNG export only. SVG output works without it.
 - Network access on first use. `uv` downloads the Python dependencies, and the skill downloads each icon the first time a diagram uses it.
 
-### Install with the script
+### Installation
 
-From a clone of this repo:
+Use the [GitHub CLI](https://cli.github.com/manual/gh_skill_install) to install the skill. Note that you must have permission to write to the installation target.
+
+The `--scope user` flag installs the skill in your home directory. Remove it to install the skill in your current path.
+
+**From GitHub**
 
 ```sh
-# Copy the skill to ~/.claude/skills/iso-diagram (Claude Code's user skills folder)
-uv run scripts/install.py
-
-# Copy it to another agent's skills folder
-uv run scripts/install.py ~/path/to/skills
-
-# Symlink it instead, so the installed skill always matches the checked-out branch
-uv run scripts/install.py --link
+gh skill install https://github.com/JoBrad/agent-skill-iso-diagram --scope user
 ```
 
-The script installs to `iso-diagram` inside the skills folder, creating the folder if needed. It then builds the skill's Python environment and reports whether it found Chrome or Chromium. `--no-check` skips that step; the skill builds its environment on first use instead. Start a new agent session afterward so the agent loads the skill.
+**From a local path**
 
-To update a copy, pull this repo and rerun the script. The update replaces the skill's files and keeps custom themes and downloaded icons from the earlier copy. A link needs no update.
+```sh
+gh skill install path-to-the-skill --from-local --scope user
+```
 
-The script will not replace a copy with a link, or a link with a copy. Remove the old install first, after moving any custom themes out of its `themes/` folder.
+You can also use the [--agent](https://cli.github.com/manual/gh_skill_install) flag to directly specify a specific agent for the installation target.
 
-On Windows, `--link` needs Developer Mode turned on. A copy works without it.
+```sh
+gh skill install https://github.com/JoBrad/agent-skill-iso-diagram --agent claude-code --scope user
+```
 
-### Install by hand
-
-Copy the `iso-diagram` folder into your agent's skills folder. Keep the folder name `iso-diagram`, since it matches the skill's name. Leave out any `.venv` and `__pycache__` folders.
-
-The installed folder must be writable. The skill writes its Python environment to `.venv`, downloaded icons to `assets/icons/`, and saved custom themes to `themes/`. Copying over an existing install by hand can delete saved themes, so move them out first.
 
 ## License
 

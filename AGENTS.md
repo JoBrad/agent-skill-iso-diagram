@@ -26,11 +26,13 @@ Process the `README.md` file in the root of this repo. It contains an overview o
 |   An overview file primarily for humans. Agents should also read it.
 ├── scripts/
 |   Repo scripts, run with `uv run scripts/NAME.py`. Not part of the skill.
-|   `install.py` installs the skill; `icon_manifest.py` regenerates the icon manifest.
 └── tests/
     Tests for the skill's package and the repo scripts. Not part of the skill.
 ```
 
+# Installing the skill
+
+There are instructions on using the `gh` CLI to install the skill in the README.md file. An advanced user may also wish to simply use a symlink to install the skill, targeting a locally-cloned copy of the repository.
 
 # Requirements
 
@@ -51,7 +53,7 @@ uv --version
 
 If `uv` is not installed, you have 2 options:
 
-1. When working on this repo, and `devbox` is installed, start the devbox environment from the repo root (`devbox shell`) to install `uv`. Devbox is for development only; the skill itself never uses it.
+1. (Preferred): When working from this repo, use `devbox`. Prompt the user to install `devbox` if it is not installed. Then run `devbox run install` to setup the virtual environment. Devbox is for development only; the skill itself never uses it.
 2. Prompt the user to install `uv` from its official source: `https://docs.astral.sh/uv/getting-started/installation/`
 
 ## Check for `chrome` or `chromium`
@@ -64,5 +66,4 @@ When the skill is updated, you should perform several checks:
 
 - Except for noted requirements, the skill should be self-contained, and not require any other skills or tools.
 - Nothing in the skill should reference resources (e.g. color palettes, etc.) that are not part of the skill, or would violate either the license of the utilized resource or the licensing of this skill.
-- If the skill starts writing a new kind of file into its own folder at runtime, add it to `SAVED_FILES` in `scripts/install.py` so updates keep it, and update the "Installation" section of `README.md`.
 - Scan the skill detail to ensure secrets, keys, etc. are not included. Nothing in the skill should require access to privileged info. If present, you may use a tool such as `gitleaks` to scan the code.

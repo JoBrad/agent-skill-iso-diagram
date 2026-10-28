@@ -1,7 +1,3 @@
-# /// script
-# requires-python = ">=3.11"
-# dependencies = ["truststore>=0.10.5"]
-# ///
 """Regenerate iso-diagram/assets/icons/manifest.json from pinned npm releases.
 
     uv run scripts/icon_manifest.py
@@ -18,10 +14,10 @@ import io
 import json
 import ssl
 import tarfile
-import urllib.request
 
 from pathlib import Path
 
+import httpx2
 import truststore
 
 
@@ -48,14 +44,19 @@ MANIFEST = (
     / "manifest.json"
 )
 TIMEOUT = 120
-# Same reason as the skill's icons.py: verify against the OS trust store.
+
+# Verify SSL certificates against the OS trust store.
 TLS = truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
 
 
 def fetch(*, url: str) -> bytes:
     """Return the body at url."""
-    with urllib.request.urlopen(url, timeout=TIMEOUT, context=TLS) as resp:
-        return resp.read()
+    try:
+        res = httpx2.get(url=url, timeout=TIMEOUT, verify=TLS)
+        res.raise_for_status()
+        return res.content
+    except httpx2.HTTPError as e:
+        raise SystemExit(f"Failed to fetch {url}: {e}") from e
 
 
 def tarball(*, package: str, version: str) -> bytes:
@@ -80,8 +81,9 @@ def icon_hashes(*, data: bytes, path: str) -> dict[str, str]:
             rest = member.name.removeprefix(prefix)
             if rest == member.name or "/" in rest or not rest.endswith(".svg"):
                 continue
-            body = tar.extractfile(member).read()
-            hashes[rest.removesuffix(".svg")] = hashlib.sha256(body).hexdigest()
+            if svg_content := tar.extractfile(member):
+                body = svg_content.read()
+                hashes[rest.removesuffix(".svg")] = hashlib.sha256(body).hexdigest()
     return dict(sorted(hashes.items()))
 
 
